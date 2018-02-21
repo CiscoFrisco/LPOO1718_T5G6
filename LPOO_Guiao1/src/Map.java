@@ -96,9 +96,6 @@ public class Map {
 			if(level == 2 && entity == 'H')
 				hasKey = true;
 
-			updatePos(entity, x_pos, y_pos);
-
-			printMap();
 			return true;
 		}
 
@@ -150,13 +147,13 @@ public class Map {
 		case 'w':
 			if(checkCell(entity, x_pos - 1,y_pos, level))
 			{
-				if(entity == 'H' && x_pos - 1 == key_x_pos && y_pos == key_y_pos)
+				if(entity == 'H' && layout[x_pos - 1][y_pos] == 'k')
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos - 1][y_pos] = 'K';
 					updatePos(entity,x_pos - 1,y_pos);
 				}
-				else if((entity == 'O' || entity == '*') && x_pos - 1 == key_x_pos && y_pos == key_y_pos)
+				else if(entity == 'O' && (layout[x_pos - 1][y_pos] == 'k' ||layout[x_pos - 1][y_pos] == '$'))
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos - 1][y_pos] = '$';
@@ -165,11 +162,22 @@ public class Map {
 				else if(entity == '*')
 				{
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
-						layout[club_x_pos][club_y_pos] = 'O';
+					{
+						if(layout[guard_x_pos][guard_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = '$';
+						else
+							layout[club_x_pos][club_y_pos] = 'O';
+					}
 					else
-						layout[club_x_pos][club_y_pos] = ' ';
+					{
+						if(layout[club_x_pos][club_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = 'k';
+						else if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
+							layout[guard_x_pos - 1][guard_y_pos] = '$';
+						else if(layout[club_x_pos][club_y_pos] == '*')
+							layout[club_x_pos][club_y_pos] = ' ';
+					}
 
-					layout[guard_x_pos - 1][guard_y_pos] = '*';
 					updatePos(entity, guard_x_pos - 1, guard_y_pos);
 				}
 				else
@@ -184,7 +192,7 @@ public class Map {
 		case 'a':
 			if(checkCell(entity, x_pos,y_pos - 1, level))
 			{
-				if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos == key_y_pos)
+				if(entity == 'O' && layout[x_pos][y_pos] == '$')
 				{
 					layout[x_pos][y_pos] = 'k';
 					layout[x_pos][y_pos -1] = entity;
@@ -193,11 +201,22 @@ public class Map {
 				else if(entity == '*')
 				{
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
-						layout[club_x_pos][club_y_pos] = 'O';
+					{
+						if(layout[guard_x_pos][guard_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = '$';
+						else
+							layout[club_x_pos][club_y_pos] = 'O';
+					}
 					else
-						layout[club_x_pos][club_y_pos] = ' ';
+					{
+						if(layout[club_x_pos][club_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = 'k';
+						else if(layout[guard_x_pos][guard_y_pos - 1]  == 'k')
+							layout[guard_x_pos][guard_y_pos - 1] = '$';
+						else if(layout[club_x_pos][club_y_pos] == '*')
+							layout[club_x_pos][club_y_pos] = ' ';
+					}
 
-					layout[guard_x_pos][guard_y_pos - 1] = '*';
 					updatePos(entity, guard_x_pos, guard_y_pos - 1);
 				}
 				else
@@ -218,7 +237,7 @@ public class Map {
 		case 's':
 			if(checkCell(entity, x_pos + 1,y_pos, level))
 			{	
-				if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos == key_y_pos)
+				if(entity == 'O' && layout[x_pos][y_pos] == '$')
 				{
 					layout[x_pos][y_pos] = 'k';
 					layout[x_pos+1][y_pos] = entity;
@@ -227,9 +246,19 @@ public class Map {
 				else if(entity == '*')
 				{
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
-						layout[club_x_pos][club_y_pos] = 'O';
+					{
+						if(layout[club_x_pos][club_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = '$';
+						else
+							layout[club_x_pos][club_y_pos] = 'O';
+					}
 					else
-						layout[club_x_pos][club_y_pos] = ' ';
+					{
+						if(layout[club_x_pos][club_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = 'k';
+						else
+							layout[club_x_pos][club_y_pos] = ' ';
+					}
 
 					layout[guard_x_pos + 1][guard_y_pos] = '*';
 					updatePos(entity, guard_x_pos + 1, guard_y_pos);
@@ -254,13 +283,13 @@ public class Map {
 					layout[x_pos][y_pos + 1] = entity;
 					updatePos(entity,x_pos,y_pos + 1);	
 				}
-				else if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos + 1 == key_y_pos)
+				else if(entity == 'O' && (layout[x_pos][y_pos + 1] == 'k' || layout[x_pos][y_pos + 1] == '$'))
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos][y_pos + 1] = '$';
 					updatePos(entity,x_pos,y_pos + 1);	
 				}
-				else if(entity == 'H' && x_pos == key_x_pos && y_pos + 1 == key_y_pos)
+				else if(entity == 'H' && layout[x_pos][y_pos + 1] == 'k')
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos][y_pos + 1] = 'K';
@@ -273,7 +302,11 @@ public class Map {
 					else
 						layout[club_x_pos][club_y_pos] = ' ';
 
-					layout[guard_x_pos][guard_y_pos + 1] = '*';
+					if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
+						layout[guard_x_pos][guard_y_pos + 1] = '$';
+					else if(layout[guard_x_pos][guard_y_pos + 1] != 'X')
+						layout[guard_x_pos][guard_y_pos + 1] = '*';
+
 					updatePos(entity, guard_x_pos, guard_y_pos + 1);
 				}
 				else

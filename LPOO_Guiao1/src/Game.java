@@ -57,7 +57,7 @@ public class Game {
 	
 	public static void setClub(Map map, int level)
 	{
-		char clubSwing = generateMovement();
+		char clubSwing = 'd';//generateMovement();
 		
 		while(!map.updateMap(clubSwing, '*', level))
 			{clubSwing = generateMovement();};
@@ -78,8 +78,8 @@ public class Game {
 		}
 		else
 		{
-			//char guardMovement = generateMovement();
-			char guardMovement = 'd';
+			char guardMovement = generateMovement();
+			//char guardMovement = 'd';
 
 			if(map.updateMap(guardMovement, 'O', level))
 				return true;
