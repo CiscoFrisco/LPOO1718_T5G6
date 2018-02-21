@@ -9,8 +9,8 @@ public class Map {
 	private int lever_y_pos;
 	private int key_x_pos;
 	private int key_y_pos;
-	private int club_x_pos;
-	private int club_y_pos;
+	public int club_x_pos;
+	public int club_y_pos;
 	private boolean lever = false;
 	private boolean escaped = false;
 	public boolean hasKey = false;
@@ -175,7 +175,7 @@ public class Map {
 					}
 					else
 					{
-						if(layout[club_x_pos][club_y_pos] == '$' )
+						if(layout[club_x_pos][club_y_pos] == '$')
 							layout[club_x_pos][club_y_pos] = '$';
 						else if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
 						{
@@ -214,7 +214,7 @@ public class Map {
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
-							layout[club_x_pos][club_y_pos] = '$';
+							layout[club_x_pos][club_y_pos] = 'k';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
 						
@@ -273,7 +273,7 @@ public class Map {
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
-							layout[club_x_pos][club_y_pos] = '$';
+							layout[club_x_pos][club_y_pos] = 'k';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
 						

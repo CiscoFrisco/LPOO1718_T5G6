@@ -163,6 +163,9 @@ public class Game {
 		//if(gameplay(1, gamemap_1, s) == 1)
 		//	return;
 
+		gamemap_2.club_x_pos = 1;
+		gamemap_2.club_y_pos = 5;
+
 		setClub(gamemap_2, 2);
 		
 		
