@@ -57,7 +57,7 @@ public class Game {
 	
 	public static void setClub(Map map, int level)
 	{
-		char clubSwing = 'd';//generateMovement();
+		char clubSwing = generateMovement();
 		
 		while(!map.updateMap(clubSwing, '*', level))
 			{clubSwing = generateMovement();};

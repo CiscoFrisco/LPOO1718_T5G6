@@ -160,22 +160,33 @@ public class Map {
 					updatePos(entity,x_pos - 1,y_pos);
 				}
 				else if(entity == '*')
-				{
+				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
 							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
+						
+						if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
+							layout[guard_x_pos - 1][guard_y_pos] = '$';
+						else
+							layout[guard_x_pos - 1][guard_y_pos] = '*';
 					}
 					else
 					{
-						if(layout[club_x_pos][club_y_pos] == '$')
-							layout[club_x_pos][club_y_pos] = 'k';
+						if(layout[club_x_pos][club_y_pos] == '$' )
+							layout[club_x_pos][club_y_pos] = '$';
 						else if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
+						{
 							layout[guard_x_pos - 1][guard_y_pos] = '$';
-						else if(layout[club_x_pos][club_y_pos] == '*')
 							layout[club_x_pos][club_y_pos] = ' ';
+						}
+						else if(layout[club_x_pos][club_y_pos] == '*')
+						{	
+							layout[guard_x_pos - 1][guard_y_pos] = '*';
+							layout[club_x_pos][club_y_pos] = ' ';
+						}
 					}
 
 					updatePos(entity, guard_x_pos - 1, guard_y_pos);
@@ -199,22 +210,36 @@ public class Map {
 					updatePos(entity,x_pos,y_pos - 1);	
 				}
 				else if(entity == '*')
-				{
+				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
 							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
+						
+						if(layout[guard_x_pos][guard_y_pos - 1]  == 'k')
+							layout[guard_x_pos][guard_y_pos - 1] = '$';
+						else
+							layout[guard_x_pos][guard_y_pos - 1] = '*';
 					}
 					else
 					{
 						if(layout[club_x_pos][club_y_pos] == '$')
+						{
 							layout[club_x_pos][club_y_pos] = 'k';
+							layout[guard_x_pos][guard_y_pos - 1] = '*';
+						}
 						else if(layout[guard_x_pos][guard_y_pos - 1]  == 'k')
-							layout[guard_x_pos][guard_y_pos - 1] = '$';
-						else if(layout[club_x_pos][club_y_pos] == '*')
+						{
 							layout[club_x_pos][club_y_pos] = ' ';
+							layout[guard_x_pos][guard_y_pos - 1] = '$';
+						}
+						else if(layout[club_x_pos][club_y_pos] == '*')
+						{
+							layout[club_x_pos][club_y_pos] = ' ';
+							layout[guard_x_pos][guard_y_pos - 1] = '*';
+						}
 					}
 
 					updatePos(entity, guard_x_pos, guard_y_pos - 1);
@@ -244,23 +269,38 @@ public class Map {
 					updatePos(entity,x_pos+1,y_pos);	
 				}
 				else if(entity == '*')
-				{
+				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
-						if(layout[club_x_pos][club_y_pos] == '$')
+						if(layout[guard_x_pos][guard_y_pos] == '$')
 							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
+						
+						if(layout[guard_x_pos + 1][guard_y_pos]  == 'k')
+							layout[guard_x_pos + 1][guard_y_pos] = '$';
+						else
+							layout[guard_x_pos + 1][guard_y_pos] = '*';
 					}
 					else
 					{
 						if(layout[club_x_pos][club_y_pos] == '$')
+						{
 							layout[club_x_pos][club_y_pos] = 'k';
-						else
+							layout[guard_x_pos + 1][guard_y_pos] = '*';
+						}
+						else if(layout[guard_x_pos + 1][guard_y_pos]  == 'k')
+						{
 							layout[club_x_pos][club_y_pos] = ' ';
+							layout[guard_x_pos][guard_y_pos - 1] = '$';
+						}
+						else if(layout[club_x_pos][club_y_pos] == '*')
+						{
+							layout[club_x_pos][club_y_pos] = ' ';
+							layout[guard_x_pos + 1][guard_y_pos] = '*';
+						}
 					}
 
-					layout[guard_x_pos + 1][guard_y_pos] = '*';
 					updatePos(entity, guard_x_pos + 1, guard_y_pos);
 				}
 				else
@@ -269,8 +309,6 @@ public class Map {
 					layout[x_pos+1][y_pos] = entity;
 					updatePos(entity,x_pos + 1,y_pos);
 				}
-
-
 				return true;
 			}
 			break;
@@ -296,16 +334,37 @@ public class Map {
 					updatePos(entity,x_pos,y_pos + 1);	
 				}
 				else if(entity == '*')
-				{
+				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
-						layout[club_x_pos][club_y_pos] = 'O';
-					else
-						layout[club_x_pos][club_y_pos] = ' ';
+					{
+						if(layout[guard_x_pos][guard_y_pos] == '$')
+							layout[club_x_pos][club_y_pos] = '$';
+						else
+							layout[club_x_pos][club_y_pos] = 'O';
+						
+						if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
+							layout[guard_x_pos][guard_y_pos + 1] = '$';
+						else
+							layout[guard_x_pos][guard_y_pos + 1] = '*';
 
-					if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
-						layout[guard_x_pos][guard_y_pos + 1] = '$';
-					else if(layout[guard_x_pos][guard_y_pos + 1] != 'X')
-						layout[guard_x_pos][guard_y_pos + 1] = '*';
+					}
+					else
+					{
+						if(layout[club_x_pos][club_y_pos] == '$')
+						{
+							layout[club_x_pos][club_y_pos] = '$';
+						}
+						else if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
+						{
+							layout[guard_x_pos][guard_y_pos + 1] = '$';
+							layout[club_x_pos][club_y_pos] = ' ';
+						}
+						else if(layout[club_x_pos][club_y_pos] == '*')
+						{	
+							layout[guard_x_pos][guard_y_pos + 1] = '*';
+							layout[club_x_pos][club_y_pos] = ' ';
+						}
+					}
 
 					updatePos(entity, guard_x_pos, guard_y_pos + 1);
 				}
