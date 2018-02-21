@@ -1,24 +1,32 @@
-
-
-
 public class Map {
 
-	private char[][] structure = {{'X','X','X','X','X','X','X','X','X','X'} , 
-			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
-			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-			{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
-			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X','X','X',' ','X','X','X','X',' ','X'} , 
-			{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
-			{'X','X','X','X','X','X','X','X','X','X'}};
-	private int hero_x_pos = 1;
-	private int hero_y_pos = 1;
-	private int guard_x_pos = 1;
-	private int guard_y_pos = 8;
+	private char[][] layout;
+	private int hero_x_pos;
+	private int hero_y_pos;
+	private int guard_x_pos;
+	private int guard_y_pos;
+	private int lever_x_pos;
+	private int lever_y_pos;
+	private int key_x_pos;
+	private int key_y_pos;
+	private int club_x_pos;
+	private int club_y_pos;
 	private boolean lever = false;
 	private boolean escaped = false;
+	public boolean hasKey = false;
+
+	public Map(char[][] layout, int h_x_pos,  int h_y_pos,  int g_x_pos,  int g_y_pos, int l_x_pos, int l_y_pos, int k_x_pos, int k_y_pos)
+	{
+		this.layout = layout;
+		hero_x_pos = h_x_pos;
+		hero_y_pos = h_y_pos;
+		guard_x_pos = g_x_pos;
+		guard_y_pos = g_y_pos;
+		lever_x_pos = l_x_pos;
+		lever_y_pos = l_y_pos;
+		key_x_pos = k_x_pos;
+		key_y_pos = k_y_pos;
+	}
 
 
 
@@ -41,8 +49,8 @@ public class Map {
 			new_char = 'I';
 		}
 
-		structure[door1_y_pos][door_x_pos] = new_char;
-		structure[door2_y_pos][door_x_pos] = new_char;
+		layout[door1_y_pos][door_x_pos] = new_char;
+		layout[door2_y_pos][door_x_pos] = new_char;
 	}
 
 	public boolean escaped()
@@ -50,6 +58,7 @@ public class Map {
 		if(escaped)
 		{
 			System.out.println("Congratulations, you escaped!");
+			escaped = false;
 			return true;
 		}
 
@@ -58,27 +67,45 @@ public class Map {
 
 	public boolean checkGuard()
 	{
-		if((Math.abs(hero_x_pos-guard_x_pos)==1 && hero_y_pos == guard_y_pos) || (Math.abs(hero_y_pos-guard_y_pos)==1 && hero_x_pos == guard_x_pos))
+		if((Math.abs(hero_x_pos-guard_x_pos)<=1 && hero_y_pos == guard_y_pos) || (Math.abs(hero_y_pos-guard_y_pos)<=1 && hero_x_pos == guard_x_pos))
+			return true;
+		else if (hero_x_pos == guard_x_pos && hero_y_pos == guard_y_pos)
 			return true;
 		return false;
 	}
 
-	public boolean checkCell(int x_pos, int y_pos)
+	public boolean checkClub()
 	{
-		if(structure[x_pos][y_pos] == 'X' || structure[x_pos][y_pos] == 'I')
+		if((Math.abs(hero_x_pos-club_x_pos)<=1 && hero_y_pos == club_y_pos) || (Math.abs(hero_y_pos-club_y_pos)<=1 && hero_x_pos == club_x_pos))
+			return true;
+		else if (hero_x_pos == club_x_pos && hero_y_pos == club_y_pos)
+			return true;
+		return false;
+	}
+
+	public boolean checkCell(char entity, int x_pos, int y_pos, int level)
+	{
+		if(layout[x_pos][y_pos] == 'X' || layout[x_pos][y_pos] == 'I')
 			return false;
 
-		if(structure[x_pos][y_pos] == 'k')
-		{
-			updateDoors();
+		if(layout[x_pos][y_pos] == 'k')
+		{	
+			if(level == 1)
+				updateDoors();
+
+			if(level == 2 && entity == 'H')
+				hasKey = true;
+
+			updatePos(entity, x_pos, y_pos);
+
 			printMap();
-			return false;
+			return true;
 		}
 
-		if(structure[x_pos][y_pos] == 'S' && (x_pos == 0 || y_pos == 0))
+		if(layout[x_pos][y_pos] == 'S' && (x_pos == 0 || y_pos == 0))
 		{
 			escaped = true;
-			return false;
+			return true;
 		}
 
 		return true;
@@ -86,29 +113,34 @@ public class Map {
 
 	public void updatePos(char entity, int x_pos, int y_pos)
 	{
-		switch(entity)
+		if(entity == 'H' || entity == 'K')
 		{
-		case 'H':
 			hero_x_pos = x_pos;
 			hero_y_pos = y_pos;
-			break;
-		case 'G':
+		}
+		else if(entity == 'O' || entity == 'G')
+		{
 			guard_x_pos = x_pos;
 			guard_y_pos = y_pos;
 		}
+		else if (entity == '*')
+		{
+			club_x_pos = x_pos;
+			club_y_pos = y_pos;
+		}
 	}
 
-	public boolean updateMap(char movement, char entity)
+	public boolean updateMap(char movement, char entity, int level)
 	{
 		int x_pos = -1, y_pos = -1;
 
-		switch(entity)
+		if(entity == 'H' || entity == 'K')
 		{
-		case 'H':
 			x_pos = hero_x_pos;
 			y_pos = hero_y_pos;
-			break;
-		case 'G':
+		}
+		else if(entity == 'O' || entity == 'G' || entity == '*')
+		{
 			x_pos = guard_x_pos;
 			y_pos = guard_y_pos;
 		}
@@ -116,38 +148,141 @@ public class Map {
 		switch(movement)
 		{
 		case 'w':
-			if(checkCell(x_pos - 1,y_pos))
+			if(checkCell(entity, x_pos - 1,y_pos, level))
 			{
-				structure[x_pos][y_pos] = ' ';
-				structure[x_pos - 1][y_pos] = entity;
-				updatePos(entity,x_pos - 1,y_pos);
+				if(entity == 'H' && x_pos - 1 == key_x_pos && y_pos == key_y_pos)
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos - 1][y_pos] = 'K';
+					updatePos(entity,x_pos - 1,y_pos);
+				}
+				else if((entity == 'O' || entity == '*') && x_pos - 1 == key_x_pos && y_pos == key_y_pos)
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos - 1][y_pos] = '$';
+					updatePos(entity,x_pos - 1,y_pos);
+				}
+				else if(entity == '*')
+				{
+					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
+						layout[club_x_pos][club_y_pos] = 'O';
+					else
+						layout[club_x_pos][club_y_pos] = ' ';
+
+					layout[guard_x_pos - 1][guard_y_pos] = '*';
+					updatePos(entity, guard_x_pos - 1, guard_y_pos);
+				}
+				else
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos - 1][y_pos] = entity;
+					updatePos(entity,x_pos - 1,y_pos);
+				}
 				return true;
 			}
 			break;
 		case 'a':
-			if(checkCell(x_pos,y_pos - 1))
+			if(checkCell(entity, x_pos,y_pos - 1, level))
 			{
-				structure[x_pos][y_pos] = ' ';
-				structure[x_pos][y_pos - 1] = entity;
-				updatePos(entity,x_pos,y_pos - 1);
+				if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos == key_y_pos)
+				{
+					layout[x_pos][y_pos] = 'k';
+					layout[x_pos][y_pos -1] = entity;
+					updatePos(entity,x_pos,y_pos - 1);	
+				}
+				else if(entity == '*')
+				{
+					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
+						layout[club_x_pos][club_y_pos] = 'O';
+					else
+						layout[club_x_pos][club_y_pos] = ' ';
+
+					layout[guard_x_pos][guard_y_pos - 1] = '*';
+					updatePos(entity, guard_x_pos, guard_y_pos - 1);
+				}
+				else
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos][y_pos-1] = entity;
+					updatePos(entity,x_pos,y_pos-1);
+				}
+
+				return true;
+			}
+			else if(layout[x_pos][y_pos-1] == 'I' && entity == 'K')
+			{
+				layout[x_pos][y_pos-1] = 'S';
 				return true;
 			}
 			break;
 		case 's':
-			if(checkCell(x_pos + 1,y_pos))
-			{
-				structure[x_pos][y_pos] = ' ';
-				structure[x_pos + 1][y_pos] = entity;
-				updatePos(entity,x_pos + 1,y_pos);
+			if(checkCell(entity, x_pos + 1,y_pos, level))
+			{	
+				if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos == key_y_pos)
+				{
+					layout[x_pos][y_pos] = 'k';
+					layout[x_pos+1][y_pos] = entity;
+					updatePos(entity,x_pos+1,y_pos);	
+				}
+				else if(entity == '*')
+				{
+					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
+						layout[club_x_pos][club_y_pos] = 'O';
+					else
+						layout[club_x_pos][club_y_pos] = ' ';
+
+					layout[guard_x_pos + 1][guard_y_pos] = '*';
+					updatePos(entity, guard_x_pos + 1, guard_y_pos);
+				}
+				else
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos+1][y_pos] = entity;
+					updatePos(entity,x_pos + 1,y_pos);
+				}
+
+
 				return true;
 			}
 			break;
 		case 'd':
-			if(checkCell(x_pos,y_pos + 1))
+			if(checkCell(entity, x_pos,y_pos + 1, level))
 			{
-				structure[x_pos][y_pos] = ' ';
-				structure[x_pos][y_pos + 1] = entity;
-				updatePos(entity,x_pos,y_pos + 1);	
+				if(x_pos == lever_x_pos && y_pos == lever_y_pos)
+				{
+					layout[x_pos][y_pos] = 'k';
+					layout[x_pos][y_pos + 1] = entity;
+					updatePos(entity,x_pos,y_pos + 1);	
+				}
+				else if((entity == 'O' || entity == '*') && x_pos == key_x_pos && y_pos + 1 == key_y_pos)
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos][y_pos + 1] = '$';
+					updatePos(entity,x_pos,y_pos + 1);	
+				}
+				else if(entity == 'H' && x_pos == key_x_pos && y_pos + 1 == key_y_pos)
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos][y_pos + 1] = 'K';
+					updatePos(entity,x_pos,y_pos + 1);	
+				}
+				else if(entity == '*')
+				{
+					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
+						layout[club_x_pos][club_y_pos] = 'O';
+					else
+						layout[club_x_pos][club_y_pos] = ' ';
+
+					layout[guard_x_pos][guard_y_pos + 1] = '*';
+					updatePos(entity, guard_x_pos, guard_y_pos + 1);
+				}
+				else
+				{
+					layout[x_pos][y_pos] = ' ';
+					layout[x_pos][y_pos + 1] = entity;
+					updatePos(entity,x_pos,y_pos + 1);
+				}
+
 				return true;
 			}
 			break;
@@ -160,14 +295,15 @@ public class Map {
 
 	public void printMap()
 	{
-		for(int i = 0; i < structure.length; i++)
+		for(int i = 0; i < layout.length; i++)
 		{
-			for(int j = 0; j < structure[i].length; j++)
+			for(int j = 0; j < layout[i].length; j++)
 			{
-				System.out.print(structure[i][j] + " ");
+				System.out.print(layout[i][j] + " ");
 			}
 
 			System.out.print('\n');
 		}
 	}
 }
+
