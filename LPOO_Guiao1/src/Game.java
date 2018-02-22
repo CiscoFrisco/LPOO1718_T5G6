@@ -101,8 +101,9 @@ public class Game {
 
 			if(scanMove(movement, map, level))
 			{	
-				if(moveGuard(level, map));
-					setClub(map,level);
+				if(moveGuard(level, map))
+					if(level == 2)
+						setClub(map,level);
 
 				map.printMap();
 
@@ -153,15 +154,15 @@ public class Game {
 		Map gamemap_1 = new Map(level1, 1, 1, 1, 8, 8, 7, -1, -1);
 		Map gamemap_2 = new Map(level2, 8, 1, 1, 5, -1, -1, 1, 8);
 		
-		//gamemap_1.printMap();
+		gamemap_1.printMap();
 
-		//printInstructions();
+		printInstructions();
 
 
 		Scanner s = new Scanner(System.in);
 
-		//if(gameplay(1, gamemap_1, s) == 1)
-		//	return;
+		if(gameplay(1, gamemap_1, s) == 1)
+			return;
 
 		gamemap_2.club_x_pos = 1;
 		gamemap_2.club_y_pos = 5;

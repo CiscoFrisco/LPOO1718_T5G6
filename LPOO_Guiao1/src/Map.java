@@ -153,13 +153,13 @@ public class Map {
 					layout[x_pos - 1][y_pos] = 'K';
 					updatePos(entity,x_pos - 1,y_pos);
 				}
-				else if(entity == 'O' && (layout[x_pos - 1][y_pos] == 'k' ||layout[x_pos - 1][y_pos] == '$'))
+				else if(entity == 'O' && (layout[x_pos - 1][y_pos] == 'k' ||layout[x_pos - 1][y_pos] == '$') && level == 2)
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos - 1][y_pos] = '$';
 					updatePos(entity,x_pos - 1,y_pos);
 				}
-				else if(entity == '*')
+				else if(entity == '*' && level == 2)
 				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
@@ -167,7 +167,7 @@ public class Map {
 							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
-						
+
 						if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
 							layout[guard_x_pos - 1][guard_y_pos] = '$';
 						else
@@ -176,7 +176,10 @@ public class Map {
 					else
 					{
 						if(layout[club_x_pos][club_y_pos] == '$')
+						{
 							layout[club_x_pos][club_y_pos] = '$';
+							layout[guard_x_pos - 1][guard_y_pos] = '*';
+						}
 						else if(layout[guard_x_pos - 1][guard_y_pos]  == 'k')
 						{
 							layout[guard_x_pos - 1][guard_y_pos] = '$';
@@ -203,21 +206,21 @@ public class Map {
 		case 'a':
 			if(checkCell(entity, x_pos,y_pos - 1, level))
 			{
-				if(entity == 'O' && layout[x_pos][y_pos] == '$')
+				if(entity == 'O' && layout[x_pos][y_pos] == '$' && level == 2)
 				{
 					layout[x_pos][y_pos] = 'k';
 					layout[x_pos][y_pos -1] = entity;
 					updatePos(entity,x_pos,y_pos - 1);	
 				}
-				else if(entity == '*')
+				else if(entity == '*' && level == 2)
 				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
-							layout[club_x_pos][club_y_pos] = 'k';
+							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
-						
+
 						if(layout[guard_x_pos][guard_y_pos - 1]  == 'k')
 							layout[guard_x_pos][guard_y_pos - 1] = '$';
 						else
@@ -262,21 +265,21 @@ public class Map {
 		case 's':
 			if(checkCell(entity, x_pos + 1,y_pos, level))
 			{	
-				if(entity == 'O' && layout[x_pos][y_pos] == '$')
+				if(entity == 'O' && layout[x_pos][y_pos] == '$' && level == 2)
 				{
 					layout[x_pos][y_pos] = 'k';
 					layout[x_pos+1][y_pos] = entity;
 					updatePos(entity,x_pos+1,y_pos);	
 				}
-				else if(entity == '*')
+				else if(entity == '*' && level == 2)
 				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
 						if(layout[guard_x_pos][guard_y_pos] == '$')
-							layout[club_x_pos][club_y_pos] = 'k';
+							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
-						
+
 						if(layout[guard_x_pos + 1][guard_y_pos]  == 'k')
 							layout[guard_x_pos + 1][guard_y_pos] = '$';
 						else
@@ -321,7 +324,7 @@ public class Map {
 					layout[x_pos][y_pos + 1] = entity;
 					updatePos(entity,x_pos,y_pos + 1);	
 				}
-				else if(entity == 'O' && (layout[x_pos][y_pos + 1] == 'k' || layout[x_pos][y_pos + 1] == '$'))
+				else if(entity == 'O' && (layout[x_pos][y_pos + 1] == 'k' || layout[x_pos][y_pos + 1] == '$') && level == 2)
 				{
 					layout[x_pos][y_pos] = ' ';
 					layout[x_pos][y_pos + 1] = '$';
@@ -333,7 +336,7 @@ public class Map {
 					layout[x_pos][y_pos + 1] = 'K';
 					updatePos(entity,x_pos,y_pos + 1);	
 				}
-				else if(entity == '*')
+				else if(entity == '*' && level ==2)
 				{					
 					if(club_x_pos == guard_x_pos && club_y_pos == guard_y_pos)
 					{
@@ -341,7 +344,7 @@ public class Map {
 							layout[club_x_pos][club_y_pos] = '$';
 						else
 							layout[club_x_pos][club_y_pos] = 'O';
-						
+
 						if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
 							layout[guard_x_pos][guard_y_pos + 1] = '$';
 						else
@@ -352,7 +355,8 @@ public class Map {
 					{
 						if(layout[club_x_pos][club_y_pos] == '$')
 						{
-							layout[club_x_pos][club_y_pos] = '$';
+							layout[club_x_pos][club_y_pos] = 'k';
+							layout[guard_x_pos][guard_y_pos + 1] = '*';
 						}
 						else if(layout[guard_x_pos][guard_y_pos + 1]  == 'k')
 						{
