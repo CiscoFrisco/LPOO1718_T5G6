@@ -5,9 +5,9 @@ public class Ogre extends Entity{
 	public Club club;
 	private boolean onKey;
 	
-	public Ogre(int x_pos, int y_pos, Club club)
+	public Ogre(int x_pos, int y_pos, Club club, char rep)
 	{
-		super(x_pos, y_pos);
+		super(x_pos, y_pos, rep);
 		this.club = club;
 		onKey = false;
 	}

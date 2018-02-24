@@ -60,13 +60,13 @@ public class Game {
 
 	public static void main(String[] args) {
 
-		Hero hero = new Hero(1,1);
-		Hero hero2 = new Hero(8,1);
-		Guard guard = new Guard(1,8);
-		Club club = new Club(1,6);
-		Ogre ogre = new Ogre(1,5, club);
-		Key key = new Key(1,8);
-		Lever lever = new Lever(8,7);
+		Hero hero = new Hero(1,1,'H');
+		Hero hero2 = new Hero(8,1, 'H');
+		Guard guard = new SuspiciousGuard(1,8,'G');
+		Club club = new Club(1,6,'*');
+		Ogre ogre = new Ogre(1,5, club,'O');
+		Key key = new Key(1,8,'k');
+		Lever lever = new Lever(8,7,'k');
 
 		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 

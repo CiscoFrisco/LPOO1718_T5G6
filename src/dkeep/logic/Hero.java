@@ -5,9 +5,9 @@ public class Hero extends Entity{
 	private boolean onLever;
 	private boolean hasKey;
 	
-	public Hero(int x_pos, int y_pos)
+	public Hero(int x_pos, int y_pos, char rep)
 	{
-		super(x_pos, y_pos);
+		super(x_pos, y_pos, rep);
 		onLever = false;
 		hasKey = false;
 	}

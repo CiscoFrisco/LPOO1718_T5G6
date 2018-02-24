@@ -4,9 +4,9 @@ public class Club extends Entity {
 	
 	public boolean onKey;
 	
-	public Club(int x_pos, int y_pos)
+	public Club(int x_pos, int y_pos, char rep)
 	{
-		super(x_pos, y_pos);
+		super(x_pos, y_pos, rep);
 		onKey = false;
 	}
 	

@@ -4,11 +4,18 @@ public abstract class Entity {
 
 	protected int x_pos;
 	protected int y_pos;
+	protected char representation;
 
-	public Entity(int x_pos, int y_pos)
+	public Entity(int x_pos, int y_pos, char representation)
 	{
 		this.x_pos = x_pos;
 		this.y_pos = y_pos;
+		this.representation = representation;
+	}
+	
+	public void setRepresentation(char r)
+	{
+		representation = r;
 	}
 	
 	public int x_pos()

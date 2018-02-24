@@ -85,72 +85,78 @@ public class GameState {
 		{
 			if(hero.lever())
 			{
-				pos1 = 'H';
+				pos1 = entity.representation;
 				pos2 = ' ';
 				map.updateDoors(hero.lever());
 			}
 			else if(hero.x_pos == lever.x_pos && hero.y_pos == lever.y_pos && level == 1)
 			{
-				pos1 = 'H';
-				pos2 = 'k';
+				pos1 = entity.representation;
+				pos2 = lever.representation;
 			}
 			else if(hero.key())
 			{
+				entity.setRepresentation('K');
 				if(map.pos(x_pos, y_pos)=='I')
 				{
 					pos1 = 'S';
-					pos2 = 'K';
+					pos2 = entity.representation;
 				}
 				else {
-					pos1 = 'K';
+					pos1 = entity.representation;
 					pos2 = ' ';
 				}
 
 			}
 			else
 			{
-				pos1 = 'H';
+				pos1 = entity.representation;
 				pos2 = ' ';
 			}
 		}
 		else if(entity.equals(ogre))
 		{
-			if(ogre.key())
+			if(ogre.key() && !hero.key())
 			{
-				pos1 = '$';
+				entity.setRepresentation('$');
+				pos1 = entity.representation;
 				pos2 = ' ';
 			}
-			else if(ogre.x_pos == key.x_pos && ogre.y_pos == key.y_pos)
+			else if(ogre.x_pos == key.x_pos && ogre.y_pos == key.y_pos && !hero.key())
 			{
-				pos1 = 'O';
-				pos2 = 'k';
+				entity.setRepresentation('O');
+				pos1 = entity.representation;
+				pos2 = key.representation;
 			}
 			else {
-				pos1 = 'O';
+				pos1 = entity.representation;
 				pos2 = ' ';
 			}
 		}
 		else if(entity.equals(guard))
 		{
-			pos1 = 'G';
+			pos1 = entity.representation;
 			pos2 = ' ';
 		}
 		else
 		{
-			if(ogre.club().key())
+			if(ogre.club().key() && !hero.key())
 			{
-				pos1 = '$';
-				pos2 = 'O';
+				entity.setRepresentation('$');
+				pos1 = entity.representation;
+				pos2 = ogre.representation;
 			}
-			else if(ogre.x_pos == key.x_pos && ogre.y_pos == key.y_pos)
+			else if(ogre.x_pos == key.x_pos && ogre.y_pos == key.y_pos && !hero.key())
 			{
-				pos1 = '*';
-				pos2 = '$';
+				entity.setRepresentation('*');
+				pos1 = entity.representation;
+				ogre.setRepresentation('$');
+				pos2 = ogre.representation;
 			}
 			else
 			{
-				pos1 = '*';
-				pos2 = 'O';
+				pos1 = entity.representation;
+				pos2 = ogre.representation;
 			}
 		}
 
@@ -314,7 +320,10 @@ public class GameState {
 			if(issueMov(guardMovement, ogre))
 			{	
 				if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
+				{
 					map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
+					ogre.club().setRepresentation('*');
+				}
 				else
 					map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
 

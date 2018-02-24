@@ -4,9 +4,9 @@ public class DrunkenGuard extends Guard{
 
 	boolean asleep = false;
 	
-	public DrunkenGuard(int x_pos, int y_pos)
+	public DrunkenGuard(int x_pos, int y_pos, char rep)
 	{
-		super(x_pos, y_pos);
+		super(x_pos, y_pos, rep);
 	}
 	
 	public void move()
@@ -18,5 +18,10 @@ public class DrunkenGuard extends Guard{
 			else
 				guard_movement++;
 		}
+	}
+	
+	public char getMove()
+	{	
+		return guard_route[guard_movement];
 	}
 }
