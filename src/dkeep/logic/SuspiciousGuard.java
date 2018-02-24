@@ -4,9 +4,7 @@ import java.util.Random;
 
 public class SuspiciousGuard extends Guard {
 
-	protected char[] guard_route_reversed = {'s','d','w','w','w','w','d','d','d','d','d','d','w','a','a','a','a','a','a','a','s','s','s','s'};
-
-	boolean reverse = false;
+	private boolean reverse = false;
 
 	public SuspiciousGuard(int x_pos, int y_pos, char rep)
 	{
@@ -78,5 +76,10 @@ public class SuspiciousGuard extends Guard {
 			reverse = true;
 		else
 			reverse = false;
+	}
+	
+	public boolean status()
+	{
+		return false;
 	}
 }

@@ -13,4 +13,6 @@ public abstract class Guard extends Entity{
 	abstract void move();
 
 	abstract char getMove();
+	
+	abstract boolean status();
 }

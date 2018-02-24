@@ -1,7 +1,7 @@
 package dkeep.cli;
 import java.util.Scanner;
 import dkeep.logic.*;
-
+import java.util.Random;
 
 public class Game {
 
@@ -37,7 +37,7 @@ public class Game {
 						state.setClub();
 
 				state.printMap();
-				
+
 				System.out.print("Insert your move: ");
 
 				if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub() || state.checkOgre())))	
@@ -58,11 +58,35 @@ public class Game {
 		System.out.println("Use WASD to move the character!" );
 	}
 
+	public static Guard generateGuard()
+	{
+		Random number = new Random();
+		int generated = number.nextInt(3);
+		Guard guard = null;
+
+		switch(generated)
+		{
+		case 0:
+			guard = new RookieGuard(1,8,'G');
+			break;
+		case 1:
+			guard = new DrunkenGuard(1,8,'G');
+			break;
+		case 2:
+			guard = new SuspiciousGuard(1,8,'G');
+			break;
+		default:
+			break;	
+		}
+
+		return guard;
+	}
+
 	public static void main(String[] args) {
 
 		Hero hero = new Hero(1,1,'H');
-		Hero hero2 = new Hero(8,1, 'H');
-		Guard guard = new SuspiciousGuard(1,8,'G');
+		Hero hero2 = new Hero(8,1, 'A');
+		Guard guard = generateGuard();
 		Club club = new Club(1,6,'*');
 		Ogre ogre = new Ogre(1,5, club,'O');
 		Key key = new Key(1,8,'k');

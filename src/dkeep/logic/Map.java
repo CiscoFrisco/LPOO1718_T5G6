@@ -39,6 +39,11 @@ public class Map {
 		layout[new_x_pos][new_y_pos] = pos1;
 		layout[entity.x_pos][entity.y_pos] = pos2;
 	}
+	
+	public void updatePos(int x_pos, int y_pos, Entity entity)
+	{
+		layout[x_pos][y_pos] = entity.representation;
+	}
 
 	public void printMap()
 	{

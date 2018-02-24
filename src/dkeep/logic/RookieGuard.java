@@ -19,4 +19,9 @@ public class RookieGuard extends Guard{
 	{	
 		return guard_route[guard_movement];
 	}
+	
+	public boolean status()
+	{
+		return false;
+	}
 }

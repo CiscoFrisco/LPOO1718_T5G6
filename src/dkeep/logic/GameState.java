@@ -1,6 +1,7 @@
 package dkeep.logic;
 
 import java.util.Random;
+import java.util.Vector;
 
 public class GameState {
 
@@ -13,6 +14,7 @@ public class GameState {
 	private int level;
 	private boolean game_over;
 	private boolean escaped;
+	//private Vector<Ogre> ogres;
 
 	public GameState(Map map, Hero hero, Guard guard, Ogre ogre, Lever lever, Key key)
 	{
@@ -54,6 +56,9 @@ public class GameState {
 		case 's':
 			x_pos++;
 			break;
+		case 'u':
+			map.updatePos(entity.x_pos, entity.y_pos, entity);
+			return true;
 		default:
 			break;
 		}
@@ -191,7 +196,7 @@ public class GameState {
 		boolean cond3 = Math.abs(hero.y_pos()-guard.y_pos())<=1;
 		boolean cond4 = hero.x_pos() == guard.x_pos();
 
-		if(( cond1 && cond2) || (cond3 && cond4))
+		if((( cond1 && cond2) || (cond3 && cond4)) && !guard.status())
 			return true;
 		else if (hero.x_pos() == guard.x_pos() && hero.y_pos() == guard.y_pos())
 			return true;
