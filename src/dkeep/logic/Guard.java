@@ -2,12 +2,18 @@ package dkeep.logic;
 
 public class Guard extends Entity{
 
-	private static char[] guard_route = {'a','s','s','s','s','a','a','a','a','a','a','s','d','d','d','d','d','d','d','w','w','w','w','w'};
-	private static int guard_movement = 0;
+	protected char[] guard_route = {'a','s','s','s','s','a','a','a','a','a','a','s','d','d','d','d','d','d','d','w','w','w','w','w'};
+	protected int guard_movement = 0;
+	protected char representation = 'G';
 
 	public Guard(int x_pos, int y_pos)
 	{
 		super(x_pos, y_pos);
+	}
+	
+	public void setRepresentation(char r)
+	{
+		representation = r;
 	}
 
 	public void move()
