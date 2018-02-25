@@ -4,12 +4,15 @@ public class Ogre extends Entity{
 	
 	public Club club;
 	private boolean onKey;
+	private boolean stunned;
+	private int stunCounter;
 	
-	public Ogre(int x_pos, int y_pos, Club club, char rep)
+	public Ogre(int x_pos, int y_pos, char rep)
 	{
 		super(x_pos, y_pos, rep);
-		this.club = club;
 		onKey = false;
+		stunned = false;
+		stunCounter = 0;
 	}
 	
 	public Club club()
@@ -20,6 +23,16 @@ public class Ogre extends Entity{
 	public boolean key()
 	{
 		return onKey;
+	}
+	
+	public void setStun()
+	{
+		stunned = !stunned;
+	}
+	
+	public boolean stunned()
+	{
+		return stunned;
 	}
 	
 	public void setKey()

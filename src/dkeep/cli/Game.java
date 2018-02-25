@@ -1,5 +1,7 @@
 package dkeep.cli;
 import java.util.Scanner;
+import java.util.Vector;
+
 import dkeep.logic.*;
 import java.util.Random;
 
@@ -82,13 +84,36 @@ public class Game {
 		return guard;
 	}
 
+	public static Vector<Ogre> generateOgres()
+	{
+		Vector<Ogre> ogres;
+		Random random = new Random();
+		int number = random.nextInt(3) + 1;
+		int x_pos = 10, y_pos = 0;
+		
+		for(int i = 0; i<number;i++)
+		{	
+			//Ogres nao podem começar perto do hero
+			while(x_pos>=5 && y_pos<=5)
+			{
+				x_pos = random.nextInt(8) + 1;
+				y_pos = random.nextInt(8) + 1;
+			}
+
+			Ogre ogre = new Ogre(x_pos, y_pos,'O');
+			ogres.add(ogre);
+		}
+
+		return ogres;
+	}
+
 	public static void main(String[] args) {
 
 		Hero hero = new Hero(1,1,'H');
 		Hero hero2 = new Hero(8,1, 'A');
-		Guard guard = generateGuard();
-		Club club = new Club(1,6,'*');
-		Ogre ogre = new Ogre(1,5, club,'O');
+		Guard guard = new DrunkenGuard(1,8,'G');//generateGuard();
+		//Club club = new Club(1,6,'*');
+		Vector<Ogre> ogres = generateOgres();
 		Key key = new Key(1,8,'k');
 		Lever lever = new Lever(8,7,'k');
 
@@ -117,7 +142,7 @@ public class Game {
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);
-		GameState state = new GameState(map, hero, guard, ogre, lever, key);
+		GameState state = new GameState(map, hero, guard, ogres, lever, key);
 
 		printInstructions();
 
