@@ -397,21 +397,22 @@ public class GameState {
 				char movement = generateMovement();
 
 				issueMov(movement, ogre);
-
-				if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
-				{
-					map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
-					ogre.club().setRepresentation('*');
-				}
-				else
-					map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
-
-				ogre.club().resetKey();
-				ogre.club().x_pos = ogre.x_pos;
-				ogre.club().y_pos = ogre.y_pos;	
 			}
+
+			if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
+			{
+				map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
+				ogre.club().setRepresentation('*');
+			}
+			else
+				map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
+
+			ogre.club().resetKey();
+			ogre.club().x_pos = ogre.x_pos;
+			ogre.club().y_pos = ogre.y_pos;	
 		}
 	}
+
 
 	public void checkStun()
 	{
