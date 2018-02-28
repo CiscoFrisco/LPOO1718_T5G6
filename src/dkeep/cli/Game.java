@@ -24,7 +24,9 @@ public class Game {
 	public static int gameplay(int level, GameState state, Scanner s)
 	{
 		char movement = 'u';
-
+		
+		if(level == 1) return 0;
+		
 		while(!state.escaped())
 		{
 			movement = s.next().charAt(0);
@@ -37,18 +39,8 @@ public class Game {
 					state.moveGuard();
 				else
 				{
-					state.checkStun();
-					
-					if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub())))	
-					{
-						state.printMap();
-						System.out.println("Game Over!");
-						return 1;
-					}
-					
 					state.moveOgres();
 					state.armOgres();
-					
 					state.checkStun();
 				}						
 
@@ -143,7 +135,7 @@ public class Game {
 		System.out.print("Insert your move: ");
 
 		Scanner s = new Scanner(System.in);
-
+		
 		if(gameplay(1, state, s) == 0) // if he goes through to the second level
 			state.changeLevel(map2, hero2);
 		else //if he dies 

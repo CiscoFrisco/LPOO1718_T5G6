@@ -393,7 +393,7 @@ public class GameState {
 		for(Ogre ogre : ogres)
 		{
 			if(!ogre.stunned())
-			{
+			{	
 				char movement = generateMovement();
 
 				issueMov(movement, ogre);
@@ -418,8 +418,10 @@ public class GameState {
 		for(Ogre ogre : ogres)
 		{
 			if(ogre.stunned())
-				if(!ogre.stillStunned())
+			{
+				if(!ogre.updateStun())
 					map.updatePos(ogre.x_pos, ogre.y_pos, ogre);
+			}
 			else if(checkOgre(ogre))
 			{
 				ogre.setStun();

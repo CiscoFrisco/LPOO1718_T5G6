@@ -28,8 +28,15 @@ public class Ogre extends Entity{
 	
 	public void setStun()
 	{
-		stunned = !stunned;
+		stunned = true;
 		representation = '8';
+	}
+	
+	public void unStun()
+	{
+		stunned = false;
+		stunCounter=0;
+		representation = 'O';
 	}
 	
 	public boolean stunned()
@@ -48,7 +55,7 @@ public class Ogre extends Entity{
 		this.y_pos = y_pos;
 	}
 	
-	public boolean stillStunned()
+	public boolean updateStun()
 	{
 		if(stunCounter<2)
 		{
@@ -57,9 +64,7 @@ public class Ogre extends Entity{
 		}
 		else
 		{
-			stunCounter = 0;
-			stunned = false;
-			representation = 'O';
+			unStun();
 			return false;
 		}
 	}
