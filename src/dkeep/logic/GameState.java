@@ -266,11 +266,13 @@ public class GameState {
 					escaped = true;
 				break;			
 			case 2:
-				if(map.pos(x_pos, y_pos) == 'k')
+				if(map.pos(x_pos, y_pos) == 'k') //se o heroi se mover para a chave
 					hero.setKey();
-				else if(map.pos(x_pos, y_pos) == 'S')
+				else if(map.pos(x_pos, y_pos) == 'S') //se o heroi se mover para a porta de saida
 					escaped = true;
-				else if(map.pos(x_pos, y_pos) == 'I' && !hero.key())
+				else if(map.pos(x_pos, y_pos) == 'I' && !hero.key()) // se o heroi se tentar mover para a porta de saida mas esta está fechada 
+					return false;
+				else if( map.pos(x_pos, y_pos) == '8' || map.pos(x_pos, y_pos) == 'O' || map.pos(x_pos, y_pos) == '$') // se o heroi se tentar mover para uma posição ja ocupada por um ogre
 					return false;
 				break;
 			default:
@@ -285,7 +287,7 @@ public class GameState {
 				{
 					if(map.pos(x_pos, y_pos) == 'k' || ogre.key())
 						ogre.setKey();
-					else if(map.pos(x_pos, y_pos) == 'S' || map.pos(x_pos, y_pos) == 'I')
+					else if(map.pos(x_pos, y_pos) == 'S' || map.pos(x_pos, y_pos) == 'I' || map.pos(x_pos, y_pos) == map.pos(hero.x_pos, hero.y_pos))
 						return false;
 
 					break;
