@@ -1,6 +1,5 @@
 package dkeep.cli;
 import java.util.Scanner;
-import java.util.Vector;
 
 import dkeep.logic.*;
 import java.util.Random;
@@ -34,19 +33,34 @@ public class Game {
 
 			if(scanMove(movement, state, state.hero()))
 			{	
-				if(state.moveGuard())
-					if(level == 2)
-						state.setClub();
+				if(level == 1)
+					state.moveGuard();
+				else
+				{
+					state.checkStun();
+					
+					if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub())))	
+					{
+						state.printMap();
+						System.out.println("Game Over!");
+						return 1;
+					}
+					
+					state.moveOgres();
+					state.armOgres();
+					
+					state.checkStun();
+				}						
 
 				state.printMap();
 
 				System.out.print("Insert your move: ");
 
-				if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub() || state.checkOgre())))	
+				if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub())))	
 				{
 					System.out.println("Game Over!");
 					return 1;
-				}	
+				}
 			}
 		}
 
@@ -84,36 +98,14 @@ public class Game {
 		return guard;
 	}
 
-	public static Vector<Ogre> generateOgres()
-	{
-		Vector<Ogre> ogres;
-		Random random = new Random();
-		int number = random.nextInt(3) + 1;
-		int x_pos = 10, y_pos = 0;
-		
-		for(int i = 0; i<number;i++)
-		{	
-			//Ogres nao podem começar perto do hero
-			while(x_pos>=5 && y_pos<=5)
-			{
-				x_pos = random.nextInt(8) + 1;
-				y_pos = random.nextInt(8) + 1;
-			}
-
-			Ogre ogre = new Ogre(x_pos, y_pos,'O');
-			ogres.add(ogre);
-		}
-
-		return ogres;
-	}
+	
 
 	public static void main(String[] args) {
 
 		Hero hero = new Hero(1,1,'H');
 		Hero hero2 = new Hero(8,1, 'A');
-		Guard guard = new DrunkenGuard(1,8,'G');//generateGuard();
+		Guard guard = generateGuard();
 		//Club club = new Club(1,6,'*');
-		Vector<Ogre> ogres = generateOgres();
 		Key key = new Key(1,8,'k');
 		Lever lever = new Lever(8,7,'k');
 
@@ -129,21 +121,21 @@ public class Game {
 				{'X','X','X','X','X','X','X','X','X','X'}};
 
 		char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-				{'I',' ',' ',' ',' ','O','*',' ','k','X'} , 
+				{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X','H',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X','X','X','X','X','X','X','X','X','X'}};
 
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);
-		GameState state = new GameState(map, hero, guard, ogres, lever, key);
-
+		GameState state = new GameState(map, hero, guard, lever, key);
+		//state.armOgres();
 		printInstructions();
 
 

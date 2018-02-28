@@ -1,7 +1,7 @@
 package dkeep.logic;
 
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class GameState {
 
@@ -13,16 +13,15 @@ public class GameState {
 	private int level;
 	private boolean game_over;
 	private boolean escaped;
-	private Vector<Ogre> ogres;
+	private ArrayList<Ogre> ogres;
 
-	public GameState(Map map, Hero hero, Guard guard, Vector<Ogre> ogres, Lever lever, Key key)
+	public GameState(Map map, Hero hero, Guard guard, Lever lever, Key key)
 	{
 		this.map = map;
 		this.hero = hero;
 		this.guard = guard;
 		this.lever = lever;
 		this.key = key;
-		this.ogres = ogres;
 		game_over = false;
 		escaped = false;
 		level = 1;
@@ -35,6 +34,8 @@ public class GameState {
 		this.hero = hero;
 		escaped = false;
 		game_over = false;
+		generateOgres();
+		armOgres();
 	}
 
 	public boolean issueMov(char movement, Entity entity)
@@ -140,7 +141,7 @@ public class GameState {
 						pos1 = entity.representation;
 						pos2 = ' ';
 					}
-					
+
 					break;
 				}
 			}
@@ -154,7 +155,7 @@ public class GameState {
 		{
 			for(Ogre ogre : ogres)
 			{
-				if(ogre.equals(entity))
+				if(ogre.club.equals(entity))
 				{
 					if(ogre.club().key() && !hero.key())
 					{
@@ -174,7 +175,7 @@ public class GameState {
 						pos1 = entity.representation;
 						pos2 = ogre.representation;
 					}
-					
+
 					break;
 				}
 			}
@@ -236,22 +237,17 @@ public class GameState {
 		return false;
 	}
 
-	public boolean checkOgre()
+	public boolean checkOgre(Ogre ogre)
 	{		
-		for(Ogre ogre : ogres)
-		{
-			boolean cond1 = Math.abs(hero.x_pos()-ogre.x_pos())<=1;
-			boolean cond2 = hero.y_pos() == ogre.y_pos();
-			boolean cond3 = Math.abs(hero.y_pos()-ogre.y_pos())<=1;
-			boolean cond4 = hero.x_pos() == ogre.x_pos();
+		boolean cond1 = Math.abs(hero.x_pos()-ogre.x_pos())<=1;
+		boolean cond2 = hero.y_pos() == ogre.y_pos();
+		boolean cond3 = Math.abs(hero.y_pos()-ogre.y_pos())<=1;
+		boolean cond4 = hero.x_pos() == ogre.x_pos();
 
-			if((cond1 && cond2) || (cond3 && cond4))
-				return true;
-			else if (hero.x_pos() == ogre.x_pos() && hero.y_pos() == ogre.y_pos())
-				return true;
-		}
-
-		return false;
+		if((cond1 && cond2) || (cond3 && cond4))
+			return true;
+		else 
+			return false;
 	}
 
 	public boolean checkCell(int x_pos, int y_pos, Entity entity)
@@ -274,6 +270,8 @@ public class GameState {
 					hero.setKey();
 				else if(map.pos(x_pos, y_pos) == 'S')
 					escaped = true;
+				else if(map.pos(x_pos, y_pos) == 'I' && !hero.key())
+					return false;
 				break;
 			default:
 				break;
@@ -294,6 +292,10 @@ public class GameState {
 				}
 			}
 		}
+		else if(entity.equals(guard))
+		{
+			return true;
+		}
 		else
 		{
 			for(Ogre ogre : ogres)
@@ -302,7 +304,7 @@ public class GameState {
 				{
 					if(map.pos(x_pos, y_pos) == 'k' || ogre.club().key())
 						ogre.club().setKey();
-					else if(map.pos(x_pos, y_pos) == 'S' || map.pos(x_pos, y_pos) == 'I')
+					else if(map.pos(x_pos, y_pos) == 'S' || map.pos(x_pos, y_pos) == 'I' || map.pos(x_pos, y_pos) == 'O')
 						return false;
 
 					break;
@@ -340,7 +342,7 @@ public class GameState {
 		return movement;
 	}
 
-	public void setClub()
+	public void setClub(Ogre ogre)
 	{
 		char clubSwing = generateMovement();
 
@@ -348,12 +350,41 @@ public class GameState {
 		{clubSwing = generateMovement();};
 	}
 
+	public void generateOgres()
+	{
+		Random random = new Random();
+		int number = random.nextInt(3) + 1;
+		int x_pos = 10, y_pos = 0;
+		ogres = new ArrayList<Ogre>(number);
+		System.out.println(number);
+		for(int i = 0; i<number;i++)
+		{	
+			//Ogres nao podem comecar perto do hero
+			while(x_pos>=5 && y_pos<=5)
+			{
+				x_pos = random.nextInt(8) + 1;
+				y_pos = random.nextInt(8) + 1;
+			}
+
+			Ogre ogre = new Ogre(x_pos, y_pos,'O');
+			ogres.add(ogre);
+
+			x_pos = 10;
+			y_pos = 0;
+		}
+
+		for(Ogre ogre : ogres)
+		{
+			map.updatePos(ogre.x_pos, ogre.y_pos, ogre);
+		}
+	}
+
 	//da clubs aos ogres antes do jogo comecar
 	public void armOgres()
 	{
 		for(Ogre ogre : ogres)
 		{
-			
+			setClub(ogre);
 		}
 	}
 
@@ -361,10 +392,12 @@ public class GameState {
 	{
 		for(Ogre ogre : ogres)
 		{
-			char movement = generateMovement();
+			if(!ogre.stunned())
+			{
+				char movement = generateMovement();
 
-			if(issueMov(movement, ogre))
-			{	
+				issueMov(movement, ogre);
+
 				if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
 				{
 					map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
@@ -373,8 +406,24 @@ public class GameState {
 				else
 					map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
 
+				ogre.club().resetKey();
 				ogre.club().x_pos = ogre.x_pos;
-				ogre.club().y_pos = ogre.y_pos;
+				ogre.club().y_pos = ogre.y_pos;	
+			}
+		}
+	}
+
+	public void checkStun()
+	{
+		for(Ogre ogre : ogres)
+		{
+			if(ogre.stunned())
+				if(!ogre.stillStunned())
+					map.updatePos(ogre.x_pos, ogre.y_pos, ogre);
+			else if(checkOgre(ogre))
+			{
+				ogre.setStun();
+				map.updatePos(ogre.x_pos, ogre.y_pos, ogre);
 			}
 		}
 	}

@@ -19,4 +19,9 @@ public class Club extends Entity {
 	{
 		onKey = !onKey;
 	}
+	
+	public void resetKey()
+	{
+		onKey = false;
+	}
 }
