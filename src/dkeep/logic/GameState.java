@@ -14,28 +14,109 @@ public class GameState {
 	private boolean game_over;
 	private boolean escaped;
 	private ArrayList<Ogre> ogres;
+	private ArrayList<ExitDoor> exitDoors;
 
-	public GameState(Map map, Hero hero, Guard guard, Lever lever, Key key)
+	public GameState(Map map, int level)
 	{
 		this.map = map;
-		this.hero = hero;
-		this.guard = guard;
-		this.lever = lever;
-		this.key = key;
 		game_over = false;
 		escaped = false;
-		level = 1;
+		this.level = level;
+		initLevel();
+	}
+	
+	public ArrayList<Ogre> ogres()
+	{
+		return ogres;
 	}
 
-	public void changeLevel(Map map, Hero hero)
+	public void initLevel()
+	{
+		switch(level)
+		{
+		case 1:
+			initDungeon();
+			break;
+		case 2:
+			initKeep();
+			break;
+		default:
+			break;	
+		}
+	}
+
+	public Guard generateGuard(int x_pos, int y_pos)
+	{
+		Random number = new Random();
+		int generated = number.nextInt(3);
+		Guard guard = null;
+
+		switch(generated)
+		{
+		case 0:
+			guard = new RookieGuard(x_pos,y_pos,'G');
+			break;
+		case 1:
+			guard = new DrunkenGuard(x_pos,y_pos,'G');
+			break;
+		case 2:
+			guard = new SuspiciousGuard(x_pos,y_pos,'G');
+			break;
+		default:
+			break;	
+		}
+
+		return guard;
+	}
+
+	public void initDungeon()
+	{
+		exitDoors = new ArrayList<ExitDoor>();
+
+		for(int i = 0;i<map.layout().length;i++)
+			for(int j = 0;j<map.layout()[i].length;j++)
+			{
+				char rep = map.layout()[i][j];
+				if(rep == 'H')
+					hero = new Hero(i,j,'H');
+				else if(rep == 'G')
+					guard = generateGuard(i,j);
+				else if(rep == 'k')
+					lever = new Lever(i,j,'k');
+				else if(rep == 'I' && (i == 0 || j == 0))
+					exitDoors.add(new ExitDoor(i,j,'I'));
+			}
+	}
+
+	public void initKeep()
+	{
+		exitDoors = new ArrayList<ExitDoor>();
+		
+		generateOgres();
+		armOgres();
+		
+		for(int i = 0;i<map.layout().length;i++)
+			for(int j = 0;j<map.layout()[i].length;j++)
+			{
+				char rep = map.layout()[i][j];
+				if(rep == 'H')
+					hero = new Hero(i,j,'H');
+				else if(rep == 'k')
+					key = new Key(i,j,'k');
+				else if(rep == 'I')
+					exitDoors.add(new ExitDoor(i,j,'I'));
+			}
+	}
+
+	public void changeLevel(Map map)
 	{
 		level++;
 		this.map = map;
-		this.hero = hero;
 		escaped = false;
 		game_over = false;
 		generateOgres();
 		armOgres();
+		initKeep();
 	}
 
 	public boolean issueMov(char movement, Entity entity)
@@ -92,9 +173,9 @@ public class GameState {
 			{
 				pos1 = entity.representation;
 				pos2 = ' ';
-				map.updateDoors(hero.lever());
+				map.updateDoors(hero.lever(), exitDoors);
 			}
-			else if(hero.x_pos == lever.x_pos && hero.y_pos == lever.y_pos && level == 1)
+			else if(level == 1 && hero.x_pos == lever.x_pos && hero.y_pos == lever.y_pos)
 			{
 				pos1 = entity.representation;
 				pos2 = lever.representation;
@@ -106,6 +187,7 @@ public class GameState {
 				{
 					pos1 = 'S';
 					pos2 = entity.representation;
+					map.updateDoors(hero.key(), exitDoors);
 				}
 				else {
 					pos1 = entity.representation;
@@ -204,6 +286,11 @@ public class GameState {
 		map.printMap();
 	}
 
+	public ArrayList<ExitDoor> exitDoors()
+	{
+		return exitDoors;
+	}
+
 
 	public boolean checkGuard()
 	{
@@ -213,9 +300,16 @@ public class GameState {
 		boolean cond4 = hero.x_pos() == guard.x_pos();
 
 		if((( cond1 && cond2) || (cond3 && cond4)) && !guard.status())
+		{
+			game_over = true;
 			return true;
+		}
 		else if (hero.x_pos() == guard.x_pos() && hero.y_pos() == guard.y_pos())
+		{
+			game_over = true;
 			return true;
+		}
+
 		return false;
 	}
 
@@ -260,7 +354,7 @@ public class GameState {
 			switch(level)
 			{
 			case 1:
-				if(map.pos(x_pos, y_pos) == 'k' || hero.lever())
+				if(map.pos(x_pos, y_pos) == 'k')
 					hero.setLever();	
 				else if(map.pos(x_pos, y_pos) == 'S')
 					escaped = true;
@@ -355,23 +449,24 @@ public class GameState {
 	public void generateOgres()
 	{
 		Random random = new Random();
-		int number = random.nextInt(3) + 1;
-		int x_pos = 10, y_pos = 0;
+		int number = 1; //random.nextInt(3) + 1;
+		int limit = map.layout().length/2;
+		int x_pos = limit + 1, y_pos = 0;
 		ogres = new ArrayList<Ogre>(number);
-		System.out.println(number);
+
 		for(int i = 0; i<number;i++)
 		{	
 			//Ogres nao podem comecar perto do hero
-			while(x_pos>=5 && y_pos<=5)
+			while(x_pos>=limit && y_pos<=limit)
 			{
-				x_pos = random.nextInt(8) + 1;
-				y_pos = random.nextInt(8) + 1;
+				x_pos = random.nextInt(limit+1) + 1;
+				y_pos = random.nextInt(limit+1) + 1;
 			}
 
 			Ogre ogre = new Ogre(x_pos, y_pos,'O');
 			ogres.add(ogre);
 
-			x_pos = 10;
+			x_pos = limit+1;
 			y_pos = 0;
 		}
 

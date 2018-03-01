@@ -1,4 +1,7 @@
 package dkeep.logic;
+
+import java.util.ArrayList;
+
 public class Map {
 
 	private char[][] layout;
@@ -6,6 +9,11 @@ public class Map {
 	public Map(char[][] layout)
 	{
 		this.layout = layout;
+	}
+	
+	public char[][] layout()
+	{
+		return layout;
 	}
 	
 	public char pos(int x_pos, int y_pos)
@@ -18,20 +26,21 @@ public class Map {
 		layout[x_pos][y_pos]=pos;
 	}
 	
-	public void updateDoors(boolean lever)
+	public void updateDoors(boolean lever, ArrayList<ExitDoor> exitDoors)
 	{
-		int door1_y_pos = 5;
-		int door2_y_pos = 6;
-		int door_x_pos = 0;
 		char new_char;
 
 		if(!lever)
 			new_char = 'I';
 		else
 			new_char = 'S';
-
-		layout[door1_y_pos][door_x_pos] = new_char;
-		layout[door2_y_pos][door_x_pos] = new_char;
+		
+		
+		for(ExitDoor exitDoor : exitDoors)
+		{	
+			exitDoor.setRepresentation(new_char);
+			updatePos(exitDoor.x_pos, exitDoor.y_pos, exitDoor);
+		}
 	}
 	
 	public void update(int new_x_pos, int new_y_pos, Entity entity, char pos1, char pos2)

@@ -1,8 +1,6 @@
 package dkeep.cli;
 import java.util.Scanner;
-
 import dkeep.logic.*;
-import java.util.Random;
 
 public class Game {
 
@@ -42,6 +40,7 @@ public class Game {
 					state.moveOgres();
 					state.armOgres();
 					state.checkStun();
+
 				}						
 
 				state.printMap();
@@ -66,41 +65,12 @@ public class Game {
 		System.out.println("Use WASD to move the character!" );
 	}
 
-	public static Guard generateGuard()
-	{
-		Random number = new Random();
-		int generated = number.nextInt(3);
-		Guard guard = null;
 
-		switch(generated)
-		{
-		case 0:
-			guard = new RookieGuard(1,8,'G');
-			break;
-		case 1:
-			guard = new DrunkenGuard(1,8,'G');
-			break;
-		case 2:
-			guard = new SuspiciousGuard(1,8,'G');
-			break;
-		default:
-			break;	
-		}
-
-		return guard;
-	}
 
 	
 
 	public static void main(String[] args) {
-
-		Hero hero = new Hero(1,1,'H');
-		Hero hero2 = new Hero(8,1, 'A');
-		Guard guard = generateGuard();
-		//Club club = new Club(1,6,'*');
-		Key key = new Key(1,8,'k');
-		Lever lever = new Lever(8,7,'k');
-
+		
 		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
 				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
@@ -126,18 +96,16 @@ public class Game {
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);
-		GameState state = new GameState(map, hero, guard, lever, key);
-		//state.armOgres();
+		GameState state = new GameState(map,1);
+		
 		printInstructions();
-
-
 		state.printMap();
 		System.out.print("Insert your move: ");
 
 		Scanner s = new Scanner(System.in);
 		
 		if(gameplay(1, state, s) == 0) // if he goes through to the second level
-			state.changeLevel(map2, hero2);
+			state.changeLevel(map2);
 		else //if he dies 
 		{
 			s.close();

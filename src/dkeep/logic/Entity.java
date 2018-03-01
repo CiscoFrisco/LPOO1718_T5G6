@@ -28,6 +28,11 @@ public abstract class Entity {
 		return y_pos;
 	}
 	
+	public char representation()
+	{
+		return representation;
+	}
+	
 	public void makeMov(int x_pos, int y_pos)
 	{
 		this.x_pos = x_pos;
