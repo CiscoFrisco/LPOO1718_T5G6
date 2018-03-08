@@ -67,7 +67,28 @@ public class Map {
 		}
 	}
 	
+	public String getMapLine(char[] line) {
+		
+		String res  = "";
+		for(int i = 0; i < line.length; i++)
+		{
+			res += line[i] + " ";
+		}
+		
+		return res;
+	}
+	
 	public String getMap()
+	{
+		String map="";
+		
+		for(int i = 0; i<layout.length;i++)
+			map+=  getMapLine(layout[i]) + "\n";
+		
+		return map;
+	}
+	
+	/*public String getMap()
 	{
 		String map="";
 		
@@ -75,6 +96,6 @@ public class Map {
 			map+=new String(layout[i]) + "\n";
 		
 		return map;
-	}
+	}*/
 }
 
