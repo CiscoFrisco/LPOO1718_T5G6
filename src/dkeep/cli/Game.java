@@ -1,6 +1,10 @@
 package dkeep.cli;
+import java.util.Random;
 import java.util.Scanner;
-import dkeep.logic.*;
+
+import dkeep.logic.Entity;
+import dkeep.logic.GameState;
+import dkeep.logic.Map;
 
 public class Game {
 
@@ -22,7 +26,7 @@ public class Game {
 	public static int gameplay(int level, GameState state, Scanner s)
 	{
 		char movement = 'u';
-		
+
 		while(!state.escaped())
 		{
 			movement = s.next().charAt(0);
@@ -38,18 +42,22 @@ public class Game {
 					state.moveOgres();
 					state.armOgres();
 					state.checkStun();
-
 				}						
 
 				state.printMap();
 
-				System.out.print("Insert your move: ");
-
-				if((state.checkGuard() && level == 1) || (level == 2 && (state.checkClub())))	
+				if((level == 1 && state.checkGuard()) || (level == 2 && (state.checkClub())))	
 				{
 					System.out.println("Game Over!");
 					return 1;
 				}
+				else if(level == 2 && state.escaped())
+				{
+					System.out.println("You won, congratulations!");
+					return 0;
+				}
+
+				System.out.print("Insert your move: ");
 			}
 		}
 
@@ -64,11 +72,38 @@ public class Game {
 	}
 
 
+	public static String guardPersonality()
+	{
+		String res ="";
+		Random random = new Random();
+		int number = random.nextInt(3);
 
+		switch(number)
+		{
+		case 0:
+			res = "Rookie";
+			break;
+		case 1:
+			res = "Drunken";
+			break;
+		case 2:
+			res = "Suspicious";
+			break;
+		default:
+			break;
+		}
+
+		return res;
+	}
 	
+	public static int numberOfOgres()
+	{
+		Random random = new Random();
+		return random.nextInt(2) + 1;
+	}
 
 	public static void main(String[] args) {
-		
+
 		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
 				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
@@ -94,16 +129,16 @@ public class Game {
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);
-		GameState state = new GameState(map,1);
-		
+		GameState state = new GameState(map,1,guardPersonality());
+
 		printInstructions();
 		state.printMap();
 		System.out.print("Insert your move: ");
 
 		Scanner s = new Scanner(System.in);
-		
+
 		if(gameplay(1, state, s) == 0) // if he goes through to the second level
-			state.changeLevel(map2);
+			state.changeLevel(map2, numberOfOgres());
 		else //if he dies 
 		{
 			s.close();

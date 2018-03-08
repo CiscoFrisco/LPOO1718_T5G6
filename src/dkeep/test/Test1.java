@@ -32,7 +32,7 @@ public class Test1 {
 	public void testHeroMov() {
 
 		Map gameMap = new Map(dungeon);
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1, "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -47,7 +47,7 @@ public class Test1 {
 	public void testFailMov() {
 
 		Map gameMap = new Map(dungeon);		
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1 , "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -63,7 +63,7 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1, "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -79,7 +79,7 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1, "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -96,7 +96,7 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1, "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -113,7 +113,7 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1); 
+		GameState game = new GameState(gameMap,1, "Rookie"); 
 
 		assertEquals(1, game.hero().x_pos());
 		assertEquals(1, game.hero().y_pos());
@@ -137,7 +137,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2); 
+		GameState game = new GameState(gameMap,2, "Rookie"); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -149,7 +149,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2); 
+		GameState game = new GameState(gameMap,2, "Rookie"); 
 
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
@@ -166,7 +166,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2); 
+		GameState game = new GameState(gameMap,2, "Rookie"); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -191,7 +191,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2); 
+		GameState game = new GameState(gameMap,2, "Rookie"); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -218,7 +218,7 @@ public class Test1 {
 	public void testStun() {
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2);
+		GameState game = new GameState(gameMap,2, "Rookie");
 		
 		game.issueMov('w', game.hero());
 		
@@ -235,7 +235,7 @@ public class Test1 {
 	public void testOgre() {
 		Map gameMap = new Map(keep);
 		
-		GameState game = new GameState(gameMap, 2);
+		GameState game = new GameState(gameMap, 2, "Rookie");
 		
 		
 	}

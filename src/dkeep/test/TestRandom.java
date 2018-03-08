@@ -21,7 +21,7 @@ public class TestRandom {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap, 2);
+		GameState game = new GameState(gameMap, 2, "Rookie");
 
 		boolean left = false, right = false, up = false, down = false;
 
@@ -71,7 +71,7 @@ public class TestRandom {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap, 2);
+		GameState game = new GameState(gameMap, 2, "Rookie");
 
 		boolean left = false, right = false, up = false, down = false;
 
