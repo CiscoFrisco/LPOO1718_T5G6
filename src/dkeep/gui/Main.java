@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -160,6 +162,7 @@ public class Main {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 571, 384);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -190,7 +193,7 @@ public class Main {
 				System.exit(0);
 			}
 		});
-		btnExitGame.setBounds(395, 277, 118, 23);
+		btnExitGame.setBounds(395, 286, 118, 23);
 		frame.getContentPane().add(btnExitGame);
 
 		txtrConsole = new JTextArea();
@@ -205,7 +208,7 @@ public class Main {
 			}
 		});
 		btnUp.setEnabled(false);
-		btnUp.setBounds(405, 131, 89, 23);
+		btnUp.setBounds(405, 143, 89, 23);
 		frame.getContentPane().add(btnUp);
 
 		btnLeft = new JButton("Left");
@@ -215,7 +218,7 @@ public class Main {
 			}
 		});
 		btnLeft.setEnabled(false);
-		btnLeft.setBounds(357, 165, 89, 23);
+		btnLeft.setBounds(357, 177, 89, 23);
 		frame.getContentPane().add(btnLeft);
 
 		btnDown = new JButton("Down");
@@ -225,7 +228,7 @@ public class Main {
 			}
 		});
 		btnDown.setEnabled(false);
-		btnDown.setBounds(405, 199, 89, 23);
+		btnDown.setBounds(405, 211, 89, 23);
 		frame.getContentPane().add(btnDown);
 
 		btnRight = new JButton("Right");
@@ -235,7 +238,7 @@ public class Main {
 			}
 		});
 		btnRight.setEnabled(false);
-		btnRight.setBounds(456, 165, 89, 23);
+		btnRight.setBounds(456, 177, 89, 23);
 		frame.getContentPane().add(btnRight);
 
 		lblGameStatus = new JLabel("Game Status");
@@ -244,7 +247,7 @@ public class Main {
 
 
 		btnNewGame = new JButton("New Game");
-		btnNewGame.setBounds(395, 59, 118, 23);
+		btnNewGame.setBounds(395, 61, 118, 23);
 		frame.getContentPane().add(btnNewGame);
 
 		invalidNumber = new JLabel("Invalid number of ogres!");
@@ -256,8 +259,14 @@ public class Main {
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				numberOfOgres = Integer.parseInt(textNumberOfOgres.getText());
-
+				try {
+					numberOfOgres = Integer.parseInt(textNumberOfOgres.getText());
+				}
+				catch(NumberFormatException e){
+					JOptionPane.showMessageDialog(frame, "Insert a valid number of Ogres!");
+					return;
+				}
+				
 				if(numberOfOgres<1 || numberOfOgres>3)
 				{
 					invalidNumber.setVisible(true);
