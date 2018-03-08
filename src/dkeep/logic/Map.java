@@ -1,6 +1,8 @@
 package dkeep.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringJoiner;
 
 public class Map {
 
@@ -65,6 +67,16 @@ public class Map {
 
 			System.out.print('\n');
 		}
+	}
+	
+	public String getMap()
+	{
+		String map="";
+		
+		for(int i = 0; i<layout.length;i++)
+			map+=new String(layout[i]) + "\n";
+		
+		return map;
 	}
 }
 

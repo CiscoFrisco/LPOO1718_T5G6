@@ -10,10 +10,10 @@ import dkeep.logic.Ogre;
 public class TestRandom {
 
 	char [][] keep = {{'X','X','X','X','X','X'},
+			{'I',' ',' ',' ',' ','X'},
 			{'X',' ',' ',' ',' ','X'},
 			{'X',' ',' ',' ',' ','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'I',' ','H',' ','k','X'},
+			{'X','H',' ',' ','k','X'},
 			{'X','X','X','X','X','X'},};
 
 	@Test (timeout = 1000)
@@ -32,7 +32,9 @@ public class TestRandom {
 				int ogre_x_pos = ogre.x_pos();
 				int ogre_y_pos = ogre.y_pos();
 
+				game.issueMov(game.generateMovement(), game.hero());
 				game.issueMov(game.generateMovement(), ogre);
+				
 
 				if(ogre_x_pos == ogre.x_pos() + 1)
 				{
@@ -54,12 +56,17 @@ public class TestRandom {
 				{
 					continue;
 				}
+				else if(game.gameOver() || game.escaped())
+				{
+					continue;
+				}
 				else
 					fail("Well...shit!");
 			}
 		}
 	}
 
+	@Test
 	public void testClubRandomMov(){
 
 		Map gameMap = new Map(keep);
@@ -74,8 +81,14 @@ public class TestRandom {
 			{
 				int club_x_pos = ogre.x_pos();
 				int club_y_pos = ogre.y_pos();
+				
+				game.printMap();
 
-				game.issueMov(game.generateMovement(), ogre.club());
+				game.issueMov(game.generateMovement(), game.hero());
+				//game.issueMov(game.generateMovement(), ogre);
+				game.updateOgre(ogre);
+				game.setClub(ogre);
+				
 
 				if(club_x_pos == ogre.club().x_pos() + 1)
 				{
@@ -94,6 +107,10 @@ public class TestRandom {
 					left = true;
 				}
 				else if(club_x_pos == ogre.club().x_pos() && club_y_pos == ogre.club().y_pos())
+				{
+					continue;
+				}
+				else if(game.gameOver() || game.escaped())
 				{
 					continue;
 				}

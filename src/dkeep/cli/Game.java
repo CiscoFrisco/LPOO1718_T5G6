@@ -23,8 +23,6 @@ public class Game {
 	{
 		char movement = 'u';
 		
-		if(level == 1) return 0;
-		
 		while(!state.escaped())
 		{
 			movement = s.next().charAt(0);

@@ -16,50 +16,33 @@ public class GameState {
 	private ArrayList<Ogre> ogres;
 	private ArrayList<ExitDoor> exitDoors;
 
-	public GameState(Map map, int level)
+	public GameState(Map map, int level, String guardType)
 	{
 		this.map = map;
 		game_over = false;
 		escaped = false;
-		this.level = level;
-		initLevel();
+		this.setLevel(level);
+		initDungeon(guardType);
 	}
-	
+
 	public ArrayList<Ogre> ogres()
 	{
 		return ogres;
 	}
 
-	public void initLevel()
+	public Guard generateGuard(int x_pos, int y_pos, String guardType)
 	{
-		switch(level)
-		{
-		case 1:
-			initDungeon();
-			break;
-		case 2:
-			initKeep();
-			break;
-		default:
-			break;	
-		}
-	}
-
-	public Guard generateGuard(int x_pos, int y_pos)
-	{
-		Random number = new Random();
-		int generated = number.nextInt(3);
 		Guard guard = null;
 
-		switch(generated)
+		switch(guardType)
 		{
-		case 0:
+		case "Rookie":
 			guard = new RookieGuard(x_pos,y_pos,'G');
 			break;
-		case 1:
+		case "Drunken":
 			guard = new DrunkenGuard(x_pos,y_pos,'G');
 			break;
-		case 2:
+		case "Suspicious":
 			guard = new SuspiciousGuard(x_pos,y_pos,'G');
 			break;
 		default:
@@ -69,7 +52,7 @@ public class GameState {
 		return guard;
 	}
 
-	public void initDungeon()
+	public void initDungeon(String guardType)
 	{
 		exitDoors = new ArrayList<ExitDoor>();
 
@@ -80,7 +63,7 @@ public class GameState {
 				if(rep == 'H')
 					hero = new Hero(i,j,'H');
 				else if(rep == 'G')
-					guard = generateGuard(i,j);
+					guard = generateGuard(i,j,guardType);
 				else if(rep == 'k')
 					lever = new Lever(i,j,'k');
 				else if(rep == 'I' && (i == 0 || j == 0))
@@ -91,16 +74,13 @@ public class GameState {
 	public void initKeep()
 	{
 		exitDoors = new ArrayList<ExitDoor>();
-		
-		generateOgres();
-		armOgres();
-		
+
 		for(int i = 0;i<map.layout().length;i++)
 			for(int j = 0;j<map.layout()[i].length;j++)
 			{
 				char rep = map.layout()[i][j];
-				if(rep == 'H')
-					hero = new Hero(i,j,'H');
+				if(rep == 'A')
+					hero = new Hero(i,j,'A');
 				else if(rep == 'k')
 					key = new Key(i,j,'k');
 				else if(rep == 'I')
@@ -108,15 +88,16 @@ public class GameState {
 			}
 	}
 
-	public void changeLevel(Map map)
+	public void changeLevel(Map map, int numberOfOgres)
 	{
-		level++;
+		setLevel(getLevel() + 1);
 		this.map = map;
 		escaped = false;
 		game_over = false;
-		generateOgres();
-		armOgres();
 		initKeep();
+		generateOgres(numberOfOgres);
+		armOgres();
+
 	}
 
 	public boolean issueMov(char movement, Entity entity)
@@ -175,7 +156,7 @@ public class GameState {
 				pos2 = ' ';
 				map.updateDoors(hero.lever(), exitDoors);
 			}
-			else if(level == 1 && hero.x_pos == lever.x_pos && hero.y_pos == lever.y_pos)
+			else if(getLevel() == 1 && hero.x_pos == lever.x_pos && hero.y_pos == lever.y_pos)
 			{
 				pos1 = entity.representation;
 				pos2 = lever.representation;
@@ -235,6 +216,7 @@ public class GameState {
 		}
 		else
 		{
+
 			for(Ogre ogre : ogres)
 			{
 				if(ogre.club.equals(entity))
@@ -322,10 +304,11 @@ public class GameState {
 			boolean cond3 = Math.abs(hero.y_pos()-ogre.club().y_pos())<=1;
 			boolean cond4 = hero.x_pos() == ogre.club().x_pos();
 
-			if((cond1 && cond2) || (cond3 && cond4))
+			if((cond1 && cond2) || (cond3 && cond4) || (cond4 && cond2))
+			{
+				game_over=true;
 				return true;
-			else if (hero.x_pos() == ogre.club().x_pos() && hero.y_pos() == ogre.club().y_pos())
-				return true;
+			}
 		}
 
 		return false;
@@ -346,12 +329,12 @@ public class GameState {
 
 	public boolean checkCell(int x_pos, int y_pos, Entity entity)
 	{
-		if(map.pos(x_pos, y_pos) == 'X' || (map.pos(x_pos, y_pos) == 'I' && level == 1))
+		if(map.pos(x_pos, y_pos) == 'X' || (map.pos(x_pos, y_pos) == 'I' && getLevel() == 1))
 			return false;
 
 		if(entity.equals(hero))
 		{
-			switch(level)
+			switch(getLevel())
 			{
 			case 1:
 				if(map.pos(x_pos, y_pos) == 'k')
@@ -446,15 +429,14 @@ public class GameState {
 		{clubSwing = generateMovement();};
 	}
 
-	public void generateOgres()
+	public void generateOgres(int numberOfOgres)
 	{
 		Random random = new Random();
-		int number = 1; //random.nextInt(3) + 1;
 		int limit = map.layout().length/2;
 		int x_pos = limit + 1, y_pos = 0;
-		ogres = new ArrayList<Ogre>(number);
+		ogres = new ArrayList<Ogre>(numberOfOgres);
 
-		for(int i = 0; i<number;i++)
+		for(int i = 0; i<numberOfOgres;i++)
 		{	
 			//Ogres nao podem comecar perto do hero
 			while(x_pos>=limit && y_pos<=limit)
@@ -496,18 +478,23 @@ public class GameState {
 				issueMov(movement, ogre);
 			}
 
-			if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
-			{
-				map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
-				ogre.club().setRepresentation('*');
-			}
-			else
-				map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
-
-			ogre.club().resetKey();
-			ogre.club().x_pos = ogre.x_pos;
-			ogre.club().y_pos = ogre.y_pos;	
+			updateOgre(ogre);
 		}
+	}
+
+	public void updateOgre(Ogre ogre)
+	{
+		if(map.pos(ogre.club().x_pos,ogre.club().y_pos) == '$')
+		{
+			map.setPos(ogre.club().x_pos,ogre.club().y_pos,'k');
+			ogre.club().setRepresentation('*');
+		}
+		else
+			map.setPos(ogre.club().x_pos,ogre.club().y_pos,' ');
+
+		ogre.club().resetKey();
+		ogre.club().x_pos = ogre.x_pos;
+		ogre.club().y_pos = ogre.y_pos;	
 	}
 
 
@@ -534,5 +521,18 @@ public class GameState {
 		guard.move();
 
 		return true;
+	}
+
+	public String getMap()
+	{
+		return map.getMap();
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

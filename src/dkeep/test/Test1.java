@@ -224,6 +224,8 @@ public class Test1 {
 		
 		game.checkStun();
 		
+		boolean stunned = false;
+		
 		for(Ogre ogre : game.ogres())
 			assertEquals('8', ogre.representation());
 					
