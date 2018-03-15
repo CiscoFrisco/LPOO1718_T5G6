@@ -1,31 +1,29 @@
 package dkeep.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Random;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import dkeep.logic.GameState;
 import dkeep.logic.Map;
+import java.awt.event.KeyAdapter;
 
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.Random;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
-import java.awt.Font;
-import java.awt.Color;
-
-public class Main {
-
-	private JFrame frame;
-	private JTextField textNumberOfOgres;
+public class Main implements KeyListener{
+	
+	private GameConfig configWindow;
+	private JFrame frmDungeonKeep;
 	private JButton btnDown;
 	private JButton btnUp;
 	private JButton btnLeft;
@@ -33,15 +31,10 @@ public class Main {
 	private JButton btnExitGame;
 	private JButton btnNewGame;
 	private JLabel lblGameStatus;
-	private JLabel lblNumberOfOgres;
-	private JLabel lblGuardPersonality;
-	private JComboBox comboBox;
-	private JTextArea txtrConsole;
+	private GameView gameView;
 	private GameState game;
-	private JLabel invalidNumber;
 	private Map map1;
 	private Map map2;
-	private int numberOfOgres;
 
 
 	/**
@@ -52,7 +45,7 @@ public class Main {
 			public void run() {
 				try {
 					Main window = new Main();
-					window.frame.setVisible(true);
+					window.frmDungeonKeep.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -78,7 +71,8 @@ public class Main {
 
 	private void updateMap()
 	{
-		txtrConsole.setText(game.getMap());
+		//txtrConsole.setText(game.getMap());
+		gameView.repaint();
 	}
 
 	private void generateStatus() {
@@ -115,6 +109,9 @@ public class Main {
 
 	private void gameIteration(char heroMov)
 	{
+		if(game.gameOver())
+			return;
+		
 		boolean mov = game.issueMov(heroMov, game.hero());
 
 		switch(game.getLevel())
@@ -132,6 +129,7 @@ public class Main {
 			break;	
 		}
 
+		gameView.updateMap(game.getLayout(),game.getLevel());
 		updateMap();
 
 		if((game.getLevel() == 1 && game.checkGuard()) || (game.getLevel() == 2 && game.checkClub()))
@@ -141,10 +139,13 @@ public class Main {
 
 
 		if(game.gameOver())
+		{
 			disableButtons();
+			
+		}
 		else if (game.escaped() && game.getLevel() == 1)
 		{
-			game.changeLevel(map2, numberOfOgres);
+			game.changeLevel(map2, configWindow.numberOfOgres());
 		}
 		else if(game.escaped() && game.getLevel() == 2)
 		{
@@ -161,45 +162,53 @@ public class Main {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 571, 384);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-
-		lblNumberOfOgres = new JLabel("Number of Ogres");
-		lblNumberOfOgres.setBounds(8, 11, 108, 14);
-		lblNumberOfOgres.setHorizontalAlignment(SwingConstants.LEFT);
-		frame.getContentPane().add(lblNumberOfOgres);
-
-		textNumberOfOgres = new JTextField();
-		textNumberOfOgres.setBounds(125, 8, 86, 20);
-		frame.getContentPane().add(textNumberOfOgres);
-		textNumberOfOgres.setColumns(10);
-
-		lblGuardPersonality = new JLabel("Guard Personality");
-		lblGuardPersonality.setBounds(8, 36, 108, 14);
-		frame.getContentPane().add(lblGuardPersonality);
-
-		String[] personalities = {"Rookie", "Drunken", "Suspicious"};
-
-		comboBox = new JComboBox(personalities);
-		comboBox.setBounds(125, 33, 86, 20);
-		frame.getContentPane().add(comboBox);
-
+		frmDungeonKeep = new JFrame();
+		frmDungeonKeep.setTitle("Dungeon Keep");
+		frmDungeonKeep.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				switch(e.getKeyCode())
+				{
+				case KeyEvent.VK_W:
+					gameIteration('w');
+					break;
+				case KeyEvent.VK_A:
+					gameIteration('a');
+					break;
+				case KeyEvent.VK_S:
+					gameIteration('s');
+					break;
+				case KeyEvent.VK_D:
+					gameIteration('d');
+					break;
+				default:
+					break;
+				}	
+			}
+		});
+		frmDungeonKeep.setResizable(false);
+		frmDungeonKeep.setBounds(100, 100, 611, 477);
+		frmDungeonKeep.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDungeonKeep.getContentPane().setLayout(null);
+		
+		configWindow = new GameConfig();
+		configWindow.setVisible(true);
+		
 		btnExitGame = new JButton("Exit Game");
 		btnExitGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		btnExitGame.setBounds(395, 286, 118, 23);
-		frame.getContentPane().add(btnExitGame);
+		btnExitGame.setBounds(444, 394, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnExitGame);
 
+		/*
 		txtrConsole = new JTextArea();
 		txtrConsole.setFont(new Font("Courier New", Font.PLAIN, 20));
 		txtrConsole.setBounds(18, 61, 329, 248);
 		frame.getContentPane().add(txtrConsole);
+		 */
 
 		btnUp = new JButton("Up");
 		btnUp.addActionListener(new ActionListener() {
@@ -208,8 +217,8 @@ public class Main {
 			}
 		});
 		btnUp.setEnabled(false);
-		btnUp.setBounds(405, 143, 89, 23);
-		frame.getContentPane().add(btnUp);
+		btnUp.setBounds(424, 242, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnUp);
 
 		btnLeft = new JButton("Left");
 		btnLeft.addActionListener(new ActionListener() {
@@ -218,8 +227,8 @@ public class Main {
 			}
 		});
 		btnLeft.setEnabled(false);
-		btnLeft.setBounds(357, 177, 89, 23);
-		frame.getContentPane().add(btnLeft);
+		btnLeft.setBounds(374, 276, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnLeft);
 
 		btnDown = new JButton("Down");
 		btnDown.addActionListener(new ActionListener() {
@@ -228,8 +237,8 @@ public class Main {
 			}
 		});
 		btnDown.setEnabled(false);
-		btnDown.setBounds(405, 211, 89, 23);
-		frame.getContentPane().add(btnDown);
+		btnDown.setBounds(424, 322, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnDown);
 
 		btnRight = new JButton("Right");
 		btnRight.addActionListener(new ActionListener() {
@@ -238,44 +247,34 @@ public class Main {
 			}
 		});
 		btnRight.setEnabled(false);
-		btnRight.setBounds(456, 177, 89, 23);
-		frame.getContentPane().add(btnRight);
+		btnRight.setBounds(473, 276, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnRight);
 
 		lblGameStatus = new JLabel("Game Status");
-		lblGameStatus.setBounds(8, 314, 339, 31);
-		frame.getContentPane().add(lblGameStatus);
+		lblGameStatus.setBounds(8, 406, 339, 31);
+		frmDungeonKeep.getContentPane().add(lblGameStatus);
 
 
 		btnNewGame = new JButton("New Game");
-		btnNewGame.setBounds(395, 61, 118, 23);
-		frame.getContentPane().add(btnNewGame);
-
-		invalidNumber = new JLabel("Invalid number of ogres!");
-		invalidNumber.setForeground(Color.RED);
-		invalidNumber.setVisible(false);
-		invalidNumber.setBounds(221, 11, 161, 14);
-
-		frame.getContentPane().add(invalidNumber);
+		btnNewGame.setBounds(444, 102, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnNewGame);
+		
+		JButton btnConfigureGame = new JButton("Configure Game");
+		btnConfigureGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				configWindow.setVisible(true);
+			}
+		});
+		btnConfigureGame.setBounds(444, 136, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnConfigureGame);
+		
+		JButton btnEditMap = new JButton("Custom Keep");
+		btnEditMap.setBounds(444, 174, 117, 23);
+		frmDungeonKeep.getContentPane().add(btnEditMap);
+		
+		
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				try {
-					numberOfOgres = Integer.parseInt(textNumberOfOgres.getText());
-				}
-				catch(NumberFormatException e){
-					JOptionPane.showMessageDialog(frame, "Insert a valid number of Ogres!");
-					return;
-				}
-				
-				if(numberOfOgres<1 || numberOfOgres>3)
-				{
-					invalidNumber.setVisible(true);
-					return;
-				}
-				else
-					invalidNumber.setVisible(false);	
-
-				String personality = comboBox.getSelectedItem().toString();
 
 				char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 						{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
@@ -301,19 +300,41 @@ public class Main {
 
 
 				map1 = new Map(level1);
+				gameView = new GameView(map1,1);
+				gameView.setBounds(18, 61, 329, 350);
+				frmDungeonKeep.getContentPane().add(gameView);
+				gameView.repaint();
 				map2 = new Map(level2);
 
-				game = new GameState(map1, 1, personality);
-
+				game = new GameState(map1, 1, configWindow.guardPersonality());
 				btnUp.setEnabled(true);
 				btnLeft.setEnabled(true);
 				btnDown.setEnabled(true);
 				btnRight.setEnabled(true);
 
 				lblGameStatus.setText("Get ready to RUMBLEEEEE!");
-
-				txtrConsole.setText(game.getMap());
+				frmDungeonKeep.requestFocusInWindow();
+				//txtrConsole.setText(game.getMap());
 			}
 		});
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

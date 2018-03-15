@@ -527,6 +527,11 @@ public class GameState {
 	{
 		return map.getMap();
 	}
+	
+	public char[][] getLayout()
+	{
+		return map.getLayout();
+	}
 
 	public int getLevel() {
 		return level;

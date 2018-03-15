@@ -87,6 +87,10 @@ public class Map {
 		
 		return map;
 	}
+
+	public char[][] getLayout() {
+		return layout;
+	}
 	
 	/*public String getMap()
 	{
