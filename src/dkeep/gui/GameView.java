@@ -24,13 +24,13 @@ public class GameView extends JPanel{
 		try {
 			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png")));
 			images.add(ImageIO.read(this.getClass().getResource("/images/guard.png"))); //guarda
-			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png"))); //guarda a dormir
+			images.add(ImageIO.read(this.getClass().getResource("/images/sleep.png"))); //guarda a dormir
 			images.add(ImageIO.read(this.getClass().getResource("/images/ogre.png"))); //ogre
-			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png"))); //taco
-			images.add(ImageIO.read(this.getClass().getResource("/images/espaco.png"))); //porta fechada
-			images.add(ImageIO.read(this.getClass().getResource("/images/espaco.png"))); //porta aberta
-			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png"))); //alavanca
-			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png"))); //chave
+			images.add(ImageIO.read(this.getClass().getResource("/images/club.png"))); //taco
+			images.add(ImageIO.read(this.getClass().getResource("/images/door_closed.png"))); //porta fechada
+			images.add(ImageIO.read(this.getClass().getResource("/images/door_open.png"))); //porta aberta
+			images.add(ImageIO.read(this.getClass().getResource("/images/lever.png"))); //alavanca
+			images.add(ImageIO.read(this.getClass().getResource("/images/key.png"))); //chave
 			images.add(ImageIO.read(this.getClass().getResource("/images/parede.png"))); //parede
 			images.add(ImageIO.read(this.getClass().getResource("/images/espaco.png")));	//espaco livre
 		} 
@@ -65,42 +65,49 @@ public class GameView extends JPanel{
 		{
 			for(int j=0; j<map[i].length;j++)
 			{
-				switch(map[i][j])
+				
+				if(map[i][j] == 'H' || map[i][j] == 'A' || map[i][j] == 'K')
 				{
-				case 'H':
 					graphics[i][j] = images.get(0);
-					break;
-				case 'G':
+				}
+				else if(map[i][j] == 'G')
+				{
 					graphics[i][j] = images.get(1);
-					break;
-				case 'g':
+				}
+				else if(map[i][j] == 'g')
+				{
 					graphics[i][j] = images.get(2);
-					break;
-				case 'O':
+				}
+				else if(map[i][j] == 'O')
+				{
 					graphics[i][j] = images.get(3);
-					break;
-				case 'X':
-					graphics[i][j] = images.get(9);
-					break;
-				case 'I':
+				}
+				else if(map[i][j] == '*')
+				{
+					graphics[i][j] = images.get(4);
+				}
+				else if(map[i][j] == 'I')
+				{
 					graphics[i][j] = images.get(5);
-					break;
-				case 'S':
+				}
+				else if(map[i][j] == 'S')
+				{
 					graphics[i][j] = images.get(6);
-					break;
-				case 'k':
+				}
+				else if(map[i][j] == 'k')
+				{
 					if(level == 1)
 						graphics[i][j] = images.get(7);
 					else
-						graphics[i][j] = images.get(8);	
-					break;
-				case '*':
-					graphics[i][j] = images.get(4);
-				case ' ':
+						graphics[i][j] = images.get(8);					
+				}
+				else if(map[i][j] == 'X')
+				{
+					graphics[i][j] = images.get(9);
+				}
+				else if(map[i][j] == ' ')
+				{
 					graphics[i][j] = images.get(10);
-					break;
-				default:
-					break;
 				}
 			}
 		}	

@@ -20,8 +20,8 @@ public class GameConfig extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textNumberOfOgres;
-	private int numberOfOgres;
-	private String guardPersonality;
+	private int numberOfOgres = 1;
+	private String guardPersonality = "Rookie";
 	private JComboBox comboBox;
 	
 
