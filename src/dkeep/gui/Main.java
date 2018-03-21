@@ -1,27 +1,23 @@
 package dkeep.gui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import dkeep.logic.GameState;
 import dkeep.logic.Map;
-import java.awt.event.KeyAdapter;
 
 public class Main implements KeyListener{
 	
+	private CustomKeep customKeep;
 	private GameConfig configWindow;
 	private JFrame frmDungeonKeep;
 	private JButton btnDown;
@@ -71,7 +67,6 @@ public class Main implements KeyListener{
 
 	private void updateMap()
 	{
-		//txtrConsole.setText(game.getMap());
 		gameView.repaint();
 	}
 
@@ -193,6 +188,8 @@ public class Main implements KeyListener{
 		
 		configWindow = new GameConfig();
 		configWindow.setVisible(true);
+		customKeep = new CustomKeep();
+		customKeep.setVisible(false);
 		
 		btnExitGame = new JButton("Exit Game");
 		btnExitGame.addActionListener(new ActionListener() {
@@ -269,6 +266,11 @@ public class Main implements KeyListener{
 		frmDungeonKeep.getContentPane().add(btnConfigureGame);
 		
 		JButton btnEditMap = new JButton("Custom Keep");
+		btnEditMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				customKeep.setVisible(true);
+			}
+		});
 		btnEditMap.setBounds(444, 174, 117, 23);
 		frmDungeonKeep.getContentPane().add(btnEditMap);
 		

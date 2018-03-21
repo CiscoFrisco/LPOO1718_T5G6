@@ -15,12 +15,11 @@ public class GameView extends JPanel{
 
 	private ArrayList<BufferedImage> images;
 	private BufferedImage[][] graphics;
-			
+
 	public GameView(Map gameMap, int level) {
-		
+
 		images = new ArrayList<BufferedImage>();
-		graphics = new BufferedImage[10][10];
-		
+
 		try {
 			images.add(ImageIO.read(this.getClass().getResource("/images/hero.png")));
 			images.add(ImageIO.read(this.getClass().getResource("/images/guard.png"))); //guarda
@@ -38,14 +37,35 @@ public class GameView extends JPanel{
 			System.out.println("ola");
 		}
 		
-		updateMap(gameMap.layout(), level);
+		initGraphics(10,10);
+
+
+		if(gameMap != null)
+		{
+			updateMap(gameMap.layout(), level);
+		}
+	}
+
+
+	public void initGraphics(int width, int height)
+	{
+		graphics = new BufferedImage[height][width];
+
+		for(int i = 0; i < height;i++)
+			for(int j = 0;j<width;j++)
+				graphics[i][j] = images.get(10);
 	}
 	
+	public BufferedImage[][] getMap()
+	{
+		return graphics;
+	}
+
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		int x = 0;
 		int y = 0;
-		
+
 		for(int i = 0; i < graphics.length;i++)
 		{
 			for(int j=0; j< graphics[i].length;j++)
@@ -53,19 +73,24 @@ public class GameView extends JPanel{
 				g.drawImage(graphics[i][j],x,y,this);
 				x += 32;
 			}
-			
+
 			x = 0;
 			y += 32;
 		}
 	}
-	
+
+	public void updatePos(int i, int j, int index)
+	{
+		graphics[i][j] = images.get(index);
+	}
+
 	public void updateMap(char[][] map, int level)
 	{		
 		for(int i = 0; i < map.length;i++)
 		{
 			for(int j=0; j<map[i].length;j++)
 			{
-				
+
 				if(map[i][j] == 'H' || map[i][j] == 'A' || map[i][j] == 'K')
 				{
 					graphics[i][j] = images.get(0);

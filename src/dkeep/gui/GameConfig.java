@@ -24,8 +24,6 @@ public class GameConfig extends JDialog {
 	private String guardPersonality = "Rookie";
 	private JComboBox comboBox;
 	
-
-	
 	/**
 	 * Launch the application.
 	 */
@@ -118,6 +116,11 @@ public class GameConfig extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
