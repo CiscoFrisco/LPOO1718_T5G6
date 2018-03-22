@@ -4,8 +4,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import dkeep.logic.GameState;
-import dkeep.logic.ExitDoor;
-import dkeep.logic.Ogre;
+import dkeep.logic.Keep;
+import dkeep.logic.Dungeon;
+import dkeep.logic.Position;
 import dkeep.logic.Map;
 
 public class Test1 {
@@ -20,7 +21,7 @@ public class Test1 {
 					 {'X',' ',' ',' ',' ','X'},
 					 {'X',' ',' ',' ',' ','X'},
 					 {'X',' ',' ',' ',' ','X'},
-					 {'I',' ','H',' ','k','X'},
+					 {'I',' ','A',' ','k','X'},
 					 {'X','X','X','X','X','X'},};
 
 	
@@ -32,44 +33,39 @@ public class Test1 {
 	public void testHeroMov() {
 
 		Map gameMap = new Map(dungeon);
-		GameState game = new GameState(gameMap,1, "Rookie"); 
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 
-		game.issueMov('s',game.hero());
+		game.issueMov('s',game.level().hero());
 
-		assertEquals(2, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(2,1), game.hero().pos());
 	}
 
 	@Test
 	public void testFailMov() {
 
 		Map gameMap = new Map(dungeon);		
-		GameState game = new GameState(gameMap,1 , "Rookie"); 
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 
-		game.issueMov('a',game.hero());
+		game.issueMov('a',game.level().hero());
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 	}
 
 	@Test
 	public void testDeathMov() {
 
 		Map gameMap = new Map(dungeon);
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		GameState game = new GameState(gameMap,1, "Rookie"); 
+		assertEquals(new Position(1,1), game.hero().pos());
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
 
 		game.issueMov('d',game.hero());
-		game.checkGuard();
+		game.checkEnemy();
 
 		assertEquals(true, game.gameOver());
 	}
@@ -79,16 +75,14 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1, "Rookie"); 
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 
 		game.issueMov('s',game.hero());
 		game.issueMov('a',game.hero());
 
-		assertEquals(2, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(2,1), game.hero().pos());
 	}
 
 	@Test
@@ -96,16 +90,14 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1, "Rookie"); 
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 
 		game.issueMov('s',game.hero());
 		game.issueMov('s',game.hero());
 
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('S', exitDoor.representation());
+		assertTrue(game.level().checkDoors());
 	}
 	
 	@Test
@@ -113,17 +105,15 @@ public class Test1 {
 
 		Map gameMap = new Map(dungeon);
 
-		GameState game = new GameState(gameMap,1, "Rookie"); 
+		GameState game = new GameState(new Dungeon(gameMap, "Rookie")); 
 
-		assertEquals(1, game.hero().x_pos());
-		assertEquals(1, game.hero().y_pos());
+		assertEquals(new Position(1,1), game.hero().pos());
 
 		game.issueMov('s',game.hero());
 		game.issueMov('s',game.hero());
 		game.issueMov('a', game.hero());
 		
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('S', exitDoor.representation());
+		assertTrue(game.level().checkDoors());
 		
 		assertEquals(true, game.escaped());
 	}
@@ -137,7 +127,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2, "Rookie"); 
+		GameState game = new GameState(new Keep(gameMap, 0)); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -149,16 +139,14 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2, "Rookie"); 
+		GameState game = new GameState(new Keep(gameMap, 1)); 
 
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
 		
-		assertEquals(4,game.hero().x_pos());
-		assertEquals(1,game.hero().y_pos());
+		assertEquals(new Position(4,1), game.hero().pos());
 
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('I', exitDoor.representation());
+		assertFalse(game.level().checkDoors());
 	}
 	
 	@Test
@@ -166,7 +154,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2, "Rookie"); 
+		GameState game = new GameState(new Keep(gameMap, 1)); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -176,13 +164,12 @@ public class Test1 {
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
 		
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('I', exitDoor.representation());
-		
+		assertFalse(game.level().checkDoors());
+
 		game.issueMov('a',game.hero());		
 		
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('S', exitDoor.representation());
+		assertTrue(game.level().checkDoors());
+
 
 	}
 	
@@ -191,7 +178,7 @@ public class Test1 {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2, "Rookie"); 
+		GameState game = new GameState(new Keep(gameMap, 1)); 
 
 		game.issueMov('d',game.hero());
 		game.issueMov('d',game.hero());
@@ -199,26 +186,25 @@ public class Test1 {
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
 
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('I', exitDoor.representation());
+		assertFalse(game.level().checkDoors());
+
 		
 		game.issueMov('a',game.hero());		
 
-		for(ExitDoor exitDoor : game.exitDoors())
-			assertEquals('S', exitDoor.representation());
-		
+		assertTrue(game.level().checkDoors());
+
 		game.issueMov('a',game.hero());		
 		
 		assertEquals(true, game.escaped());
 	}
 	
-	
+	/*
 	//Code needed to be slightly changed in order to test this (remove randomness)
 	@Test
 	public void testStun() {
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap,2, "Rookie");
+		GameState game = new GameState(new Keep(gameMap, 1)); 
 		
 		game.issueMov('w', game.hero());
 		
@@ -235,8 +221,9 @@ public class Test1 {
 	public void testOgre() {
 		Map gameMap = new Map(keep);
 		
-		GameState game = new GameState(gameMap, 2, "Rookie");
+		GameState game = new GameState(new Keep(gameMap, 1)); 
 		
 		
 	}
+	*/
 }

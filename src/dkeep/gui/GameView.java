@@ -2,16 +2,14 @@ package dkeep.gui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import dkeep.logic.Entity;
-import dkeep.logic.Hero;
 import dkeep.logic.Map;
-import dkeep.logic.Position;
 
 public class GameView extends JPanel
 {
@@ -28,24 +26,24 @@ public class GameView extends JPanel
 
 		try
 		{
-			images.put('H', ImageIO.read(this.getClass().getResource("/images/hero.png")));
-			images.put('K', ImageIO.read(this.getClass().getResource("/images/hero.png")));
-			images.put('A', ImageIO.read(this.getClass().getResource("/images/hero.png")));
-			images.put('$', ImageIO.read(this.getClass().getResource("/images/hero.png")));
-			images.put('8', ImageIO.read(this.getClass().getResource("/images/hero.png")));
-			images.put('G',ImageIO.read(this.getClass().getResource("/images/guard.png"))); //guarda
-			images.put('g',ImageIO.read(this.getClass().getResource("/images/sleep.png"))); //guarda a dormir
-			images.put('O',ImageIO.read(this.getClass().getResource("/images/ogre.png"))); //ogre
-			images.put('*',ImageIO.read(this.getClass().getResource("/images/club.png"))); //taco
-			images.put('I',ImageIO.read(this.getClass().getResource("/images/door_closed.png"))); //porta fechada
-			images.put('S',ImageIO.read(this.getClass().getResource("/images/door_open.png"))); //porta aberta
-			images.put('k',ImageIO.read(this.getClass().getResource("/images/lever.png"))); //alavanca
-			images.put('X',ImageIO.read(this.getClass().getResource("/images/parede.png"))); //parede
-			images.put(' ',ImageIO.read(this.getClass().getResource("/images/espaco.png")));	//espaco livre
+			images.put('H', ImageIO.read(new File("images/hero.png")));
+			images.put('K', ImageIO.read(new File("images/hero.png")));
+			images.put('A', ImageIO.read(new File("images/hero.png")));
+			images.put('$', ImageIO.read(new File("images/hero.png")));
+			images.put('8', ImageIO.read(new File("images/hero.png")));
+			images.put('G', ImageIO.read(new File("images/guard.png")));
+			images.put('g', ImageIO.read(new File("images/sleep.png")));
+			images.put('O', ImageIO.read(new File("images/ogre.png")));
+			images.put('*', ImageIO.read(new File("images/club.png")));
+			images.put('I', ImageIO.read(new File("images/door_closed.png")));
+			images.put('S', ImageIO.read(new File("images/door_open.png")));
+			images.put('k', ImageIO.read(new File("images/lever.png")));
+			images.put('X', ImageIO.read(new File("images/parede.png")));
+			images.put(' ', ImageIO.read(new File("images/espaco.png")));
 		} 
 		catch (IOException e) 
 		{
-			System.out.println("ola");
+			System.out.println(e.getMessage());
 		}
 
 		initGraphics(width,height);

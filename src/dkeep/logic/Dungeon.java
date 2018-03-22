@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dkeep.gui.GameView;
-
 public class Dungeon extends Level
 {
 	private ArrayList<ExitDoor> exitDoors;
@@ -25,6 +23,8 @@ public class Dungeon extends Level
 		initDungeon(guardType);
 		escaped = false;
 		gameOver = false;
+		movements = new ArrayList<Character>();
+		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
 
 	public Guard guard()

@@ -92,8 +92,7 @@ public class CustomKeep extends JDialog {
 		widthSel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JComboBox<Integer> cb = (JComboBox<Integer>) e.getSource();
-					width =  Integer.parseInt(cb.getSelectedItem().toString());
+					width =  Integer.parseInt(widthSel.getSelectedItem().toString());
 					generateMap();
 				}catch(NumberFormatException ex){
 
@@ -108,8 +107,7 @@ public class CustomKeep extends JDialog {
 		heightSel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JComboBox<Integer> cb = (JComboBox<Integer>) e.getSource();
-					height =  Integer.parseInt(cb.getSelectedItem().toString());
+					height =  Integer.parseInt(heightSel.getSelectedItem().toString());
 					generateMap();
 				}catch(NumberFormatException ex){
 

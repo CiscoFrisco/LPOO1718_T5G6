@@ -1,6 +1,7 @@
 package dkeep.logic;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Level 
@@ -10,6 +11,7 @@ public abstract class Level
 	protected Hero hero;
 	protected boolean escaped;
 	protected boolean gameOver;
+	protected ArrayList<Character> movements;
 	
 	public Map map()
 	{
@@ -35,27 +37,8 @@ public abstract class Level
 	{
 		Random number = new Random();
 		int generated = number.nextInt(4);
-		char movement = 'u';
 
-		switch(generated)
-		{
-		case 0:
-			movement = 'a';
-			break;
-		case 1:
-			movement = 'w';
-			break;
-		case 2:
-			movement = 'd';
-			break;
-		case 3:
-			movement = 's';
-			break;
-		default:
-			break;
-		}
-
-		return movement;
+		return movements.get(generated);
 	}
 	
 	public boolean issueMov(char movement, Entity entity)
@@ -97,6 +80,16 @@ public abstract class Level
 	public abstract void saveToFile(File file);
 	
 	public abstract Level readFromFile(File file);
-
-
+	
+	public boolean checkDoors()
+	{
+		for(int i = 0; i<map.height();i++)
+			for(int j=0; j<map.width();j++)
+			{
+				if(map.pos(new Position(i,j))=='S')
+					return true;
+			}
+		
+		return false;
+	}
 }

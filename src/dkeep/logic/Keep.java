@@ -21,6 +21,8 @@ public class Keep extends Level
 		this.map = map;
 		initKeep();
 		generateOgres(numberOfOgres);
+		movements = new ArrayList<Character>();
+		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
 	
 	public Keep(Map map)
@@ -28,6 +30,8 @@ public class Keep extends Level
 		id = 2;
 		this.map = map;
 		initKeep();
+		movements = new ArrayList<Character>();
+		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
 
 	public Key key()

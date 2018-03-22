@@ -76,8 +76,8 @@ public class Map
 		return map;
 	}
 
-	public String getMapLine(char[] line) {
-
+	public String getMapLine(char[] line) 
+	{
 		String res  = "";
 		for(int i = 0; i < line.length; i++)
 			res += line[i] + " ";

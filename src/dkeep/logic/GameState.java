@@ -19,9 +19,19 @@ public class GameState
 		return level;
 	}
 	
+	public void issueMov(char movement, Entity entity)
+	{
+		level.issueMov(movement, entity);
+	}
+	
 	public boolean escaped()
 	{
 		return level.escaped;
+	}
+	
+	public boolean gameOver()
+	{
+		return level.gameOver;
 	}
 
 	public void moveEnemy() 
@@ -42,5 +52,10 @@ public class GameState
 	public int getLevel()
 	{
 		return level.id;
+	}
+	
+	public Hero hero()
+	{
+		return level.hero;
 	}
 }

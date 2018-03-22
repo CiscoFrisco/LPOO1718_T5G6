@@ -33,9 +33,30 @@ public class Main implements KeyListener
 	private JLabel lblGameStatus;
 	private GameView gameView;
 	private GameState game;
-	private Map map1;
 	private Map map2;
 	private int level = 1;
+	
+	private char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X','X',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
+			{'X','X','X','X','X','X','X','X','X','X'}};
+
+	private char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','X','X','X','X','X','X','X','X','X'}};
 
 
 	/**
@@ -62,12 +83,12 @@ public class Main implements KeyListener
 	}
 
 
-	private void disableButtons()
+	private void btnSetEnabled(boolean state)
 	{
-		btnUp.setEnabled(false);
-		btnDown.setEnabled(false);
-		btnLeft.setEnabled(false);
-		btnRight.setEnabled(false);
+		btnUp.setEnabled(state);
+		btnDown.setEnabled(state);
+		btnLeft.setEnabled(state);
+		btnRight.setEnabled(state);
 	}
 
 	private void updateMap()
@@ -122,12 +143,8 @@ public class Main implements KeyListener
 		else if(game.escaped())
 			lblGameStatus.setText("You escaped! Move to go to level 2!");
 
-
 		if(game.level().gameOver())
-		{
-			disableButtons();
-
-		}
+			btnSetEnabled(false);
 		else if (game.escaped() && level  == 1)
 		{
 			game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
@@ -136,12 +153,10 @@ public class Main implements KeyListener
 		else if(game.escaped() && level == 2)
 		{
 			lblGameStatus.setText("You won! Congratulations!");
-			disableButtons();
+			btnSetEnabled(false);
 		}
 		else
-		{
 			generateStatus();
-		}
 	}
 
 	/**
@@ -289,7 +304,7 @@ public class Main implements KeyListener
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
-/*
+					/*
 					gameView = new GameView(map,level);
 					gameView.setBounds(18, 61, width*32, height*32);
 					frmDungeonKeep.getContentPane().add(gameView);
@@ -307,31 +322,8 @@ public class Main implements KeyListener
 
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-						{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
-						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-						{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
-						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','X','X',' ','X','X','X','X',' ','X'} , 
-						{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
-						{'X','X','X','X','X','X','X','X','X','X'}};
-
-				char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','X','X','X','X','X','X','X','X','X'}};
-
-
-				map1 = new Map(level1);
+				
+				Map map1 = new Map(level1);
 				gameView = new GameView(map1,1);
 				gameView.setBounds(18, 61, 329, 350);
 				frmDungeonKeep.getContentPane().add(gameView);
@@ -339,10 +331,7 @@ public class Main implements KeyListener
 				map2 = new Map(level2);
 
 				game = new GameState(new Dungeon(map1, configWindow.guardPersonality()));
-				btnUp.setEnabled(true);
-				btnLeft.setEnabled(true);
-				btnDown.setEnabled(true);
-				btnRight.setEnabled(true);
+				btnSetEnabled(true);
 
 				lblGameStatus.setText("Get ready to RUMBLEEEEE!");
 				frmDungeonKeep.requestFocusInWindow();

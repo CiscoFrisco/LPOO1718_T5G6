@@ -22,7 +22,8 @@ public class Position implements Comparable<Position>
 	}
 
 	@Override
-	public int compareTo(Position p2) {
+	public int compareTo(Position p2)
+	{
 		if(i==p2.i && j==p2.j)
 			return 0;
 		

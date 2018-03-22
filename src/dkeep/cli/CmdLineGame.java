@@ -7,22 +7,38 @@ import dkeep.logic.Dungeon;
 import dkeep.logic.Entity;
 import dkeep.logic.GameState;
 import dkeep.logic.Keep;
-import dkeep.logic.Level;
 import dkeep.logic.Map;
 
 public class CmdLineGame 
 {
+	private static char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X','X',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
+			{'X','X','X','X','X','X','X','X','X','X'}};
+
+	private static char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','X','X','X','X','X','X','X','X','X'}};
+
 	public static boolean scanMove(char movement, GameState state, Entity entity)
 	{
 		if(movement == 'a' || movement == 'w' || movement == 's' || movement == 'd')
-		{	
-			if(state.level().issueMov(movement, entity))
-				return true;
+			return state.level().issueMov(movement, entity);
 
-			return false;
-		}
-		else
-			return false;
+		return false;
 	}
 
 
@@ -36,11 +52,11 @@ public class CmdLineGame
 
 			System.out.print('\n');
 
-			if(scanMove(movement, state, state.level().hero()))
+			if(scanMove(movement, state, state.hero()))
 			{	
 				state.moveEnemy();
 
-				System.out.print(state.getMap());
+				System.out.print(state.getMap().getPrintable());
 
 				if(state.checkEnemy())
 				{
@@ -91,7 +107,7 @@ public class CmdLineGame
 
 		return res;
 	}
-	
+
 	public static int numberOfOgres()
 	{
 		Random random = new Random();
@@ -100,52 +116,25 @@ public class CmdLineGame
 
 	public static void main(String[] args) 
 	{
-		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
-				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-				{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
-				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-				{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X','X','X',' ','X','X','X','X',' ','X'} , 
-				{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
-				{'X','X','X','X','X','X','X','X','X','X'}};
-
-		char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-				{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
-				{'X','X','X','X','X','X','X','X','X','X'}};
-
-		Map map = new Map(level1);
-		Map map2 = new Map(level2);
-		Level dungeon = new Dungeon(map, guardPersonality());
-		GameState state = new GameState(dungeon);
+		GameState state = new GameState(new Dungeon(new Map(level1), guardPersonality()));
 
 		printInstructions();
-		System.out.print(state.getMap());
+		System.out.print(state.getMap().getPrintable());
 		System.out.print("Insert your move: ");
 
 		Scanner s = new Scanner(System.in);
 
 		if(gameplay(1, state, s) == 0)
-			state.setLevel(new Keep(map2, numberOfOgres()));
+			state.setLevel(new Keep(new Map(level2), numberOfOgres()));
 		else
 		{
 			s.close();
 			return;
 		}
 
-		System.out.print(state.getMap());
+		System.out.print(state.getMap().getPrintable());
+
 		if(gameplay(2, state, s) == 0)
 			s.close();
-
-		return;
 	}
-
 }
