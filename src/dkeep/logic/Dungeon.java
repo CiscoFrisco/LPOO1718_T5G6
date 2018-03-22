@@ -1,16 +1,27 @@
 package dkeep.logic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import dkeep.gui.GameView;
 
 public class Dungeon extends Level
 {
 	private ArrayList<ExitDoor> exitDoors;
 	private Guard guard;
 	private Lever lever;
+	private String guardType;
 
 	public Dungeon(Map map, String guardType)
 	{
+		id = 1;
 		this.map = map;
+		this.guardType = guardType;
 		initDungeon(guardType);
 		escaped = false;
 		gameOver = false;
@@ -143,4 +154,68 @@ public class Dungeon extends Level
 	{
 		return checkGuard();
 	}
+
+	@Override
+	public void saveToFile(File file) 
+	{
+		String writable = map.getWritable();
+		int width = map.width();
+		int height = map.height();
+
+		try 
+		{
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(height + System.lineSeparator());
+			writer.write(width  + System.lineSeparator());
+			writer.write(1 + System.lineSeparator());
+			writer.write(guardType + System.lineSeparator());
+			writer.write(guard.getMovement() + System.lineSeparator());
+
+			writer.write(writable);
+
+			writer.close();
+
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public Dungeon readFromFile(File file)
+	{
+		char[][] reading = null;
+		String guardPersonality = "";
+		int index_mov = 0;
+		try 
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			int height = Integer.parseInt(reader.readLine());
+			int width = Integer.parseInt(reader.readLine());
+			guardPersonality = reader.readLine();
+			index_mov = Integer.parseInt(reader.readLine());
+
+			reading = new char[height][width];
+
+			for(int i=0;i<height; i++)
+			{
+				String line = reader.readLine();
+				reading[i] = line.toCharArray();
+			}
+
+			reader.close();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Map newMap = new Map(reading);
+		
+		Dungeon dungeon = new Dungeon(newMap,guardPersonality);
+		dungeon.guard().setMovement(index_mov);
+		return dungeon;
+	}
+	
+	
 }

@@ -6,13 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -20,11 +14,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import dkeep.logic.Dungeon;
 import dkeep.logic.GameState;
+import dkeep.logic.Keep;
 import dkeep.logic.Map;
 
-public class Main implements KeyListener{
-
+public class Main implements KeyListener
+{
 	private CustomKeep customKeep;
 	private GameConfig configWindow;
 	private JFrame frmDungeonKeep;
@@ -39,6 +35,7 @@ public class Main implements KeyListener{
 	private GameState game;
 	private Map map1;
 	private Map map2;
+	private int level = 1;
 
 
 	/**
@@ -105,8 +102,6 @@ public class Main implements KeyListener{
 			break;
 		default:
 			break;
-
-
 		}
 	}
 
@@ -115,11 +110,11 @@ public class Main implements KeyListener{
 		if(game.level().gameOver())
 			return;
 
-		boolean mov = game.issueMov(heroMov, game.hero());
+		game.level().issueMov(heroMov, game.level().hero());
 
 		game.moveEnemy();
 
-		gameView.updateMap(game.getLayout(),game.getLevel());
+		gameView.updateMap(game.level().map().layout());
 		updateMap();
 
 		if(game.checkEnemy())
@@ -133,11 +128,12 @@ public class Main implements KeyListener{
 			disableButtons();
 
 		}
-		else if (game.escaped() && game.getLevel() == 1)
+		else if (game.escaped() && level  == 1)
 		{
-			game.changeLevel(map2, configWindow.numberOfOgres());
+			game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
+			level++;
 		}
-		else if(game.escaped() && game.getLevel() == 2)
+		else if(game.escaped() && level == 2)
 		{
 			lblGameStatus.setText("You won! Congratulations!");
 			disableButtons();
@@ -277,25 +273,7 @@ public class Main implements KeyListener{
 				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 
-					String map = game.getWritable();
-					int width = game.getLayout()[0].length;
-					int height = game.getLayout().length;
 
-					try {
-						BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-						writer.write(height + System.lineSeparator());
-						writer.write(width  + System.lineSeparator());
-						writer.write(game.getLevel()+ System.lineSeparator());
-						writer.write(game.getGuardType() + System.lineSeparator());
-						writer.write(game.getGuard().getMovement() + System.lineSeparator());
-
-						writer.write(map);
-
-						writer.close();
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 
 				}
 
@@ -311,38 +289,14 @@ public class Main implements KeyListener{
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
+/*
+					gameView = new GameView(map,level);
+					gameView.setBounds(18, 61, width*32, height*32);
+					frmDungeonKeep.getContentPane().add(gameView);
 
-					try {
-						BufferedReader reader = new BufferedReader(new FileReader(file));
-						int height = Integer.parseInt(reader.readLine());
-						int width = Integer.parseInt(reader.readLine());
-						int level = Integer.parseInt(reader.readLine());
-						String guardType = reader.readLine();
-						int index_mov = Integer.parseInt(reader.readLine());
-
-						char[][] reading = new char[height][width];
-
-						for(int i=0;i<height; i++)
-						{
-							String line = reader.readLine();
-							reading[i] = line.toCharArray();
-						}
-
-						reader.close();
-
-						Map map = new Map(reading);
-						gameView = new GameView(map,level);
-						gameView.setBounds(18, 61, width*32, height*32);
-						frmDungeonKeep.getContentPane().add(gameView);
-
-						game = new GameState(map,level, guardType);
-						game.getGuard().setMovement(index_mov);
-						gameView.repaint();
-
-					} catch (NumberFormatException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					game = new GameState(map,level, guardType);
+					game.getGuard().setMovement(index_mov);
+					gameView.repaint();*/
 
 				}
 			}
@@ -384,7 +338,7 @@ public class Main implements KeyListener{
 				gameView.repaint();
 				map2 = new Map(level2);
 
-				game = new GameState(map1, 1, configWindow.guardPersonality());
+				game = new GameState(new Dungeon(map1, configWindow.guardPersonality()));
 				btnUp.setEnabled(true);
 				btnLeft.setEnabled(true);
 				btnDown.setEnabled(true);
@@ -392,7 +346,6 @@ public class Main implements KeyListener{
 
 				lblGameStatus.setText("Get ready to RUMBLEEEEE!");
 				frmDungeonKeep.requestFocusInWindow();
-				//txtrConsole.setText(game.getMap());
 			}
 		});
 

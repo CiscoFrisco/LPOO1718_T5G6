@@ -1,5 +1,11 @@
 package dkeep.logic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,8 +17,17 @@ public class Keep extends Level
 
 	public Keep(Map map, int numberOfOgres)
 	{
+		id = 2;
 		this.map = map;
-		initKeep(numberOfOgres);
+		initKeep();
+		generateOgres(numberOfOgres);
+	}
+	
+	public Keep(Map map)
+	{
+		id = 2;
+		this.map = map;
+		initKeep();
 	}
 
 	public Key key()
@@ -25,7 +40,7 @@ public class Keep extends Level
 		return exitDoor;
 	}
 
-	private void initKeep(int numberOfOgres) 
+	private void initKeep() 
 	{
 		for(int i = 0;i<map.layout().length;i++)
 			for(int j = 0;j<map.layout()[i].length;j++)
@@ -37,9 +52,10 @@ public class Keep extends Level
 					key = new Key(new Position(i,j),'k');
 				else if(rep == 'I')
 					exitDoor = new ExitDoor(new Position(i,j),'I');
+				else if(rep == 'O' || rep == '8')
+					ogres.add(new Ogre(new Position(i,j),rep));
 			}	
 
-		generateOgres(numberOfOgres);
 	}
 
 	public void generateOgres(int numberOfOgres)
@@ -294,5 +310,62 @@ public class Keep extends Level
 	public boolean checkEnemy() 
 	{
 		return checkClub();
+	}
+
+	@Override
+	public void saveToFile(File file) 
+	{
+		String writable = map.getWritable();
+		int width = map.width();
+		int height = map.height();
+
+		try 
+		{
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(height + System.lineSeparator());
+			writer.write(width  + System.lineSeparator());
+			writer.write(2 + System.lineSeparator());
+
+			writer.write(writable);
+
+			writer.close();
+
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public Keep readFromFile(File file)
+	{
+		char[][] reading = null;
+
+		try 
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			int height = Integer.parseInt(reader.readLine());
+			int width = Integer.parseInt(reader.readLine());
+
+
+			reading = new char[height][width];
+
+			for(int i=0;i<height; i++)
+			{
+				String line = reader.readLine();
+				reading[i] = line.toCharArray();
+			}
+
+			reader.close();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Map newMap = new Map(reading);
+		
+		Keep keep = new Keep(newMap);
+		return keep;
 	}
 }

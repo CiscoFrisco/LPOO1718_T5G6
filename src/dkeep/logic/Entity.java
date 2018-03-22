@@ -1,6 +1,6 @@
 package dkeep.logic;
 
-public abstract class Entity 
+public abstract class Entity
 {
 	protected Position pos;
 	protected char representation;

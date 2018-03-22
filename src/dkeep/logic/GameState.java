@@ -28,14 +28,19 @@ public class GameState
 	{
 		level.moveEnemy();	
 	}
-	
-	public String getMap()
-	{
-		return level.map.getPrintable();
-	}
 
 	public boolean checkEnemy()
 	{
 		return level.checkEnemy();
+	}
+	
+	public Map getMap()
+	{
+		return level.map;
+	}
+	
+	public int getLevel()
+	{
+		return level.id;
 	}
 }

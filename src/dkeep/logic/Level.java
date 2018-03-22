@@ -1,9 +1,11 @@
 package dkeep.logic;
 
+import java.io.File;
 import java.util.Random;
 
 public abstract class Level 
 {
+	protected int id;
 	protected Map map;
 	protected Hero hero;
 	protected boolean escaped;
@@ -91,6 +93,10 @@ public abstract class Level
 	public abstract void moveEnemy();
 
 	public abstract boolean checkEnemy();
+	
+	public abstract void saveToFile(File file);
+	
+	public abstract Level readFromFile(File file);
 
 
 }

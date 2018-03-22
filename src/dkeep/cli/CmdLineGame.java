@@ -1,4 +1,5 @@
 package dkeep.cli;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ import dkeep.logic.Keep;
 import dkeep.logic.Level;
 import dkeep.logic.Map;
 
-public class Game 
+public class CmdLineGame 
 {
 	public static boolean scanMove(char movement, GameState state, Entity entity)
 	{
@@ -71,7 +72,7 @@ public class Game
 	{
 		String res ="";
 		Random random = new Random();
-		int number = 0;//random.nextInt(3);
+		int number = random.nextInt(3);
 
 		switch(number)
 		{
@@ -120,7 +121,6 @@ public class Game
 				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
 				{'X','X','X','X','X','X','X','X','X','X'}};
-
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);

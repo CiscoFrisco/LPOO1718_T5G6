@@ -2,8 +2,8 @@ package dkeep.logic;
 
 import java.util.ArrayList;
 
-public class Map {
-
+public class Map
+{
 	private char[][] layout;
 	private int width;
 	private int height;

@@ -16,6 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import dkeep.logic.Position;
+
 
 public class CustomKeep extends JDialog {
 
@@ -25,10 +27,10 @@ public class CustomKeep extends JDialog {
 	private int height = 10;
 	private int current_line;
 	private int current_col;
-	private int current_char;
+	private char current_char;
 	private int numOgres = 0;
 	GameView editable = new GameView(null, 2);
-	private TreeMap<Position, Integer> positions = new TreeMap<Position, Integer>();
+	private TreeMap<Position, Character> positions = new TreeMap<Position, Character>();
 
 	/**
 	 * Launch the application.
@@ -50,17 +52,14 @@ public class CustomKeep extends JDialog {
 
 		for(int i=0;i<height;i++)
 		{
-			editable.updatePos(i, 0, 9);
-			editable.updatePos(i, width-1, 9);
-
-
+			editable.updatePos(i, 0, 'X');
+			editable.updatePos(i, width-1, 'X');
 		}
 
 		for(int j=0;j<width;j++)
 		{
-			editable.updatePos(0, j, 9);
-			editable.updatePos(height-1, j, 9);
-
+			editable.updatePos(0, j, 'X');
+			editable.updatePos(height-1, j, 'X');
 		}
 
 		editable.repaint();
@@ -123,7 +122,7 @@ public class CustomKeep extends JDialog {
 		JButton btnHero = new JButton("Hero");
 		btnHero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				current_char = 0;
+				current_char = 'A';
 			}
 		});
 		btnHero.setBounds(398, 70, 89, 23);
@@ -132,7 +131,7 @@ public class CustomKeep extends JDialog {
 		JButton btnOgre = new JButton("Ogre");
 		btnOgre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				current_char = 3;
+				current_char = 'O';
 			}
 		});
 		btnOgre.setBounds(398, 135, 89, 23);
@@ -141,7 +140,7 @@ public class CustomKeep extends JDialog {
 		JButton btnKey = new JButton("Key");
 		btnKey.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				current_char = 8;
+				current_char = 'k';
 			}
 		});
 		btnKey.setBounds(398, 198, 89, 23);
@@ -150,7 +149,7 @@ public class CustomKeep extends JDialog {
 		JButton btnDoor = new JButton("Door");
 		btnDoor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				current_char = 5;
+				current_char = 'I';
 			}
 		});
 		btnDoor.setBounds(398, 257, 89, 23);
@@ -159,7 +158,7 @@ public class CustomKeep extends JDialog {
 		JButton btnWall = new JButton("Wall");
 		btnWall.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				current_char = 9;
+				current_char = 'X';
 			}
 		});
 		btnWall.setBounds(398, 324, 89, 23);
@@ -173,17 +172,17 @@ public class CustomKeep extends JDialog {
 
 				if(e.getClickCount()==2)
 				{
-					editable.updatePos(current_line, current_col, 10);
-					Integer ent = positions.get(new Position(current_line, current_col));
+					editable.updatePos(current_line, current_col, ' ');
+					Character ent = positions.get(new Position(current_line, current_col));
 					if(ent != null)
 					{
-						if(ent == 0)
+						if(ent == 'A')
 							btnHero.setEnabled(true);
-						else if(ent == 8)
+						else if(ent == 'k')
 							btnKey.setEnabled(true);
-						else if(ent == 5)
+						else if(ent == 'I')
 							btnDoor.setEnabled(true);
-						else if(ent == 3)
+						else if(ent == 'O')
 						{
 							numOgres--;
 							btnOgre.setEnabled(true);
@@ -193,22 +192,23 @@ public class CustomKeep extends JDialog {
 				}
 				else if(e.getClickCount() == 1)
 				{
-					if(current_char!=10){
+					if(current_char!=' ')
+					{
 						editable.updatePos(current_line, current_col, current_char);
 						editable.repaint();
-
 					}
 
-					Integer ent = positions.get(new Position(current_line, current_col));
+					Character ent = positions.get(new Position(current_line, current_col));
+					
 					if(ent!=null)
 					{
-						if(ent == 0)
+						if(ent == 'A')
 							btnHero.setEnabled(true);
-						else if(ent == 8)
+						else if(ent == 'k')
 							btnKey.setEnabled(true);
-						else if(ent == 5)
+						else if(ent == 'I')
 							btnDoor.setEnabled(true);
-						else if(ent == 3)
+						else if(ent == 'O')
 						{
 							numOgres--;
 							btnOgre.setEnabled(true);
@@ -217,30 +217,30 @@ public class CustomKeep extends JDialog {
 
 					positions.put(new Position(current_line, current_col), current_char);
 
-					if(current_char == 0)
+					if(current_char == 'A')
 					{
 						btnHero.setEnabled(false);
-						current_char = 10;
+						current_char = ' ';
 					}
-					else if(current_char == 8)
+					else if(current_char == 'k')
 					{
 						btnKey.setEnabled(false);
-						current_char = 10;
+						current_char = ' ';
 
 					}
-					else if(current_char == 5)
+					else if(current_char == 'I')
 					{
 						btnDoor.setEnabled(false);
-						current_char = 10;
+						current_char = ' ';
 					}
-					else if(current_char == 3)
+					else if(current_char == 'O')
 					{
 						numOgres++;
 
 						if(numOgres==3)
 						{
 							btnOgre.setEnabled(false);
-							current_char = 10;
+							current_char = ' ';
 						}
 					}
 				}
@@ -265,16 +265,16 @@ public class CustomKeep extends JDialog {
 						boolean key = false;
 						boolean door = false;
 
-						for(Entry<Position, Integer> entry : positions.entrySet())
+						for(Entry<Position, Character> entry : positions.entrySet())
 						{
-							Integer ent = entry.getValue();
-							if(ent == 0)
+							Character ent = entry.getValue();
+							if(ent == 'A')
 								hero = true;
-							else if (ent == 3)
+							else if (ent == 'O')
 								ogre = true;
-							else if(ent == 5)
+							else if(ent == 'I')
 								door = true;
-							else if(ent == 8)
+							else if(ent == 'k')
 								key = true;
 
 						}
