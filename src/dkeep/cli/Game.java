@@ -2,22 +2,24 @@ package dkeep.cli;
 import java.util.Random;
 import java.util.Scanner;
 
+import dkeep.logic.Dungeon;
 import dkeep.logic.Entity;
 import dkeep.logic.GameState;
+import dkeep.logic.Keep;
+import dkeep.logic.Level;
 import dkeep.logic.Map;
 
-public class Game {
-
+public class Game 
+{
 	public static boolean scanMove(char movement, GameState state, Entity entity)
 	{
 		if(movement == 'a' || movement == 'w' || movement == 's' || movement == 'd')
 		{	
-			if(state.issueMov(movement, entity))
+			if(state.level().issueMov(movement, entity))
 				return true;
 
 			return false;
 		}
-
 		else
 			return false;
 	}
@@ -33,25 +35,18 @@ public class Game {
 
 			System.out.print('\n');
 
-			if(scanMove(movement, state, state.hero()))
+			if(scanMove(movement, state, state.level().hero()))
 			{	
-				if(level == 1)
-					state.moveGuard();
-				else
-				{
-					state.moveOgres();
-					state.armOgres();
-					state.checkStun();
-				}						
+				state.moveEnemy();
 
-				state.printMap();
+				System.out.print(state.getMap());
 
-				if((level == 1 && state.checkGuard()) || (level == 2 && (state.checkClub())))	
+				if(state.checkEnemy())
 				{
 					System.out.println("Game Over!");
 					return 1;
 				}
-				else if(level == 2 && state.escaped())
+				else if(state.escaped() && level == 2)
 				{
 					System.out.println("You won, congratulations!");
 					return 0;
@@ -76,7 +71,7 @@ public class Game {
 	{
 		String res ="";
 		Random random = new Random();
-		int number = random.nextInt(3);
+		int number = 0;//random.nextInt(3);
 
 		switch(number)
 		{
@@ -102,8 +97,8 @@ public class Game {
 		return random.nextInt(2) + 1;
 	}
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) 
+	{
 		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
 				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
@@ -129,28 +124,26 @@ public class Game {
 
 		Map map = new Map(level1);
 		Map map2 = new Map(level2);
-		GameState state = new GameState(map,1,guardPersonality());
+		Level dungeon = new Dungeon(map, guardPersonality());
+		GameState state = new GameState(dungeon);
 
 		printInstructions();
-		state.printMap();
+		System.out.print(state.getMap());
 		System.out.print("Insert your move: ");
 
 		Scanner s = new Scanner(System.in);
 
-		if(gameplay(1, state, s) == 0) // if he goes through to the second level
-			state.changeLevel(map2, numberOfOgres());
-		else //if he dies 
+		if(gameplay(1, state, s) == 0)
+			state.setLevel(new Keep(map2, numberOfOgres()));
+		else
 		{
 			s.close();
 			return;
-
 		}
 
-		state.printMap();
-		if(gameplay(2, state, s) == 0) //
-		{
+		System.out.print(state.getMap());
+		if(gameplay(2, state, s) == 0)
 			s.close();
-		}
 
 		return;
 	}

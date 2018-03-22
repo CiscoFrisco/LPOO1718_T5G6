@@ -57,10 +57,23 @@ public class Position implements Comparable<Position>
 			break;
 		case 's':
 			i++;
-			break;
-			//map.updatePos(entity.x_pos, entity.y_pos, entity);
 		default:
 			break;
 		}
+	}
+	
+	public boolean isAdjacent(Position pos2)
+	{
+		boolean cond1 = Math.abs(i-pos2.i)<=1;
+		boolean cond2 = j == pos2.j;
+		boolean cond3 = Math.abs(j-pos2.j)<=1;
+		boolean cond4 = i == pos2.i;
+		
+		return  (cond1 && cond2) || (cond3 && cond4);
+	}
+	
+	public Position clone()
+	{
+		return new Position(i,j);
 	}
 }

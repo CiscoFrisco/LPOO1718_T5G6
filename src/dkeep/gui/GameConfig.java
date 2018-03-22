@@ -22,7 +22,7 @@ public class GameConfig extends JDialog {
 	private JTextField textNumberOfOgres;
 	private int numberOfOgres = 1;
 	private String guardPersonality = "Rookie";
-	private JComboBox comboBox;
+	private JComboBox<String> comboBox;
 	
 	/**
 	 * Launch the application.
@@ -72,7 +72,7 @@ public class GameConfig extends JDialog {
 		{
 			String[] personalities = {"Rookie", "Drunken", "Suspicious"};
 
-			comboBox = new JComboBox(personalities);
+			comboBox = new JComboBox<String>(personalities);
 			comboBox.setBounds(197, 117, 88, 20);
 			contentPanel.add(comboBox);
 		}

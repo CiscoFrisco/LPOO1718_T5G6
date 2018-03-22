@@ -81,7 +81,7 @@ public class DrunkenGuard extends Guard
 					movement = guard_route[guard_movement - 1];
 			}	
 
-			reverseMovement(movement);
+			movement = reverseMovement(movement);
 		}
 
 		return movement;

@@ -8,17 +8,18 @@ public class Keep extends Level
 	private ArrayList<Ogre> ogres;
 	private Key key;
 	private ExitDoor exitDoor;
-	
+
 	public Keep(Map map, int numberOfOgres)
 	{
+		this.map = map;
 		initKeep(numberOfOgres);
 	}
-	
+
 	public Key key()
 	{
 		return key;
 	}
-	
+
 	public ExitDoor exitDoor()
 	{
 		return exitDoor;
@@ -31,16 +32,16 @@ public class Keep extends Level
 			{
 				char rep = map.layout()[i][j];
 				if(rep == 'A')
-					hero = new Hero(i,j,'A');
+					hero = new Hero(new Position(i,j),'A');
 				else if(rep == 'k')
-					key = new Key(i,j,'k');
+					key = new Key(new Position(i,j),'k');
 				else if(rep == 'I')
-					exitDoor = new ExitDoor(i,j,'I');
+					exitDoor = new ExitDoor(new Position(i,j),'I');
 			}	
-		
+
 		generateOgres(numberOfOgres);
 	}
-	
+
 	public void generateOgres(int numberOfOgres)
 	{
 		Random random = new Random();
@@ -64,15 +65,15 @@ public class Keep extends Level
 		}
 
 		for(Ogre ogre : ogres)
-			map.updatePos(ogre.pos().getI(), ogre.pos.getJ(), ogre);
+			map.updatePos(ogre.pos, ogre);
 	}
-	
+
 	public void armOgres()
 	{
 		for(Ogre ogre : ogres)
 			setClub(ogre);
 	}
-	
+
 	public void setClub(Ogre ogre)
 	{
 		char clubSwing = generateMovement();
@@ -80,7 +81,23 @@ public class Keep extends Level
 		while(!issueMov(clubSwing, ogre.club))
 			clubSwing = generateMovement();
 	}
-	
+
+	public void updateOgre(Ogre ogre)
+	{
+		Position pos = ogre.club().pos();
+
+		if(map.pos(pos) == '$')
+		{
+			map.setPos(pos,'k');
+			ogre.club().setRepresentation('*');
+		}
+		else
+			map.setPos(pos,' ');
+
+		ogre.club().resetKey();
+		ogre.club.setPos(ogre.pos);
+	}
+
 	public void moveOgres()
 	{
 		for(Ogre ogre : ogres)
@@ -96,4 +113,186 @@ public class Keep extends Level
 		}
 	}
 
+	public boolean checkOgre(Ogre ogre)
+	{		
+		if(hero.pos.isAdjacent(ogre.pos))
+			return true;
+
+		return false;
+	}
+
+	public boolean checkClub()
+	{
+		for(Ogre ogre: ogres)
+			if(hero.pos.isAdjacent(ogre.club.pos))
+			{
+				gameOver = true;
+				return true;
+			}
+
+		return false;
+	}
+
+	public void checkStun()
+	{
+		for(Ogre ogre : ogres)
+		{
+			if(ogre.stunned() && !ogre.updateStun())
+				map.updatePos(ogre.pos, ogre);
+			else if(checkOgre(ogre))
+			{
+				ogre.setStun();
+				map.updatePos(ogre.pos, ogre);
+			}
+		}
+	}
+
+
+	public  boolean checkCell(Position pos, Entity entity)
+	{
+		if(map.pos(pos) == 'X')
+			return false;
+
+		if(entity.equals(hero))
+		{
+			if(map.pos(pos) == 'k') 
+				hero.setKey();
+			else if(map.pos(pos) == 'S')
+				escaped = true;
+			else if(map.pos(pos) == 'I' && !hero.key())
+				return false;
+			else if( map.pos(pos) == '8' || map.pos(pos) == 'O' || map.pos(pos) == '$')
+				return false;
+		}
+		else if(entity.getClass() == Ogre.class)
+		{
+			for(Ogre ogre : ogres)
+				if(ogre.equals(entity))
+				{
+					if(map.pos(pos) == 'k' || ogre.key())
+						ogre.setKey();
+					else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == map.pos(hero.pos))
+						return false;
+
+					break;
+				}
+		}
+		else
+		{
+			for(Ogre ogre : ogres)
+				if(ogre.club.equals(entity))
+				{
+					if(map.pos(pos) == 'k' || ogre.club().key())
+						ogre.club().setKey();
+					else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == 'O')
+						return false;
+
+					break;
+				}
+		}
+
+		return true;
+	}
+
+	public void update(Position pos, Entity entity)
+	{	
+		char pos1 = ' ', pos2= ' ';
+
+		if(entity.equals(hero))
+		{
+			if(hero.key())
+			{
+				entity.setRepresentation('K');
+				if(map.pos(pos)=='I')
+				{
+					pos1 = 'S';
+					pos2 = entity.representation;
+					map.updateDoor(hero.key(), exitDoor);
+				}
+				else 
+				{
+					pos1 = entity.representation;
+					pos2 = ' ';
+				}
+
+			}
+			else
+			{
+				pos1 = entity.representation;
+				pos2 = ' ';
+			}
+		}
+		else if(entity.getClass() == Ogre.class)
+		{
+			for(Ogre ogre : ogres)
+			{
+				if(ogre.equals(entity))
+				{
+					if(ogre.key() && !hero.key())
+					{
+						entity.setRepresentation('$');
+						pos1 = entity.representation;
+						pos2 = ' ';
+					}
+					else if(ogre.pos.equals(key.pos) && !hero.key())
+					{
+						entity.setRepresentation('O');
+						pos1 = entity.representation;
+						pos2 = key.representation;
+					}
+					else 
+					{
+						pos1 = entity.representation;
+						pos2 = ' ';
+					}
+
+					break;
+				}
+			}
+		}
+		else
+		{
+			for(Ogre ogre : ogres)
+			{
+				if(ogre.club.equals(entity))
+				{
+					if(ogre.club().key() && !hero.key())
+					{
+						entity.setRepresentation('$');
+						pos1 = entity.representation;
+						pos2 = ogre.representation;
+					}
+					else if(ogre.pos.equals(key.pos) && !hero.key())
+					{
+						entity.setRepresentation('*');
+						pos1 = entity.representation;
+						ogre.setRepresentation('$');
+						pos2 = ogre.representation;
+					}
+					else
+					{
+						pos1 = entity.representation;
+						pos2 = ogre.representation;
+					}
+
+					break;
+				}
+			}
+		}
+
+		map.update(pos, entity, pos1, pos2);
+	}
+
+	public void moveEnemy()
+	{
+		moveOgres();
+		armOgres();
+		checkStun();
+	}
+
+	@Override
+	public boolean checkEnemy() 
+	{
+		return checkClub();
+	}
 }

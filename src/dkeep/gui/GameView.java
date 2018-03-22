@@ -90,7 +90,6 @@ public class GameView extends JPanel{
 		{
 			for(int j=0; j<map[i].length;j++)
 			{
-
 				if(map[i][j] == 'H' || map[i][j] == 'A' || map[i][j] == 'K')
 				{
 					graphics[i][j] = images.get(0);

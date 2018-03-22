@@ -24,7 +24,7 @@ import dkeep.logic.GameState;
 import dkeep.logic.Map;
 
 public class Main implements KeyListener{
-	
+
 	private CustomKeep customKeep;
 	private GameConfig configWindow;
 	private JFrame frmDungeonKeep;
@@ -112,39 +112,26 @@ public class Main implements KeyListener{
 
 	private void gameIteration(char heroMov)
 	{
-		if(game.gameOver())
+		if(game.level().gameOver())
 			return;
-		
+
 		boolean mov = game.issueMov(heroMov, game.hero());
 
-		switch(game.getLevel())
-		{
-		case 1:
-			if(mov)
-				game.moveGuard();
-			break;
-		case 2:
-			game.moveOgres();
-			game.armOgres();
-			game.checkStun();
-			break;
-		default:
-			break;	
-		}
+		game.moveEnemy();
 
 		gameView.updateMap(game.getLayout(),game.getLevel());
 		updateMap();
 
-		if((game.getLevel() == 1 && game.checkGuard()) || (game.getLevel() == 2 && game.checkClub()))
+		if(game.checkEnemy())
 			lblGameStatus.setText("You lost!");
 		else if(game.escaped())
 			lblGameStatus.setText("You escaped! Move to go to level 2!");
 
 
-		if(game.gameOver())
+		if(game.level().gameOver())
 		{
 			disableButtons();
-			
+
 		}
 		else if (game.escaped() && game.getLevel() == 1)
 		{
@@ -193,12 +180,12 @@ public class Main implements KeyListener{
 		frmDungeonKeep.setBounds(100, 100, 611, 477);
 		frmDungeonKeep.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDungeonKeep.getContentPane().setLayout(null);
-		
+
 		configWindow = new GameConfig();
 		configWindow.setVisible(true);
 		customKeep = new CustomKeep();
 		customKeep.setVisible(false);
-		
+
 		btnExitGame = new JButton("Exit Game");
 		btnExitGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -261,7 +248,7 @@ public class Main implements KeyListener{
 		btnNewGame = new JButton("New Game");
 		btnNewGame.setBounds(444, 30, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnNewGame);
-		
+
 		JButton btnConfigureGame = new JButton("Configure Game");
 		btnConfigureGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -271,7 +258,7 @@ public class Main implements KeyListener{
 		});
 		btnConfigureGame.setBounds(444, 64, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnConfigureGame);
-		
+
 		JButton btnEditMap = new JButton("Custom Keep");
 		btnEditMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -281,89 +268,89 @@ public class Main implements KeyListener{
 		});
 		btnEditMap.setBounds(444, 102, 117, 23);
 		frmDungeonKeep.getContentPane().add(btnEditMap);
-		
+
 		JButton btnSaveGame = new JButton("Save Game");
 		btnSaveGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmDungeonKeep.requestFocusInWindow();
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-				  File file = fileChooser.getSelectedFile();
-				  
-				  String map = game.getWritable();
-				  int width = game.getLayout()[0].length;
-				  int height = game.getLayout().length;
-				  
-				  try {
-					BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-					writer.write(height + System.lineSeparator());
-					writer.write(width  + System.lineSeparator());
-					writer.write(game.getLevel()+ System.lineSeparator());
-					writer.write(game.getGuardType() + System.lineSeparator());
-					writer.write(game.getGuard().getMovement() + System.lineSeparator());
+					File file = fileChooser.getSelectedFile();
 
-					writer.write(map);
-				
-					writer.close();
+					String map = game.getWritable();
+					int width = game.getLayout()[0].length;
+					int height = game.getLayout().length;
 
-				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+						writer.write(height + System.lineSeparator());
+						writer.write(width  + System.lineSeparator());
+						writer.write(game.getLevel()+ System.lineSeparator());
+						writer.write(game.getGuardType() + System.lineSeparator());
+						writer.write(game.getGuard().getMovement() + System.lineSeparator());
+
+						writer.write(map);
+
+						writer.close();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
 				}
-				  
-				}
-				
+
 			}
 		});
 		btnSaveGame.setBounds(444, 136, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnSaveGame);
-		
+
 		JButton btnLoadGame = new JButton("Load Game");
 		btnLoadGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmDungeonKeep.requestFocusInWindow();
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-				  File file = fileChooser.getSelectedFile();
-				  
-				  try {
-					BufferedReader reader = new BufferedReader(new FileReader(file));
-					int height = Integer.parseInt(reader.readLine());
-					int width = Integer.parseInt(reader.readLine());
-					int level = Integer.parseInt(reader.readLine());
-					String guardType = reader.readLine();
-					int index_mov = Integer.parseInt(reader.readLine());
-					
-					char[][] reading = new char[height][width];
-					
-					for(int i=0;i<height; i++)
-					{
-						String line = reader.readLine();
-						reading[i] = line.toCharArray();
-					}
-					
-					reader.close();
-					
-					Map map = new Map(reading);
-					gameView = new GameView(map,level);
-					gameView.setBounds(18, 61, width*32, height*32);
-					frmDungeonKeep.getContentPane().add(gameView);
-					
-					game = new GameState(map,level, guardType);
-					game.getGuard().setMovement(index_mov);
-					gameView.repaint();
+					File file = fileChooser.getSelectedFile();
 
-				} catch (NumberFormatException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				  
+					try {
+						BufferedReader reader = new BufferedReader(new FileReader(file));
+						int height = Integer.parseInt(reader.readLine());
+						int width = Integer.parseInt(reader.readLine());
+						int level = Integer.parseInt(reader.readLine());
+						String guardType = reader.readLine();
+						int index_mov = Integer.parseInt(reader.readLine());
+
+						char[][] reading = new char[height][width];
+
+						for(int i=0;i<height; i++)
+						{
+							String line = reader.readLine();
+							reading[i] = line.toCharArray();
+						}
+
+						reader.close();
+
+						Map map = new Map(reading);
+						gameView = new GameView(map,level);
+						gameView.setBounds(18, 61, width*32, height*32);
+						frmDungeonKeep.getContentPane().add(gameView);
+
+						game = new GameState(map,level, guardType);
+						game.getGuard().setMovement(index_mov);
+						gameView.repaint();
+
+					} catch (NumberFormatException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 			}
 		});
 		btnLoadGame.setBounds(444, 174, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnLoadGame);
-		
-		
+
+
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -414,18 +401,18 @@ public class Main implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

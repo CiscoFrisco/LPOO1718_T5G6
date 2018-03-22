@@ -15,8 +15,13 @@ public class Club extends Entity
 		return onKey;
 	}
 	
-	public void setKey(boolean newState)
+	public void setKey()
 	{
-		onKey = newState;
+		onKey = !onKey;
+	}
+	
+	public void resetKey()
+	{
+		onKey = false;
 	}
 }

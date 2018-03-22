@@ -20,7 +20,7 @@ public abstract class Guard extends Entity
 		guard_movement = mov;
 	}
 	
-	public void reverseMovement(char mov)
+	public char reverseMovement(char mov)
 	{
 		switch(mov)
 		{
@@ -39,6 +39,8 @@ public abstract class Guard extends Entity
 		default:
 			break;
 		}
+		
+		return mov;
 	}
 	
 	abstract void move();

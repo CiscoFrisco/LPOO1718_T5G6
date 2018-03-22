@@ -46,7 +46,7 @@ public class SuspiciousGuard extends Guard
 				mov = guard_route[guard_movement - 1];
 		}	
 		
-		reverseMovement(mov);
+		mov = reverseMovement(mov);
 		
 		return mov;
 	}
