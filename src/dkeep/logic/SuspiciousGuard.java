@@ -2,13 +2,14 @@ package dkeep.logic;
 
 import java.util.Random;
 
-public class SuspiciousGuard extends Guard {
+public class SuspiciousGuard extends Guard 
+{
+	private boolean reverse;
 
-	private boolean reverse = false;
-
-	public SuspiciousGuard(int x_pos, int y_pos, char rep)
+	public SuspiciousGuard(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
+		reverse = false;
 	}
 
 	public void move()
@@ -31,7 +32,7 @@ public class SuspiciousGuard extends Guard {
 
 	public char getMove()
 	{	
-		reverseMov();
+		setReverse();
 		
 		char mov = guard_route[guard_movement];
 		
@@ -44,38 +45,19 @@ public class SuspiciousGuard extends Guard {
 			else
 				mov = guard_route[guard_movement - 1];
 		}	
-
-		switch(mov)
-		{
-		case 'w':
-			mov = 's';
-			break;
-		case'd':
-			mov = 'a';
-			break;
-		case 's':
-			mov = 'w';
-			break;
-		case 'a':
-			mov = 'd';
-			break;
-		default:
-			break;
-		}
-
+		
+		reverseMovement(mov);
+		
 		return mov;
 	}
 
-	public void reverseMov()
+	public void setReverse()
 	{
 		Random number = new Random();
 		int generated = number.nextInt(11); //generate a number between 0 and 10
 
 		//guard has 30 % chance of reversing his movement
-		if(generated >= 7)
-			reverse = true;
-		else
-			reverse = false;
+		reverse = generated>=7 ? true : false;
 	}
 	
 	public boolean status()

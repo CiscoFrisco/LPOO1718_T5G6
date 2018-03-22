@@ -1,12 +1,12 @@
 package dkeep.logic;
 
-public class Club extends Entity {
-	
+public class Club extends Entity 
+{
 	public boolean onKey;
 	
-	public Club(int x_pos, int y_pos, char rep)
+	public Club(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
 		onKey = false;
 	}
 	
@@ -15,13 +15,8 @@ public class Club extends Entity {
 		return onKey;
 	}
 	
-	public void setKey()
+	public void setKey(boolean newState)
 	{
-		onKey = !onKey;
-	}
-	
-	public void resetKey()
-	{
-		onKey = false;
+		onKey = newState;
 	}
 }

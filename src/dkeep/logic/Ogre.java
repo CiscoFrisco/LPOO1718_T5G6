@@ -1,19 +1,19 @@
 package dkeep.logic;
 
-public class Ogre extends Entity{
-	
+public class Ogre extends Entity
+{
 	public Club club;
 	private boolean onKey;
 	private boolean stunned;
 	private int stunCounter;
 	
-	public Ogre(int x_pos, int y_pos, char rep)
+	public Ogre(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
 		onKey = false;
 		stunned = false;
 		stunCounter = 0;
-		club = new Club(x_pos,y_pos, '*');
+		club = new Club(pos, '*');
 	}
 	
 	public Club club()
@@ -47,12 +47,6 @@ public class Ogre extends Entity{
 	public void setKey()
 	{
 		onKey = !onKey;
-	}
-	
-	public void makeMov(int x_pos, int y_pos)
-	{
-		this.x_pos = x_pos;
-		this.y_pos = y_pos;
 	}
 	
 	public boolean updateStun()

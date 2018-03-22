@@ -1,10 +1,10 @@
 package dkeep.logic;
 
-public class RookieGuard extends Guard{
-	
-	public RookieGuard(int x_pos, int y_pos, char rep)
+public class RookieGuard extends Guard
+{	
+	public RookieGuard(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
 	}
 	
 	public void move()

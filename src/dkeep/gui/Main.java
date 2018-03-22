@@ -6,9 +6,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -200,16 +208,11 @@ public class Main implements KeyListener{
 		btnExitGame.setBounds(444, 394, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnExitGame);
 
-		/*
-		txtrConsole = new JTextArea();
-		txtrConsole.setFont(new Font("Courier New", Font.PLAIN, 20));
-		txtrConsole.setBounds(18, 61, 329, 248);
-		frame.getContentPane().add(txtrConsole);
-		 */
 
 		btnUp = new JButton("Up");
 		btnUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
 				gameIteration('w');
 			}
 		});
@@ -220,6 +223,7 @@ public class Main implements KeyListener{
 		btnLeft = new JButton("Left");
 		btnLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
 				gameIteration('a');
 			}
 		});
@@ -230,6 +234,7 @@ public class Main implements KeyListener{
 		btnDown = new JButton("Down");
 		btnDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
 				gameIteration('s');
 			}
 		});
@@ -240,6 +245,7 @@ public class Main implements KeyListener{
 		btnRight = new JButton("Right");
 		btnRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
 				gameIteration('d');
 			}
 		});
@@ -253,26 +259,109 @@ public class Main implements KeyListener{
 
 
 		btnNewGame = new JButton("New Game");
-		btnNewGame.setBounds(444, 102, 118, 23);
+		btnNewGame.setBounds(444, 30, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnNewGame);
 		
 		JButton btnConfigureGame = new JButton("Configure Game");
 		btnConfigureGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frmDungeonKeep.requestFocusInWindow();
 				configWindow.setVisible(true);
 			}
 		});
-		btnConfigureGame.setBounds(444, 136, 118, 23);
+		btnConfigureGame.setBounds(444, 64, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnConfigureGame);
 		
 		JButton btnEditMap = new JButton("Custom Keep");
 		btnEditMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
 				customKeep.setVisible(true);
 			}
 		});
-		btnEditMap.setBounds(444, 174, 117, 23);
+		btnEditMap.setBounds(444, 102, 117, 23);
 		frmDungeonKeep.getContentPane().add(btnEditMap);
+		
+		JButton btnSaveGame = new JButton("Save Game");
+		btnSaveGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
+				  File file = fileChooser.getSelectedFile();
+				  
+				  String map = game.getWritable();
+				  int width = game.getLayout()[0].length;
+				  int height = game.getLayout().length;
+				  
+				  try {
+					BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+					writer.write(height + System.lineSeparator());
+					writer.write(width  + System.lineSeparator());
+					writer.write(game.getLevel()+ System.lineSeparator());
+					writer.write(game.getGuardType() + System.lineSeparator());
+					writer.write(game.getGuard().getMovement() + System.lineSeparator());
+
+					writer.write(map);
+				
+					writer.close();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				  
+				}
+				
+			}
+		});
+		btnSaveGame.setBounds(444, 136, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnSaveGame);
+		
+		JButton btnLoadGame = new JButton("Load Game");
+		btnLoadGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
+				  File file = fileChooser.getSelectedFile();
+				  
+				  try {
+					BufferedReader reader = new BufferedReader(new FileReader(file));
+					int height = Integer.parseInt(reader.readLine());
+					int width = Integer.parseInt(reader.readLine());
+					int level = Integer.parseInt(reader.readLine());
+					String guardType = reader.readLine();
+					int index_mov = Integer.parseInt(reader.readLine());
+					
+					char[][] reading = new char[height][width];
+					
+					for(int i=0;i<height; i++)
+					{
+						String line = reader.readLine();
+						reading[i] = line.toCharArray();
+					}
+					
+					reader.close();
+					
+					Map map = new Map(reading);
+					gameView = new GameView(map,level);
+					gameView.setBounds(18, 61, width*32, height*32);
+					frmDungeonKeep.getContentPane().add(gameView);
+					
+					game = new GameState(map,level, guardType);
+					game.getGuard().setMovement(index_mov);
+					gameView.repaint();
+
+				} catch (NumberFormatException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				  
+				}
+			}
+		});
+		btnLoadGame.setBounds(444, 174, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnLoadGame);
 		
 		
 		btnNewGame.addActionListener(new ActionListener() {

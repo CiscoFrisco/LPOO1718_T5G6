@@ -1,15 +1,13 @@
 package dkeep.logic;
 
-public abstract class Entity {
-
-	protected int x_pos;
-	protected int y_pos;
+public abstract class Entity 
+{
+	protected Position pos;
 	protected char representation;
 
-	public Entity(int x_pos, int y_pos, char representation)
+	public Entity(Position pos, char representation)
 	{
-		this.x_pos = x_pos;
-		this.y_pos = y_pos;
+		this.pos = pos;
 		this.representation = representation;
 	}
 	
@@ -18,14 +16,9 @@ public abstract class Entity {
 		representation = r;
 	}
 	
-	public int x_pos()
+	public Position pos()
 	{
-		return x_pos;
-	}
-	
-	public int y_pos()
-	{
-		return y_pos;
+		return pos;
 	}
 	
 	public char representation()
@@ -33,10 +26,8 @@ public abstract class Entity {
 		return representation;
 	}
 	
-	public void makeMov(int x_pos, int y_pos)
+	public void setPos(Position pos)
 	{
-		this.x_pos = x_pos;
-		this.y_pos = y_pos;
+		this.pos = pos;
 	}
-
 }

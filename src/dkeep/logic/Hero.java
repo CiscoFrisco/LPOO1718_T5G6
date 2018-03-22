@@ -1,13 +1,13 @@
 package dkeep.logic;
 
-public class Hero extends Entity{
-	
+public class Hero extends Entity
+{
 	private boolean onLever;
 	private boolean hasKey;
 	
-	public Hero(int x_pos, int y_pos, char rep)
+	public Hero(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
 		onLever = false;
 		hasKey = false;
 	}
@@ -31,7 +31,4 @@ public class Hero extends Entity{
 	{
 		hasKey = true;
 	}
-
-	
-
 }

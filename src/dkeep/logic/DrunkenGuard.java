@@ -2,14 +2,16 @@ package dkeep.logic;
 
 import java.util.Random;
 
-public class DrunkenGuard extends Guard{
+public class DrunkenGuard extends Guard
+{
+	private boolean asleep;
+	private boolean reverse;
 
-	private boolean asleep = false;
-	private boolean reverse = false;
-
-	public DrunkenGuard(int x_pos, int y_pos, char rep)
+	public DrunkenGuard(Position pos, char rep)
 	{
-		super(x_pos, y_pos, rep);
+		super(pos, rep);
+		asleep = false;
+		reverse = false;
 	}
 
 	public void setAsleep()
@@ -49,7 +51,7 @@ public class DrunkenGuard extends Guard{
 	public char getMove()
 	{	
 		Random number = new Random();
-		int generated = number.nextInt(11); //generate a number between 0 and 10
+		int generated = number.nextInt(11);
 		char movement = 'u';
 
 		//guard has 30 % chance of reversing its asleep state
@@ -60,20 +62,8 @@ public class DrunkenGuard extends Guard{
 
 			if(!asleep)
 			{
-				generated = number.nextInt(2);
-
-				switch(generated)
-				{
-				case 0:
-					reverse = true;
-					break;
-				case 1:
-					reverse = false;
-					break;
-				default:
-					break;
-				}
-
+				generated = number.nextInt(2);				
+				reverse = generated == 0 ? true : false;
 			}
 		}
 
@@ -91,24 +81,7 @@ public class DrunkenGuard extends Guard{
 					movement = guard_route[guard_movement - 1];
 			}	
 
-			switch(movement)
-			{
-			case 'w':
-				movement = 's';
-				break;
-			case'd':
-				movement = 'a';
-				break;
-			case 's':
-				movement = 'w';
-				break;
-			case 'a':
-				movement = 'd';
-				break;
-			default:
-				break;
-			}
-
+			reverseMovement(movement);
 		}
 
 		return movement;

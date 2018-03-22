@@ -5,10 +5,14 @@ import java.util.ArrayList;
 public class Map {
 
 	private char[][] layout;
+	private int width;
+	private int height;
 	
 	public Map(char[][] layout)
 	{
 		this.layout = layout;
+		width= layout[0].length;
+		height = layout.length;
 	}
 	
 	public char[][] layout()
@@ -53,53 +57,49 @@ public class Map {
 	{
 		layout[x_pos][y_pos] = entity.representation;
 	}
-
-	public void printMap()
+	
+	public String getPrintable()
 	{
-		for(int i = 0; i < layout.length; i++)
+		String map="";
+		
+		for(int i = 0; i<layout.length;i++)
 		{
-			for(int j = 0; j < layout[i].length; j++)
-			{
-				System.out.print(layout[i][j] + " ");
-			}
-
-			System.out.print('\n');
+			for(int j = 0; j< layout[i].length; j++)
+				map+=layout[i][j] + " ";
+			
+			map+=System.lineSeparator();
 		}
+
+		return map;
 	}
 	
 	public String getMapLine(char[] line) {
 		
 		String res  = "";
 		for(int i = 0; i < line.length; i++)
-		{
 			res += line[i] + " ";
-		}
 		
 		return res;
 	}
-	
-	public String getMap()
-	{
-		String map="";
-		
-		for(int i = 0; i<layout.length;i++)
-			map+=  getMapLine(layout[i]) + "\n";
-		
-		return map;
-	}
 
-	public char[][] getLayout() {
-		return layout;
-	}
-	
-	/*public String getMap()
+	public String getWritable()
 	{
 		String map="";
 		
 		for(int i = 0; i<layout.length;i++)
-			map+=new String(layout[i]) + "\n";
+			map+=new String(layout[i]) + System.lineSeparator();
 		
 		return map;
-	}*/
+	}
+	
+	public int width()
+	{
+		return width;
+	}
+	
+	public int height()
+	{
+		return height;
+	}
 }
 
