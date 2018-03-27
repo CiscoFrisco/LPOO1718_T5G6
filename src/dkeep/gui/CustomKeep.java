@@ -48,23 +48,10 @@ public class CustomKeep extends JDialog {
 	}
 
 	public Map getMap()
-	{
-		char[][] layout = new char[height][width];
+	{		
+		Map map = new Map(editable.getGameMap());
 
-		for(int i = 0; i< height; i++)
-			for(int j = 0; j< width; j++)
-			{
-				layout[i][j] = positions.get(new Position(i,j));
-				if(layout[i][j] == 'O')
-					numOgres++;
-			}
-
-		return new Map(layout);
-	}
-
-	public int numberOfOgres()
-	{
-		return numOgres;
+		return map;
 	}
 
 	public void generateMap() {

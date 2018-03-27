@@ -29,6 +29,7 @@ public class Keep extends Level
 	{
 		id = 2;
 		this.map = map;
+		ogres = new ArrayList<Ogre>();
 		initKeep();
 		movements = new ArrayList<Character>();
 		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
@@ -67,7 +68,6 @@ public class Keep extends Level
 		Random random = new Random();
 		int limit = map.layout().length/2;
 		int x_pos = limit + 1, y_pos = 0;
-		ogres = new ArrayList<Ogre>(numberOfOgres);
 
 		for(int i = 0; i<numberOfOgres;i++)
 		{	

@@ -127,7 +127,7 @@ public class Main implements KeyListener
 		else if (game.escaped() && level  == 1)
 		{
 			//game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
-			game.setLevel(new Keep(customKeep.getMap(), customKeep.numberOfOgres()));
+			game.setLevel(new Keep(customKeep.getMap()));
 			level++;
 			gameView.changeLevel();
 		}

@@ -16,6 +16,7 @@ public class GameView extends JPanel
 	private TreeMap<Character, BufferedImage> dungeon;
 	private TreeMap<Character, BufferedImage> keep;
 	private BufferedImage[][] graphics;
+	private char[][] gameMap;
 	private int width;
 	private int height;
 	private int level;
@@ -25,6 +26,7 @@ public class GameView extends JPanel
 		width = 10;
 		height = 10;
 		this.level = level;
+		this.gameMap = new char[height][width];
 		dungeon = new TreeMap<Character, BufferedImage>();
 		keep = new TreeMap<Character, BufferedImage>();
 
@@ -104,15 +106,24 @@ public class GameView extends JPanel
 	public void updatePos(int i, int j, char entity)
 	{
 		graphics[i][j] = level == 1 ? dungeon.get(entity) : keep.get(entity);
+		gameMap[i][j] = entity;
 	}
 
 	public void updateMap(char[][] map)
 	{		
 		TreeMap<Character, BufferedImage> images = level == 1 ? dungeon : keep;
 		
+		for(int i = 0; i < map.length; i++)
+		    gameMap[i] = map[i].clone();
+		
 		for(int i = 0; i < map.length;i++)
 			for(int j=0; j<map[i].length;j++)
 				graphics[i][j] = images.get(map[i][j]);
 	}	
+	
+	public char[][] getGameMap()
+	{
+		return gameMap;
+	}
 
 }
