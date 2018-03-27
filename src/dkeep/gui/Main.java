@@ -36,27 +36,6 @@ public class Main implements KeyListener
 	private Map map2;
 	private int level = 1;
 	
-	private char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
-			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-			{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
-			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X','X','X',' ','X','X','X','X',' ','X'} , 
-			{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
-			{'X','X','X','X','X','X','X','X','X','X'}};
-
-	private char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-			{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
-			{'X','X','X','X','X','X','X','X','X','X'}};
 
 
 	/**
@@ -147,8 +126,10 @@ public class Main implements KeyListener
 			btnSetEnabled(false);
 		else if (game.escaped() && level  == 1)
 		{
-			game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
+			//game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
+			game.setLevel(new Keep(customKeep.getMap(), customKeep.numberOfOgres()));
 			level++;
+			gameView.changeLevel();
 		}
 		else if(game.escaped() && level == 2)
 		{
@@ -322,7 +303,28 @@ public class Main implements KeyListener
 
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				 char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+						{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
+						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+						{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
+						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X','X','X',' ','X','X','X','X',' ','X'} , 
+						{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
+						{'X','X','X','X','X','X','X','X','X','X'}};
+
+				 char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+						{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
+						{'X','X','X','X','X','X','X','X','X','X'}};
+
 				Map map1 = new Map(level1);
 				gameView = new GameView(map1,1);
 				gameView.setBounds(18, 61, 329, 350);

@@ -13,33 +13,43 @@ import dkeep.logic.Map;
 
 public class GameView extends JPanel
 {
-	private TreeMap<Character, BufferedImage> images;
+	private TreeMap<Character, BufferedImage> dungeon;
+	private TreeMap<Character, BufferedImage> keep;
 	private BufferedImage[][] graphics;
 	private int width;
 	private int height;
+	private int level;
 
 	public GameView(Map gameMap, int level) 
 	{
 		width = 10;
 		height = 10;
-		images = new TreeMap<Character, BufferedImage>();
+		this.level = level;
+		dungeon = new TreeMap<Character, BufferedImage>();
+		keep = new TreeMap<Character, BufferedImage>();
 
 		try
 		{
-			images.put('H', ImageIO.read(new File("images/hero.png")));
-			images.put('K', ImageIO.read(new File("images/hero.png")));
-			images.put('A', ImageIO.read(new File("images/hero.png")));
-			images.put('$', ImageIO.read(new File("images/hero.png")));
-			images.put('8', ImageIO.read(new File("images/hero.png")));
-			images.put('G', ImageIO.read(new File("images/guard.png")));
-			images.put('g', ImageIO.read(new File("images/sleep.png")));
-			images.put('O', ImageIO.read(new File("images/ogre.png")));
-			images.put('*', ImageIO.read(new File("images/club.png")));
-			images.put('I', ImageIO.read(new File("images/door_closed.png")));
-			images.put('S', ImageIO.read(new File("images/door_open.png")));
-			images.put('k', ImageIO.read(new File("images/lever.png")));
-			images.put('X', ImageIO.read(new File("images/parede.png")));
-			images.put(' ', ImageIO.read(new File("images/espaco.png")));
+			dungeon.put('H', ImageIO.read(new File("images/hero.png")));
+			dungeon.put('G', ImageIO.read(new File("images/guard.png")));
+			dungeon.put('g', ImageIO.read(new File("images/sleep.png")));
+			dungeon.put('I', ImageIO.read(new File("images/door_closed.png")));
+			dungeon.put('S', ImageIO.read(new File("images/door_open.png")));
+			dungeon.put('k', ImageIO.read(new File("images/lever.png")));
+			dungeon.put('X', ImageIO.read(new File("images/parede.png")));
+			dungeon.put(' ', ImageIO.read(new File("images/espaco.png")));
+			
+			keep.put('O', ImageIO.read(new File("images/ogre.png")));
+			keep.put('*', ImageIO.read(new File("images/club.png")));
+			keep.put('K', ImageIO.read(new File("images/hero.png")));
+			keep.put('A', ImageIO.read(new File("images/hero.png")));
+			keep.put('$', ImageIO.read(new File("images/hero.png")));
+			keep.put('k', ImageIO.read(new File("images/key.png")));
+			keep.put('8', ImageIO.read(new File("images/hero.png")));
+			keep.put('X', dungeon.get('X'));
+			keep.put(' ', dungeon.get(' '));
+			keep.put('S', dungeon.get('S'));
+			keep.put('I', dungeon.get('I'));
 		} 
 		catch (IOException e) 
 		{
@@ -59,7 +69,12 @@ public class GameView extends JPanel
 
 		for(int i = 0; i < height;i++)
 			for(int j = 0;j<width;j++)
-				graphics[i][j] = images.get(' ');
+				graphics[i][j] = dungeon.get(' ');
+	}
+	
+	public void changeLevel()
+	{
+		level++;
 	}
 
 	public BufferedImage[][] getMap()
@@ -88,17 +103,16 @@ public class GameView extends JPanel
 
 	public void updatePos(int i, int j, char entity)
 	{
-		graphics[i][j] = images.get(entity);
+		graphics[i][j] = level == 1 ? dungeon.get(entity) : keep.get(entity);
 	}
 
 	public void updateMap(char[][] map)
 	{		
+		TreeMap<Character, BufferedImage> images = level == 1 ? dungeon : keep;
+		
 		for(int i = 0; i < map.length;i++)
-		{
 			for(int j=0; j<map[i].length;j++)
-			{
 				graphics[i][j] = images.get(map[i][j]);
-			}
-		}	
 	}	
+
 }

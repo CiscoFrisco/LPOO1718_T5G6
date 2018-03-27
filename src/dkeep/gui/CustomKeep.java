@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.TreeMap;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import dkeep.logic.Map;
 import dkeep.logic.Position;
 
 
@@ -43,6 +45,26 @@ public class CustomKeep extends JDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Map getMap()
+	{
+		char[][] layout = new char[height][width];
+
+		for(int i = 0; i< height; i++)
+			for(int j = 0; j< width; j++)
+			{
+				layout[i][j] = positions.get(new Position(i,j));
+				if(layout[i][j] == 'O')
+					numOgres++;
+			}
+
+		return new Map(layout);
+	}
+
+	public int numberOfOgres()
+	{
+		return numOgres;
 	}
 
 	public void generateMap() {
@@ -197,7 +219,7 @@ public class CustomKeep extends JDialog {
 					}
 
 					Character ent = positions.get(new Position(current_line, current_col));
-					
+
 					if(ent!=null)
 					{
 						if(ent == 'A')
