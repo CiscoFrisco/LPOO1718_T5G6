@@ -165,9 +165,9 @@ public class Dungeon extends Level
 		try 
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(id + System.lineSeparator());
 			writer.write(height + System.lineSeparator());
 			writer.write(width  + System.lineSeparator());
-			writer.write(1 + System.lineSeparator());
 			writer.write(guardType + System.lineSeparator());
 			writer.write(guard.getMovement() + System.lineSeparator());
 
@@ -182,8 +182,7 @@ public class Dungeon extends Level
 		
 	}
 
-	@Override
-	public Dungeon readFromFile(File file)
+	public static Dungeon readFromFile(File file)
 	{
 		char[][] reading = null;
 		String guardPersonality = "";
@@ -191,6 +190,7 @@ public class Dungeon extends Level
 		try 
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
+			reader.readLine();
 			int height = Integer.parseInt(reader.readLine());
 			int width = Integer.parseInt(reader.readLine());
 			guardPersonality = reader.readLine();

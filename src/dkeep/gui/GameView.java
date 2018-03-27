@@ -113,9 +113,6 @@ public class GameView extends JPanel
 	{		
 		TreeMap<Character, BufferedImage> images = level == 1 ? dungeon : keep;
 		
-		for(int i = 0; i < map.length; i++)
-		    gameMap[i] = map[i].clone();
-		
 		for(int i = 0; i < map.length;i++)
 			for(int j=0; j<map[i].length;j++)
 				graphics[i][j] = images.get(map[i][j]);

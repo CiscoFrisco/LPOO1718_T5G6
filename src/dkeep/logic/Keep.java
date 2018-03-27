@@ -19,6 +19,7 @@ public class Keep extends Level
 	{
 		id = 2;
 		this.map = map;
+		ogres = new ArrayList<Ogre>();
 		initKeep();
 		generateOgres(numberOfOgres);
 		movements = new ArrayList<Character>();
@@ -51,16 +52,29 @@ public class Keep extends Level
 			for(int j = 0;j<map.layout()[i].length;j++)
 			{
 				char rep = map.layout()[i][j];
-				if(rep == 'A')
-					hero = new Hero(new Position(i,j),'A');
+				if(rep == 'A' || rep== 'K')
+					hero = new Hero(new Position(i,j),rep);
 				else if(rep == 'k')
-					key = new Key(new Position(i,j),'k');
+					key = new Key(new Position(i,j),rep);
 				else if(rep == 'I')
-					exitDoor = new ExitDoor(new Position(i,j),'I');
+					exitDoor = new ExitDoor(new Position(i,j),rep);
 				else if(rep == 'O' || rep == '8')
 					ogres.add(new Ogre(new Position(i,j),rep));
-			}	
-
+			}
+		
+		if(key == null)
+			key = new Key(new Position(0, 0),'k');
+		
+		if(hero.representation == 'K')
+			hero.setKey();
+		
+		for(Ogre ogre : ogres)
+		{
+			if(ogre.representation() == '8')
+			{
+				ogre.setStun();
+			}
+		}
 	}
 
 	public void generateOgres(int numberOfOgres)
@@ -326,10 +340,9 @@ public class Keep extends Level
 		try 
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(id + System.lineSeparator());
 			writer.write(height + System.lineSeparator());
 			writer.write(width  + System.lineSeparator());
-			writer.write(2 + System.lineSeparator());
-
 			writer.write(writable);
 
 			writer.close();
@@ -338,21 +351,20 @@ public class Keep extends Level
 		{
 			e.printStackTrace();
 		}
-		
+		 
 	}
 
-	@Override
-	public Keep readFromFile(File file)
+	public static Keep readFromFile(File file)
 	{
 		char[][] reading = null;
 
 		try 
 		{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
+			reader.readLine();
 			int height = Integer.parseInt(reader.readLine());
 			int width = Integer.parseInt(reader.readLine());
-
-
+			
 			reading = new char[height][width];
 
 			for(int i=0;i<height; i++)

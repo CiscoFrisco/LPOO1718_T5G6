@@ -32,7 +32,9 @@ public class CustomKeep extends JDialog {
 	private char current_char;
 	private int numOgres = 0;
 	GameView editable = new GameView(null, 2);
+	private Map gameMap;
 	private TreeMap<Position, Character> positions = new TreeMap<Position, Character>();
+	private boolean[][] visited;
 
 	/**
 	 * Launch the application.
@@ -49,9 +51,9 @@ public class CustomKeep extends JDialog {
 
 	public Map getMap()
 	{		
-		Map map = new Map(editable.getGameMap());
+		gameMap = new Map(editable.getGameMap());
 
-		return map;
+		return gameMap;
 	}
 
 	public void generateMap() {
@@ -73,6 +75,46 @@ public class CustomKeep extends JDialog {
 
 		editable.repaint();
 
+	}
+
+	boolean findGoalRec(int x, int y, char entity)
+	{
+		visited[x][y] = true;
+
+		if (gameMap.layout()[x][y] == entity)
+			return true;
+		
+		if (gameMap.layout()[x - 1][y] == ' ' && !visited[x - 1][y])
+			if (findGoalRec(x - 1, y,entity))
+				return true;
+		
+		if (gameMap.layout()[x + 1][y] == ' ' && !visited[x + 1][y])
+			if (findGoalRec(x + 1, y,entity))
+				return true;
+		
+		if (gameMap.layout()[x][y+1] == ' ' && !visited[x][y+1])
+			if (findGoalRec(x, y + 1,entity))
+				return true;
+		
+		if (gameMap.layout()[x][y-1] == ' ' && !visited[x][y-1])
+			if (findGoalRec(x, y - 1,entity))
+				return true;
+		
+		return false;
+	}
+
+	boolean findGoal(int x, int y, char entity)
+	{
+		initializeVisited();
+
+		return findGoalRec(x, y, entity);
+	}
+
+	void initializeVisited()
+	{
+		for (int i = 0; i < 10; i++)
+			for (int j = 0; j < 10; j++)
+				visited[i][j] = false;
 	}
 
 	/**
@@ -288,7 +330,7 @@ public class CustomKeep extends JDialog {
 
 						if(!(hero && ogre && key && door))
 							return;
-
+						
 						dispose();
 					}
 				});

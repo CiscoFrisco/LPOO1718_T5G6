@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import dkeep.logic.Dungeon;
 import dkeep.logic.GameState;
 import dkeep.logic.Keep;
+import dkeep.logic.Level;
 import dkeep.logic.Map;
 
 public class Main implements KeyListener
@@ -35,7 +36,7 @@ public class Main implements KeyListener
 	private GameState game;
 	private Map map2;
 	private int level = 1;
-	
+
 
 
 	/**
@@ -69,6 +70,7 @@ public class Main implements KeyListener
 		btnLeft.setEnabled(state);
 		btnRight.setEnabled(state);
 	}
+
 
 	private void updateMap()
 	{
@@ -149,23 +151,26 @@ public class Main implements KeyListener
 		frmDungeonKeep.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				switch(e.getKeyCode())
+				if(!game.gameOver() && !game.escaped())
 				{
-				case KeyEvent.VK_W:
-					gameIteration('w');
-					break;
-				case KeyEvent.VK_A:
-					gameIteration('a');
-					break;
-				case KeyEvent.VK_S:
-					gameIteration('s');
-					break;
-				case KeyEvent.VK_D:
-					gameIteration('d');
-					break;
-				default:
-					break;
-				}	
+					switch(e.getKeyCode())
+					{
+					case KeyEvent.VK_W:
+						gameIteration('w');
+						break;
+					case KeyEvent.VK_A:
+						gameIteration('a');
+						break;
+					case KeyEvent.VK_S:
+						gameIteration('s');
+						break;
+					case KeyEvent.VK_D:
+						gameIteration('d');
+						break;
+					default:
+						break;
+					}	
+				}
 			}
 		});
 		frmDungeonKeep.setResizable(false);
@@ -267,10 +272,7 @@ public class Main implements KeyListener
 				frmDungeonKeep.requestFocusInWindow();
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
-
-
-
+					game.level().saveToFile(fileChooser.getSelectedFile());
 				}
 
 			}
@@ -284,16 +286,12 @@ public class Main implements KeyListener
 				frmDungeonKeep.requestFocusInWindow();
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
-					/*
-					gameView = new GameView(map,level);
-					gameView.setBounds(18, 61, width*32, height*32);
+					game = new GameState(Level.readFromFile(fileChooser.getSelectedFile()));
+					level = game.getLevel();
+					gameView = new GameView(game.getMap(),game.getLevel());
+					gameView.setBounds(18, 61, 329, 350);
 					frmDungeonKeep.getContentPane().add(gameView);
-
-					game = new GameState(map,level, guardType);
-					game.getGuard().setMovement(index_mov);
-					gameView.repaint();*/
-
+					gameView.repaint();
 				}
 			}
 		});
@@ -303,7 +301,7 @@ public class Main implements KeyListener
 
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+				char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 						{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
 						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
 						{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
@@ -314,7 +312,7 @@ public class Main implements KeyListener
 						{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
 						{'X','X','X','X','X','X','X','X','X','X'}};
 
-				 char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+				char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 						{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
 						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
 						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
@@ -331,7 +329,7 @@ public class Main implements KeyListener
 				frmDungeonKeep.getContentPane().add(gameView);
 				gameView.repaint();
 				map2 = new Map(level2);
-
+				level = 1;
 				game = new GameState(new Dungeon(map1, configWindow.guardPersonality()));
 				btnSetEnabled(true);
 

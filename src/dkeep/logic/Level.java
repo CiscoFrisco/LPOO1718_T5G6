@@ -1,6 +1,10 @@
 package dkeep.logic;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -79,7 +83,22 @@ public abstract class Level
 	
 	public abstract void saveToFile(File file);
 	
-	public abstract Level readFromFile(File file);
+	public static Level readFromFile(File file)
+	{
+		BufferedReader reader;
+		int levelID = 0;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			levelID = Integer.parseInt(reader.readLine());
+			reader.close();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return levelID == 1 ? Dungeon.readFromFile(file) : Keep.readFromFile(file);
+	}
 	
 	public boolean checkDoors()
 	{
