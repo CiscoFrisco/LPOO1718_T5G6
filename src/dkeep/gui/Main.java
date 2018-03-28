@@ -22,7 +22,6 @@ import dkeep.logic.Map;
 
 public class Main implements KeyListener
 {
-	private CustomKeep customKeep;
 	private GameConfig configWindow;
 	private JFrame frmDungeonKeep;
 	private JButton btnDown;
@@ -128,8 +127,11 @@ public class Main implements KeyListener
 			btnSetEnabled(false);
 		else if (game.escaped() && level  == 1)
 		{
-			//game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
-			game.setLevel(new Keep(customKeep.getMap()));
+			if(configWindow.getMode())
+				game.setLevel(new Keep(map2, configWindow.numberOfOgres()));
+			else
+				game.setLevel(new Keep(configWindow.getMap()));
+			
 			level++;
 			gameView.changeLevel();
 		}
@@ -180,8 +182,6 @@ public class Main implements KeyListener
 
 		configWindow = new GameConfig();
 		configWindow.setVisible(true);
-		customKeep = new CustomKeep();
-		customKeep.setVisible(false);
 
 		btnExitGame = new JButton("Exit Game");
 		btnExitGame.addActionListener(new ActionListener() {
@@ -189,7 +189,7 @@ public class Main implements KeyListener
 				System.exit(0);
 			}
 		});
-		btnExitGame.setBounds(444, 394, 118, 23);
+		btnExitGame.setBounds(406, 391, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnExitGame);
 
 
@@ -201,7 +201,7 @@ public class Main implements KeyListener
 			}
 		});
 		btnUp.setEnabled(false);
-		btnUp.setBounds(424, 242, 89, 23);
+		btnUp.setBounds(424, 231, 89, 23);
 		frmDungeonKeep.getContentPane().add(btnUp);
 
 		btnLeft = new JButton("Left");
@@ -243,28 +243,18 @@ public class Main implements KeyListener
 
 
 		btnNewGame = new JButton("New Game");
-		btnNewGame.setBounds(444, 30, 118, 23);
+		btnNewGame.setBounds(10, 11, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnNewGame);
 
-		JButton btnConfigureGame = new JButton("Configure Game");
+		JButton btnConfigureGame = new JButton("Options");
 		btnConfigureGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmDungeonKeep.requestFocusInWindow();
 				configWindow.setVisible(true);
 			}
 		});
-		btnConfigureGame.setBounds(444, 64, 118, 23);
+		btnConfigureGame.setBounds(138, 11, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnConfigureGame);
-
-		JButton btnEditMap = new JButton("Custom Keep");
-		btnEditMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				customKeep.setVisible(true);
-			}
-		});
-		btnEditMap.setBounds(444, 102, 117, 23);
-		frmDungeonKeep.getContentPane().add(btnEditMap);
 
 		JButton btnSaveGame = new JButton("Save Game");
 		btnSaveGame.addActionListener(new ActionListener() {
@@ -277,7 +267,7 @@ public class Main implements KeyListener
 
 			}
 		});
-		btnSaveGame.setBounds(444, 136, 118, 23);
+		btnSaveGame.setBounds(477, 11, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnSaveGame);
 
 		JButton btnLoadGame = new JButton("Load Game");
@@ -295,7 +285,7 @@ public class Main implements KeyListener
 				}
 			}
 		});
-		btnLoadGame.setBounds(444, 174, 118, 23);
+		btnLoadGame.setBounds(477, 45, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnLoadGame);
 
 

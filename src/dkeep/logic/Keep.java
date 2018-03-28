@@ -112,7 +112,7 @@ public class Keep extends Level
 	{
 		char clubSwing = generateMovement();
 
-		while(!issueMov(clubSwing, ogre.club))
+		while(!issueMov(clubSwing, ogre.club));
 			clubSwing = generateMovement();
 	}
 

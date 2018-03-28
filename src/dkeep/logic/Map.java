@@ -14,6 +14,13 @@ public class Map
 		width= layout[0].length;
 		height = layout.length;
 	}
+	
+	public Map(char[][] layout, int width, int height)
+	{
+		this.layout = layout;
+		this.width= width;
+		this.height = height;
+	}
 
 	public char[][] layout()
 	{

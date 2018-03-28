@@ -6,10 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.TreeMap;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -29,12 +31,12 @@ public class CustomKeep extends JDialog {
 	private int height = 10;
 	private int current_line;
 	private int current_col;
-	private char current_char;
+	private char current_char = ' ';
 	private int numOgres = 0;
-	GameView editable = new GameView(null, 2);
+	private GameView editable = new GameView(null, 2);
+
 	private Map gameMap;
 	private TreeMap<Position, Character> positions = new TreeMap<Position, Character>();
-	private boolean[][] visited;
 
 	/**
 	 * Launch the application.
@@ -57,8 +59,8 @@ public class CustomKeep extends JDialog {
 	}
 
 	public void generateMap() {
+		editable.setBounds(20, 60, 320, 320);
 		editable.initGraphics(width, height);
-		editable.setBounds(20,60,width*32,height*32);
 
 
 		for(int i=0;i<height;i++)
@@ -76,51 +78,12 @@ public class CustomKeep extends JDialog {
 		editable.repaint();
 
 	}
-
-	boolean findGoalRec(int x, int y, char entity)
-	{
-		visited[x][y] = true;
-
-		if (gameMap.layout()[x][y] == entity)
-			return true;
-		
-		if (gameMap.layout()[x - 1][y] == ' ' && !visited[x - 1][y])
-			if (findGoalRec(x - 1, y,entity))
-				return true;
-		
-		if (gameMap.layout()[x + 1][y] == ' ' && !visited[x + 1][y])
-			if (findGoalRec(x + 1, y,entity))
-				return true;
-		
-		if (gameMap.layout()[x][y+1] == ' ' && !visited[x][y+1])
-			if (findGoalRec(x, y + 1,entity))
-				return true;
-		
-		if (gameMap.layout()[x][y-1] == ' ' && !visited[x][y-1])
-			if (findGoalRec(x, y - 1,entity))
-				return true;
-		
-		return false;
-	}
-
-	boolean findGoal(int x, int y, char entity)
-	{
-		initializeVisited();
-
-		return findGoalRec(x, y, entity);
-	}
-
-	void initializeVisited()
-	{
-		for (int i = 0; i < 10; i++)
-			for (int j = 0; j < 10; j++)
-				visited[i][j] = false;
-	}
-
+	
 	/**
 	 * Create the dialog.
 	 */
 	public CustomKeep() {
+		setModal(true);
 		setTitle("Custom Keep");
 		setBounds(100, 100, 513, 484);
 		getContentPane().setLayout(new BorderLayout());
@@ -138,7 +101,9 @@ public class CustomKeep extends JDialog {
 			contentPanel.add(lblNewLabel);
 		}
 		Integer[] sizes = {5,6,7,8,9,10};
-		JComboBox<Integer> widthSel = new JComboBox<Integer>(sizes);
+		JComboBox<Integer> widthSel = new JComboBox<Integer>();
+		widthSel.setBounds(62, 11, 42, 20);
+		widthSel.setModel(new DefaultComboBoxModel<Integer>(sizes));
 		widthSel.setSelectedItem(10);
 		widthSel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -150,10 +115,11 @@ public class CustomKeep extends JDialog {
 				}
 			}
 		});
-		widthSel.setBounds(62, 11, 42, 20);
 		contentPanel.add(widthSel);
 
-		JComboBox<Integer> heightSel = new JComboBox<Integer>(sizes);
+		JComboBox<Integer> heightSel = new JComboBox<Integer>();
+		heightSel.setBounds(165, 12, 47, 20);
+		heightSel.setModel(new DefaultComboBoxModel<Integer>(sizes));
 		heightSel.setSelectedItem(10);
 		heightSel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -165,52 +131,51 @@ public class CustomKeep extends JDialog {
 				}
 			}
 		});
-		heightSel.setBounds(165, 12, 47, 20);
 		contentPanel.add(heightSel);
 
 		JButton btnHero = new JButton("Hero");
+		btnHero.setBounds(375, 60, 89, 23);
 		btnHero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				current_char = 'A';
 			}
 		});
-		btnHero.setBounds(398, 70, 89, 23);
 		contentPanel.add(btnHero);
 
 		JButton btnOgre = new JButton("Ogre");
+		btnOgre.setBounds(375, 137, 89, 23);
 		btnOgre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				current_char = 'O';
 			}
 		});
-		btnOgre.setBounds(398, 135, 89, 23);
 		contentPanel.add(btnOgre);
 
 		JButton btnKey = new JButton("Key");
+		btnKey.setBounds(375, 215, 89, 23);
 		btnKey.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				current_char = 'k';
 			}
 		});
-		btnKey.setBounds(398, 198, 89, 23);
 		contentPanel.add(btnKey);
 
 		JButton btnDoor = new JButton("Door");
+		btnDoor.setBounds(375, 284, 89, 23);
 		btnDoor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				current_char = 'I';
 			}
 		});
-		btnDoor.setBounds(398, 257, 89, 23);
 		contentPanel.add(btnDoor);
 
 		JButton btnWall = new JButton("Wall");
+		btnWall.setBounds(375, 357, 89, 23);
 		btnWall.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				current_char = 'X';
 			}
 		});
-		btnWall.setBounds(398, 324, 89, 23);
 		contentPanel.add(btnWall);
 
 		editable.addMouseListener(new MouseAdapter() {
@@ -221,7 +186,11 @@ public class CustomKeep extends JDialog {
 
 				if(e.getClickCount()==2)
 				{
-					editable.updatePos(current_line, current_col, ' ');
+					if(!isInsidePerimeter())
+						editable.updatePos(current_line, current_col, 'X');
+					else
+						editable.updatePos(current_line, current_col, ' ');
+
 					Character ent = positions.get(new Position(current_line, current_col));
 					if(ent != null)
 					{
@@ -243,6 +212,9 @@ public class CustomKeep extends JDialog {
 				{
 					if(current_char!=' ')
 					{
+						if(!checkEntitiesPosition())
+							return;
+
 						editable.updatePos(current_line, current_col, current_char);
 						editable.repaint();
 					}
@@ -295,9 +267,34 @@ public class CustomKeep extends JDialog {
 				}
 
 			}
-		});
 
-		editable.setBounds(20, 60, 320, 320);
+			private boolean isInsidePerimeter()
+			{
+				if(current_col == 0 || current_col == width - 1 || current_line == 0 || current_line == height - 1)
+					return false;
+				else
+					return true;
+			}
+
+			private boolean checkEntitiesPosition() 
+			{
+				if(current_char!='I' && isInsidePerimeter())
+					return true;
+				else if(current_char == 'I' && !isInsidePerimeter())
+				{
+					Position curr_pos = new Position(current_line, current_col);
+
+					if(curr_pos.equals(new Position(0,0)) || curr_pos.equals(new Position(height-1,width-1)) ||
+							curr_pos.equals(new Position(height-1,0)) || curr_pos.equals(new Position(0,width-1)))
+						return false;
+					else 
+						return true;
+				}
+
+				return false;
+
+			}
+		});
 		generateMap();
 		contentPanel.add(editable);
 
@@ -334,7 +331,6 @@ public class CustomKeep extends JDialog {
 						dispose();
 					}
 				});
-				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
