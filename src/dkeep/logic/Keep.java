@@ -25,7 +25,7 @@ public class Keep extends Level
 		movements = new ArrayList<Character>();
 		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
-	
+
 	public Keep(Map map)
 	{
 		id = 2;
@@ -61,13 +61,13 @@ public class Keep extends Level
 				else if(rep == 'O' || rep == '8')
 					ogres.add(new Ogre(new Position(i,j),rep));
 			}
-		
+
 		if(key == null)
 			key = new Key(new Position(0, 0),'k');
-		
+
 		if(hero.representation == 'K')
 			hero.setKey();
-		
+
 		for(Ogre ogre : ogres)
 		{
 			if(ogre.representation() == '8')
@@ -113,7 +113,7 @@ public class Keep extends Level
 		char clubSwing = generateMovement();
 
 		while(!issueMov(clubSwing, ogre.club));
-			clubSwing = generateMovement();
+		clubSwing = generateMovement();
 	}
 
 	public void updateOgre(Ogre ogre)
@@ -228,20 +228,99 @@ public class Keep extends Level
 		return true;
 	}
 
-	public void update(Position pos, Entity entity)
-	{	
+	private void updateHero(Position pos, Entity entity)
+	{
 		char pos1 = ' ', pos2= ' ';
 
-		if(entity.equals(hero))
+		if(hero.key())
 		{
-			if(hero.key())
+			entity.setRepresentation('K');
+			if(map.pos(pos)=='I')
 			{
-				entity.setRepresentation('K');
-				if(map.pos(pos)=='I')
+				pos1 = 'S';
+				pos2 = entity.representation;
+				map.updateDoor(hero.key(), exitDoor);
+			}
+			else 
+			{
+				pos1 = entity.representation;
+				pos2 = ' ';
+			}
+
+		}
+		else
+		{
+			pos1 = entity.representation;
+			pos2 = ' ';
+		}
+
+		map.update(pos, entity, pos1, pos2);
+	}
+
+	public void update(Position pos, Entity entity)
+	{	
+		if(entity.equals(hero))
+			updateHero(pos, entity);
+		else if(entity.getClass() == Ogre.class)
+			updateOgres(pos, entity);
+		else
+			updateClubs(pos, entity);
+
+	}
+
+	private void updateClubs(Position pos, Entity entity) {
+		
+		char pos1 = ' ', pos2= ' ';
+
+		for(Ogre ogre : ogres)
+		{
+			if(ogre.club.equals(entity))
+			{
+				if(ogre.club().key() && !hero.key())
 				{
-					pos1 = 'S';
-					pos2 = entity.representation;
-					map.updateDoor(hero.key(), exitDoor);
+					entity.setRepresentation('$');
+					pos1 = entity.representation;
+					pos2 = ogre.representation;
+				}
+				else if(ogre.pos.equals(key.pos) && !hero.key())
+				{
+					entity.setRepresentation('*');
+					pos1 = entity.representation;
+					ogre.setRepresentation('$');
+					pos2 = ogre.representation;
+				}
+				else
+				{
+					pos1 = entity.representation;
+					pos2 = ogre.representation;
+				}
+
+				break;
+			}
+		}
+		
+		map.update(pos, entity, pos1, pos2);
+	}
+
+	private void updateOgres(Position pos, Entity entity) {
+		
+		char pos1 = ' ', pos2= ' ';
+
+		for(Ogre ogre : ogres)
+		{
+			if(ogre.equals(entity))
+			{
+				if(ogre.key() && !hero.key())
+				{
+					entity.setRepresentation('$');
+					pos1 = entity.representation;
+					pos2 = ' ';
+				}
+				else if(ogre.pos.equals(key.pos) && !hero.key())
+				{
+					entity.setRepresentation('O');
+					pos1 = entity.representation;
+					pos2 = key.representation;
 				}
 				else 
 				{
@@ -249,71 +328,9 @@ public class Keep extends Level
 					pos2 = ' ';
 				}
 
-			}
-			else
-			{
-				pos1 = entity.representation;
-				pos2 = ' ';
+				break;
 			}
 		}
-		else if(entity.getClass() == Ogre.class)
-		{
-			for(Ogre ogre : ogres)
-			{
-				if(ogre.equals(entity))
-				{
-					if(ogre.key() && !hero.key())
-					{
-						entity.setRepresentation('$');
-						pos1 = entity.representation;
-						pos2 = ' ';
-					}
-					else if(ogre.pos.equals(key.pos) && !hero.key())
-					{
-						entity.setRepresentation('O');
-						pos1 = entity.representation;
-						pos2 = key.representation;
-					}
-					else 
-					{
-						pos1 = entity.representation;
-						pos2 = ' ';
-					}
-
-					break;
-				}
-			}
-		}
-		else
-		{
-			for(Ogre ogre : ogres)
-			{
-				if(ogre.club.equals(entity))
-				{
-					if(ogre.club().key() && !hero.key())
-					{
-						entity.setRepresentation('$');
-						pos1 = entity.representation;
-						pos2 = ogre.representation;
-					}
-					else if(ogre.pos.equals(key.pos) && !hero.key())
-					{
-						entity.setRepresentation('*');
-						pos1 = entity.representation;
-						ogre.setRepresentation('$');
-						pos2 = ogre.representation;
-					}
-					else
-					{
-						pos1 = entity.representation;
-						pos2 = ogre.representation;
-					}
-
-					break;
-				}
-			}
-		}
-
 		map.update(pos, entity, pos1, pos2);
 	}
 
@@ -351,7 +368,7 @@ public class Keep extends Level
 		{
 			e.printStackTrace();
 		}
-		 
+
 	}
 
 	public static Keep readFromFile(File file)
@@ -364,7 +381,7 @@ public class Keep extends Level
 			reader.readLine();
 			int height = Integer.parseInt(reader.readLine());
 			int width = Integer.parseInt(reader.readLine());
-			
+
 			reading = new char[height][width];
 
 			for(int i=0;i<height; i++)
@@ -378,9 +395,9 @@ public class Keep extends Level
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Map newMap = new Map(reading);
-		
+
 		Keep keep = new Keep(newMap);
 		return keep;
 	}
