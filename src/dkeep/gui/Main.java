@@ -206,27 +206,9 @@ public class Main implements KeyListener
 		frmDungeonKeep.getContentPane().add(btnNewGame);
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-						{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
-						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-						{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
-						{'X','X','X',' ','X','X','X',' ',' ','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','X','X',' ','X','X','X','X',' ','X'} , 
-						{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
-						{'X','X','X','X','X','X','X','X','X','X'}};
 
-				char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
-						{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
-						{'X','X','X','X','X','X','X','X','X','X'}};
+				char[][] level1 = level1();
+				char[][] level2 = level2();
 
 				Map map1 = new Map(level1);
 				gameView = new GameView(map1,1);
@@ -259,6 +241,34 @@ public class Main implements KeyListener
 		frmDungeonKeep.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDungeonKeep.getContentPane().setLayout(null);
 		
+	}
+	
+	private char[][] level2() {
+		char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+				{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X','A',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X','X','X','X','X','X','X','X','X','X'}};
+		return level2;
+	}
+
+	private char[][] level1() {
+		char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+				{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
+				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+				{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
+				{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+				{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+				{'X','X','X',' ','X','X','X','X',' ','X'} , 
+				{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
+				{'X','X','X','X','X','X','X','X','X','X'}};
+		return level1;
 	}
 
 	private void initBtnExit() {

@@ -375,7 +375,11 @@ public class CustomKeep extends JDialog {
 		initBtnKey();
 		initBtnOgre();
 		initBtnWall();
+		initEditable();
+		initBtnPane();
+	}
 
+	private void initEditable() {
 		editable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -386,18 +390,17 @@ public class CustomKeep extends JDialog {
 					dblClickHandler();
 				else if(e.getClickCount() == 1)
 					sglClickHandler();
-
 			}
 		});
 		generateMap();
 		contentPanel.add(editable);
+	}
 
-		{
-			buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			initOkBtn();
-			initCancelBtn();
-		}
+	private void initBtnPane() {
+		buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		initOkBtn();
+		initCancelBtn();	
 	}
 }

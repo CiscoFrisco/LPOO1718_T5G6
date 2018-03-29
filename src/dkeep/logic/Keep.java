@@ -182,48 +182,70 @@ public class Keep extends Level
 	}
 
 
-	public  boolean checkCell(Position pos, Entity entity)
+	public boolean checkCell(Position pos, Entity entity)
 	{
 		if(map.pos(pos) == 'X')
 			return false;
 
 		if(entity.equals(hero))
 		{
-			if(map.pos(pos) == 'k') 
-				hero.setKey();
-			else if(map.pos(pos) == 'S')
-				escaped = true;
-			else if(map.pos(pos) == 'I' && !hero.key())
-				return false;
-			else if( map.pos(pos) == '8' || map.pos(pos) == 'O' || map.pos(pos) == '$')
+			if(!checkHero(pos))
 				return false;
 		}
 		else if(entity.getClass() == Ogre.class)
 		{
-			for(Ogre ogre : ogres)
-				if(ogre.equals(entity))
-				{
-					if(map.pos(pos) == 'k' || ogre.key())
-						ogre.setKey();
-					else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == map.pos(hero.pos))
-						return false;
-
-					break;
-				}
+			if(!checkOgres(pos, entity))
+				return false;
 		}
 		else
 		{
-			for(Ogre ogre : ogres)
-				if(ogre.club.equals(entity))
-				{
-					if(map.pos(pos) == 'k' || ogre.club().key())
-						ogre.club().setKey();
-					else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == 'O')
-						return false;
-
-					break;
-				}
+			if(!checkClubs(pos, entity))
+				return false;
 		}
+
+		return true;
+	}
+
+	private boolean checkClubs(Position pos, Entity entity) {
+		for(Ogre ogre : ogres)
+			if(ogre.club.equals(entity))
+			{
+				if(map.pos(pos) == 'k' || ogre.club().key())
+					ogre.club().setKey();
+				else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == 'O')
+					return false;
+
+				break;
+			}
+		
+		return true;
+	}
+
+	private boolean checkOgres(Position pos, Entity entity) {
+		for(Ogre ogre : ogres)
+			if(ogre.equals(entity))
+			{
+				if(map.pos(pos) == 'k' || ogre.key())
+					ogre.setKey();
+				else if(map.pos(pos) == 'S' || map.pos(pos) == 'I' || map.pos(pos) == map.pos(hero.pos))
+					return false;
+
+				break;
+			}
+		
+		return true;
+	}
+
+	private boolean checkHero(Position pos) {
+
+		if(map.pos(pos) == 'k') 
+			hero.setKey();
+		else if(map.pos(pos) == 'S')
+			escaped = true;
+		else if(map.pos(pos) == 'I' && !hero.key())
+			return false;
+		else if( map.pos(pos) == '8' || map.pos(pos) == 'O' || map.pos(pos) == '$')
+			return false;
 
 		return true;
 	}
@@ -269,7 +291,7 @@ public class Keep extends Level
 	}
 
 	private void updateClubs(Position pos, Entity entity) {
-		
+
 		char pos1 = ' ', pos2= ' ';
 
 		for(Ogre ogre : ogres)
@@ -298,12 +320,12 @@ public class Keep extends Level
 				break;
 			}
 		}
-		
+
 		map.update(pos, entity, pos1, pos2);
 	}
 
 	private void updateOgres(Position pos, Entity entity) {
-		
+
 		char pos1 = ' ', pos2= ' ';
 
 		for(Ogre ogre : ogres)
