@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -143,56 +142,9 @@ public class Main implements KeyListener
 		else
 			generateStatus();
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frmDungeonKeep = new JFrame();
-		frmDungeonKeep.setTitle("Dungeon Keep");
-		frmDungeonKeep.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!game.gameOver() && !game.escaped())
-				{
-					switch(e.getKeyCode())
-					{
-					case KeyEvent.VK_W:
-						gameIteration('w');
-						break;
-					case KeyEvent.VK_A:
-						gameIteration('a');
-						break;
-					case KeyEvent.VK_S:
-						gameIteration('s');
-						break;
-					case KeyEvent.VK_D:
-						gameIteration('d');
-						break;
-					default:
-						break;
-					}	
-				}
-			}
-		});
-		frmDungeonKeep.setResizable(false);
-		frmDungeonKeep.setBounds(100, 100, 611, 477);
-		frmDungeonKeep.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmDungeonKeep.getContentPane().setLayout(null);
-
-		configWindow = new GameConfig();
-		configWindow.setVisible(true);
-
-		btnExitGame = new JButton("Exit Game");
-		btnExitGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
-		btnExitGame.setBounds(406, 391, 118, 23);
-		frmDungeonKeep.getContentPane().add(btnExitGame);
-
-
+	
+	private void initBtnUp()
+	{
 		btnUp = new JButton("Up");
 		btnUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -203,92 +155,55 @@ public class Main implements KeyListener
 		btnUp.setEnabled(false);
 		btnUp.setBounds(424, 231, 89, 23);
 		frmDungeonKeep.getContentPane().add(btnUp);
+	}
+	
+	private void handleInput(KeyEvent e) {
+		switch(e.getKeyCode())
+		{
+		case KeyEvent.VK_W:
+			gameIteration('w');
+			break;
+		case KeyEvent.VK_A:
+			gameIteration('a');
+			break;
+		case KeyEvent.VK_S:
+			gameIteration('s');
+			break;
+		case KeyEvent.VK_D:
+			gameIteration('d');
+			break;
+		default:
+			break;
+		}
+		
+	}
 
-		btnLeft = new JButton("Left");
-		btnLeft.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				gameIteration('a');
-			}
-		});
-		btnLeft.setEnabled(false);
-		btnLeft.setBounds(374, 276, 89, 23);
-		frmDungeonKeep.getContentPane().add(btnLeft);
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
 
-		btnDown = new JButton("Down");
-		btnDown.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				gameIteration('s');
-			}
-		});
-		btnDown.setEnabled(false);
-		btnDown.setBounds(424, 322, 89, 23);
-		frmDungeonKeep.getContentPane().add(btnDown);
+		initFrame();
+		configWindow = new GameConfig();
+		configWindow.setVisible(true);
 
-		btnRight = new JButton("Right");
-		btnRight.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				gameIteration('d');
-			}
-		});
-		btnRight.setEnabled(false);
-		btnRight.setBounds(473, 276, 89, 23);
-		frmDungeonKeep.getContentPane().add(btnRight);
+		initLabels();
+		initBtnExit();
+		initBtnUp();
+		initBtnLeft();
+		initBtnRight();
+		initBtnDown();
+		initBtnConfig();
+		initBtnSave();
+		initBtnLoad();
+		
+		initBtnNewGame();
+	}
 
-		lblGameStatus = new JLabel("Game Status");
-		lblGameStatus.setBounds(8, 406, 339, 31);
-		frmDungeonKeep.getContentPane().add(lblGameStatus);
-
-
+	private void initBtnNewGame() {
 		btnNewGame = new JButton("New Game");
 		btnNewGame.setBounds(10, 11, 118, 23);
 		frmDungeonKeep.getContentPane().add(btnNewGame);
-
-		JButton btnConfigureGame = new JButton("Options");
-		btnConfigureGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frmDungeonKeep.requestFocusInWindow();
-				configWindow.setVisible(true);
-			}
-		});
-		btnConfigureGame.setBounds(138, 11, 118, 23);
-		frmDungeonKeep.getContentPane().add(btnConfigureGame);
-
-		JButton btnSaveGame = new JButton("Save Game");
-		btnSaveGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				JFileChooser fileChooser = new JFileChooser();
-				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-					game.level().saveToFile(fileChooser.getSelectedFile());
-				}
-
-			}
-		});
-		btnSaveGame.setBounds(477, 11, 118, 23);
-		frmDungeonKeep.getContentPane().add(btnSaveGame);
-
-		JButton btnLoadGame = new JButton("Load Game");
-		btnLoadGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmDungeonKeep.requestFocusInWindow();
-				JFileChooser fileChooser = new JFileChooser();
-				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
-					game = new GameState(Level.readFromFile(fileChooser.getSelectedFile()));
-					level = game.getLevel();
-					gameView = new GameView(game.getMap(),game.getLevel());
-					gameView.setBounds(18, 61, 329, 350);
-					frmDungeonKeep.getContentPane().add(gameView);
-					gameView.repaint();
-				}
-			}
-		});
-		btnLoadGame.setBounds(477, 45, 118, 23);
-		frmDungeonKeep.getContentPane().add(btnLoadGame);
-
-
 		btnNewGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
@@ -327,24 +242,152 @@ public class Main implements KeyListener
 				frmDungeonKeep.requestFocusInWindow();
 			}
 		});
-
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+	private void initFrame() {
+		frmDungeonKeep = new JFrame();
+		frmDungeonKeep.setTitle("Dungeon Keep");
+		frmDungeonKeep.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!game.gameOver() && !game.escaped())
+					handleInput(e);
+			}
+		});
+		frmDungeonKeep.setResizable(false);
+		frmDungeonKeep.setBounds(100, 100, 611, 477);
+		frmDungeonKeep.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDungeonKeep.getContentPane().setLayout(null);
+		
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+	private void initBtnExit() {
+		btnExitGame = new JButton("Exit Game");
+		btnExitGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		btnExitGame.setBounds(406, 391, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnExitGame);
+		
+	}
 
+	private void initLabels() {
+		lblGameStatus = new JLabel("Game Status");
+		lblGameStatus.setBounds(8, 406, 339, 31);
+		frmDungeonKeep.getContentPane().add(lblGameStatus);		
+	}
+
+	private void initBtnLoad() {
+		JButton btnLoadGame = new JButton("Load Game");
+		btnLoadGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showOpenDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
+					game = new GameState(Level.readFromFile(fileChooser.getSelectedFile()));
+					level = game.getLevel();
+					gameView = new GameView(game.getMap(),game.getLevel());
+					gameView.setBounds(18, 61, 329, 350);
+					frmDungeonKeep.getContentPane().add(gameView);
+					gameView.repaint();
+				}
+			}
+		});
+		btnLoadGame.setBounds(477, 45, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnLoadGame);
+		
+	}
+
+	private void initBtnSave() {
+		JButton btnSaveGame = new JButton("Save Game");
+		btnSaveGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showSaveDialog(frmDungeonKeep) == JFileChooser.APPROVE_OPTION) {
+					game.level().saveToFile(fileChooser.getSelectedFile());
+				}
+
+			}
+		});
+		btnSaveGame.setBounds(477, 11, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnSaveGame);
+		
+	}
+
+	private void initBtnConfig() {
+		JButton btnConfigureGame = new JButton("Options");
+		btnConfigureGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmDungeonKeep.requestFocusInWindow();
+				configWindow.setVisible(true);
+			}
+		});
+		btnConfigureGame.setBounds(138, 11, 118, 23);
+		frmDungeonKeep.getContentPane().add(btnConfigureGame);
+		
+	}
+
+	private void initBtnDown() {
+		btnDown = new JButton("Down");
+		btnDown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				gameIteration('s');
+			}
+		});
+		btnDown.setEnabled(false);
+		btnDown.setBounds(424, 322, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnDown);
+		
+	}
+
+	private void initBtnRight() {
+		btnRight = new JButton("Right");
+		btnRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				gameIteration('d');
+			}
+		});
+		btnRight.setEnabled(false);
+		btnRight.setBounds(473, 276, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnRight);
+		
+	}
+
+	private void initBtnLeft() {
+		
+		btnLeft = new JButton("Left");
+		btnLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frmDungeonKeep.requestFocusInWindow();
+				gameIteration('a');
+			}
+		});
+		btnLeft.setEnabled(false);
+		btnLeft.setBounds(374, 276, 89, 23);
+		frmDungeonKeep.getContentPane().add(btnLeft);
+		
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

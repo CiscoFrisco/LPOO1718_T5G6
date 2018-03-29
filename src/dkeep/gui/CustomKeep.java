@@ -41,7 +41,7 @@ public class CustomKeep extends JDialog {
 	private JButton btnOgre; 
 	private JButton btnHero; 
 	private JButton btnDoor; 
-
+	private JPanel buttonPane;
 
 	/**
 	 * Launch the application.
@@ -84,7 +84,7 @@ public class CustomKeep extends JDialog {
 
 	}
 
-	public void enableButton(char ent)
+	private void enableButton(char ent)
 	{
 		if(ent == 'A')
 			btnHero.setEnabled(true);
@@ -100,7 +100,7 @@ public class CustomKeep extends JDialog {
 	}
 
 
-	public void initWidthSel(Integer[] sizes)
+	private void initWidthSel(Integer[] sizes)
 	{
 		JComboBox<Integer> widthSel = new JComboBox<Integer>();
 		widthSel.setBounds(62, 11, 42, 20);
@@ -119,7 +119,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(widthSel);
 	}
 
-	public void initHeightSel(Integer[] sizes)
+	private void initHeightSel(Integer[] sizes)
 	{
 		JComboBox<Integer> heightSel = new JComboBox<Integer>();
 		heightSel.setBounds(165, 12, 47, 20);
@@ -138,7 +138,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(heightSel);
 	}
 
-	public void initBtnHero()
+	private void initBtnHero()
 	{
 		btnHero = new JButton("Hero");
 		btnHero.setBounds(375, 60, 89, 23);
@@ -150,7 +150,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(btnHero);
 	}
 
-	public void initBtnOgre()
+	private void initBtnOgre()
 	{
 		btnOgre = new JButton("Ogre");
 		btnOgre.setBounds(375, 137, 89, 23);
@@ -162,7 +162,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(btnOgre);
 	}
 
-	public void initBtnDoor()
+	private void initBtnDoor()
 	{
 		btnDoor = new JButton("Door");
 		btnDoor.setBounds(375, 284, 89, 23);
@@ -174,7 +174,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(btnDoor);
 	}
 
-	public void initBtnWall()
+	private void initBtnWall()
 	{
 		JButton btnWall = new JButton("Wall");
 		btnWall.setBounds(375, 357, 89, 23);
@@ -186,7 +186,7 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(btnWall);
 	}
 
-	public void initBtnKey()
+	private void initBtnKey()
 	{
 		btnKey = new JButton("Key");
 		btnKey.setBounds(375, 215, 89, 23);
@@ -225,7 +225,7 @@ public class CustomKeep extends JDialog {
 
 	}
 
-	public void disableBtn()
+	private void disableBtn()
 	{
 		if(current_char == 'A')
 		{
@@ -254,15 +254,15 @@ public class CustomKeep extends JDialog {
 			}
 		}
 	}
-	
-	public boolean checkEntities()
+
+	private boolean checkEntities()
 	{
 		boolean hero = false, ogre = false, key = false, door = false;
 
 		for(Entry<Position, Character> entry : positions.entrySet())
 		{
 			Character ent = entry.getValue();
-			
+
 			if(ent == 'A')
 				hero = true;
 			else if (ent == 'O')
@@ -275,8 +275,83 @@ public class CustomKeep extends JDialog {
 
 		return hero && ogre && key && door;
 	}
+
+	private void initOkBtn()
+	{
+		JButton okButton = new JButton("OK");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if(!checkEntities())
+					return;
+
+				dispose();
+			}
+		});
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+	}
+
+	private void initCancelBtn()
+	{
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton);
+	}
+
+	private void initLabels()
+	{
+
+		JLabel lblHeight = new JLabel("Height");
+		lblHeight.setBounds(114, 12, 81, 20);
+		contentPanel.add(lblHeight);
+
+		JLabel lblNewLabel = new JLabel("Width");
+		lblNewLabel.setBounds(10, 14, 42, 17);
+		contentPanel.add(lblNewLabel);
+
+	}
 	
+	private void dblClickHandler()
+	{
+		if(!isInsidePerimeter())
+			editable.updatePos(current_line, current_col, 'X');
+		else
+			editable.updatePos(current_line, current_col, ' ');
+
+		Character ent = positions.get(new Position(current_line, current_col));
+		if(ent != null)
+			enableButton(ent);
+
+		editable.repaint();
+	}
 	
+	private void sglClickHandler()
+	{
+		if(current_char!=' ')
+		{
+			if(!checkEntitiesPosition())
+				return;
+
+			editable.updatePos(current_line, current_col, current_char);
+			editable.repaint();
+		}
+
+		Character ent = positions.get(new Position(current_line, current_col));
+
+		if(ent!=null)
+			enableButton(ent);
+
+		positions.put(new Position(current_line, current_col), current_char);
+
+		disableBtn();
+	}
+
 	/**
 	 * Create the dialog.
 	 */
@@ -288,21 +363,12 @@ public class CustomKeep extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		{
-			JLabel lblHeight = new JLabel("Height");
-			lblHeight.setBounds(114, 12, 81, 20);
-			contentPanel.add(lblHeight);
-		}
-		{
-			JLabel lblNewLabel = new JLabel("Width");
-			lblNewLabel.setBounds(10, 14, 42, 17);
-			contentPanel.add(lblNewLabel);
-		}
+		
+		initLabels();
 
 		Integer[] sizes = {5,6,7,8,9,10};
 		initHeightSel(sizes);
 		initWidthSel(sizes);
-
 
 		initBtnDoor();
 		initBtnHero();
@@ -317,38 +383,9 @@ public class CustomKeep extends JDialog {
 				current_col = e.getX()/piece_width;
 
 				if(e.getClickCount()==2)
-				{
-					if(!isInsidePerimeter())
-						editable.updatePos(current_line, current_col, 'X');
-					else
-						editable.updatePos(current_line, current_col, ' ');
-
-					Character ent = positions.get(new Position(current_line, current_col));
-					if(ent != null)
-						enableButton(ent);
-
-					editable.repaint();
-				}
+					dblClickHandler();
 				else if(e.getClickCount() == 1)
-				{
-					if(current_char!=' ')
-					{
-						if(!checkEntitiesPosition())
-							return;
-
-						editable.updatePos(current_line, current_col, current_char);
-						editable.repaint();
-					}
-
-					Character ent = positions.get(new Position(current_line, current_col));
-
-					if(ent!=null)
-						enableButton(ent);
-
-					positions.put(new Position(current_line, current_col), current_char);
-
-					disableBtn();
-				}
+					sglClickHandler();
 
 			}
 		});
@@ -356,23 +393,11 @@ public class CustomKeep extends JDialog {
 		contentPanel.add(editable);
 
 		{
-			JPanel buttonPane = new JPanel();
+			buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						dispose();
-					}
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
+			initOkBtn();
+			initCancelBtn();
 		}
-
 	}
 }
