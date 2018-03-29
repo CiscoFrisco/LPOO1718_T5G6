@@ -1,13 +1,19 @@
 package dkeep.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import org.junit.Test;
 
+import dkeep.logic.Dungeon;
 import dkeep.logic.GameState;
 import dkeep.logic.Keep;
-import dkeep.logic.Dungeon;
-import dkeep.logic.Position;
 import dkeep.logic.Map;
+import dkeep.logic.Position;
 
 public class Test1 {
 
@@ -169,8 +175,6 @@ public class Test1 {
 		game.issueMov('a',game.hero());		
 		
 		assertTrue(game.level().checkDoors());
-
-
 	}
 	
 	@Test
@@ -196,6 +200,43 @@ public class Test1 {
 		game.issueMov('a',game.hero());		
 		
 		assertEquals(true, game.escaped());
+	}
+	
+	@Test
+	public void testDungeonSave() {
+		Map gameMap = new Map(dungeon);
+		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
+		
+		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
+	}
+	
+	@Test
+	public void testDungeonLoad() {
+		Map gameMap = new Map(dungeon);
+		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
+		
+		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
+		
+		assertNotNull(Dungeon.readFromFile(new File("dkeep/test/dungeon.txt")));
+	}
+	
+	@Test
+	public void testKeepSave() {
+		Map gameMap = new Map(keep);
+		Keep keep = new Keep(gameMap,1);
+		
+		keep.saveToFile(new File("dkeep/test/keep.txt"));
+	}
+	
+	@Test
+	public void testKeepLoad() {
+		
+		Map gameMap = new Map(keep);
+		Keep keep = new Keep(gameMap,1);
+		
+		keep.saveToFile(new File("dkeep/test/keep.txt"));
+		
+		assertNotNull(Keep.readFromFile(new File("dkeep/test/keep.txt")));
 	}
 	
 	/*
