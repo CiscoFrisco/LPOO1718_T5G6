@@ -112,8 +112,8 @@ public class Keep extends Level
 	{
 		char clubSwing = generateMovement();
 
-		while(!issueMov(clubSwing, ogre.club));
-		clubSwing = generateMovement();
+		while(!issueMov(clubSwing, ogre.club))
+			clubSwing = generateMovement();
 	}
 
 	public void updateOgre(Ogre ogre)
@@ -217,7 +217,7 @@ public class Keep extends Level
 
 				break;
 			}
-		
+
 		return true;
 	}
 
@@ -232,7 +232,7 @@ public class Keep extends Level
 
 				break;
 			}
-		
+
 		return true;
 	}
 
