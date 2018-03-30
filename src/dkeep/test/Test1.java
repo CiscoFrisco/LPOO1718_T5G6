@@ -18,19 +18,30 @@ import dkeep.logic.Position;
 public class Test1 {
 
 	char [][] dungeon = {{'X','X','X','X','X'},
-					 {'X','H',' ','G','X'},
-					 {'I',' ',' ',' ','X'},
-					 {'I','k',' ',' ','X'},
-					 {'X','X','X','X','X'},};
-	
-	char [][] keep = {{'X','X','X','X','X','X'},
-					 {'X',' ',' ',' ',' ','X'},
-					 {'X',' ',' ',' ',' ','X'},
-					 {'X',' ',' ',' ',' ','X'},
-					 {'I',' ','A',' ','k','X'},
-					 {'X','X','X','X','X','X'},};
+			{'X','H',' ','G','X'},
+			{'I',' ',' ',' ','X'},
+			{'I','k',' ',' ','X'},
+			{'X','X','X','X','X'},};
 
-	
+	char [][] keep = {{'X','X','X','X','X','X'},
+			{'X',' ',' ',' ',' ','X'},
+			{'X',' ',' ',' ',' ','X'},
+			{'X',' ',' ',' ',' ','X'},
+			{'I',' ','A',' ','k','X'},
+			{'X','X','X','X','X','X'},};
+
+	char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
+			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'I',' ',' ',' ',' ',' ',' ',' ',' ','X'} , 
+			{'X','X','X',' ','X','X','X','X',' ','X'} , 
+			{'X',' ','I',' ','I',' ','X','k',' ','X'} , 
+			{'X','X','X','X','X','X','X','X','X','X'}};
+
+
 	/////////////////
 	//Dungeon tests//
 	/////////////////
@@ -105,7 +116,7 @@ public class Test1 {
 
 		assertTrue(game.level().checkDoors());
 	}
-	
+
 	@Test
 	public void testExit() {
 
@@ -118,16 +129,16 @@ public class Test1 {
 		game.issueMov('s',game.hero());
 		game.issueMov('s',game.hero());
 		game.issueMov('a', game.hero());
-		
+
 		assertTrue(game.level().checkDoors());
-		
+
 		assertEquals(true, game.escaped());
 	}
-	
+
 	//////////////
 	//Keep tests//
 	//////////////
-	
+
 	@Test
 	public void testKeyHeroMov() {
 
@@ -139,7 +150,7 @@ public class Test1 {
 		game.issueMov('d',game.hero());
 		assertEquals('K', game.hero().representation());	
 	}
-	
+
 	@Test
 	public void testFailedExitKeep() {
 
@@ -149,12 +160,12 @@ public class Test1 {
 
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
-		
+
 		assertEquals(new Position(4,1), game.hero().pos());
 
 		assertFalse(game.level().checkDoors());
 	}
-	
+
 	@Test
 	public void testOpenDoorKeep() {
 
@@ -169,14 +180,14 @@ public class Test1 {
 
 		game.issueMov('a',game.hero());
 		game.issueMov('a',game.hero());
-		
+
 		assertFalse(game.level().checkDoors());
 
 		game.issueMov('a',game.hero());		
-		
+
 		assertTrue(game.level().checkDoors());
 	}
-	
+
 	@Test
 	public void testVictoryKeep() {
 
@@ -192,53 +203,119 @@ public class Test1 {
 
 		assertFalse(game.level().checkDoors());
 
-		
+
 		game.issueMov('a',game.hero());		
 
 		assertTrue(game.level().checkDoors());
 
 		game.issueMov('a',game.hero());		
-		
+
 		assertEquals(true, game.escaped());
 	}
-	
+
 	@Test
 	public void testDungeonSave() {
 		Map gameMap = new Map(dungeon);
 		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
-		
+
 		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
 	}
-	
+
 	@Test
 	public void testDungeonLoad() {
 		Map gameMap = new Map(dungeon);
 		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
-		
+
 		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
-		
+
 		assertNotNull(Dungeon.readFromFile(new File("dkeep/test/dungeon.txt")));
 	}
-	
+
 	@Test
 	public void testKeepSave() {
 		Map gameMap = new Map(keep);
 		Keep keep = new Keep(gameMap,1);
-		
+
 		keep.saveToFile(new File("dkeep/test/keep.txt"));
 	}
-	
+
 	@Test
 	public void testKeepLoad() {
-		
+
 		Map gameMap = new Map(keep);
 		Keep keep = new Keep(gameMap,1);
-		
+
 		keep.saveToFile(new File("dkeep/test/keep.txt"));
-		
+
 		assertNotNull(Keep.readFromFile(new File("dkeep/test/keep.txt")));
 	}
+
+	@Test
+	public void testRookieGuardMov() {
+		Map gameMap = new Map(level1);
+		Dungeon dungeon = new Dungeon(gameMap, "Rookie");
+
+		dungeon.moveEnemy();
+		assertEquals(new Position(1,7), dungeon.guard().pos());
+	}
+
+	@Test
+	public void testDungeonGameOver() {
+		Map gameMap = new Map(level1);
+		Dungeon dungeon = new Dungeon(gameMap, "Rookie");
+
+		dungeon.issueMov('d', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('d', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('s', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('s', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('s', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('s', dungeon.hero());
+		dungeon.moveEnemy();
+		dungeon.issueMov('d', dungeon.hero());
+		dungeon.moveEnemy();
+
+		assertTrue(dungeon.checkEnemy());
+	}
+
+	@Test(timeout = 1000)
+	public void testDrunkenGuard() {
+		Map gameMap = new Map(level1);
+		Dungeon dungeon = new Dungeon(gameMap, "Drunken");
+
+		dungeon.moveEnemy();
+		while(!dungeon.guard().status())
+			dungeon.moveEnemy();
+
+		while(dungeon.guard().status())
+			dungeon.moveEnemy();
+	}
 	
+	@Test(timeout = 1000)
+	public void testSuspiciousGuard() {
+		Map gameMap = new Map(level1);
+		Dungeon dungeon = new Dungeon(gameMap, "Suspicious");
+		int mov = 0;
+		dungeon.moveEnemy();
+		
+		while(dungeon.guard().getMovement()>mov)
+		{
+			mov = dungeon.guard().getMovement();
+			dungeon.moveEnemy();
+		}
+			
+
+		while(dungeon.guard().getMovement()<mov)
+		{
+			mov = dungeon.guard().getMovement();
+			dungeon.moveEnemy();
+		}
+	}
+
 	/*
 	//Code needed to be slightly changed in order to test this (remove randomness)
 	@Test
@@ -246,25 +323,25 @@ public class Test1 {
 		Map gameMap = new Map(keep);
 
 		GameState game = new GameState(new Keep(gameMap, 1)); 
-		
+
 		game.issueMov('w', game.hero());
-		
+
 		game.checkStun();
-		
+
 		boolean stunned = false;
-		
+
 		for(Ogre ogre : game.ogres())
 			assertEquals('8', ogre.representation());
-					
+
 	}
-	
+
 	@Test
 	public void testOgre() {
 		Map gameMap = new Map(keep);
-		
+
 		GameState game = new GameState(new Keep(gameMap, 1)); 
-		
-		
+
+
 	}
-	*/
+	 */
 }

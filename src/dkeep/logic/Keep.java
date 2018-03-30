@@ -45,6 +45,11 @@ public class Keep extends Level
 	{
 		return exitDoor;
 	}
+	
+	public ArrayList<Ogre> ogres()
+	{
+		return ogres;
+	}
 
 	private void initKeep() 
 	{

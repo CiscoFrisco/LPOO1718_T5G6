@@ -3,9 +3,10 @@ package dkeep.test;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import dkeep.logic.GameState;
+import dkeep.logic.Keep;
 import dkeep.logic.Map;
 import dkeep.logic.Ogre;
+import dkeep.logic.Position;
 
 public class TestRandom {
 
@@ -13,7 +14,7 @@ public class TestRandom {
 			{'I',' ',' ',' ',' ','X'},
 			{'X',' ',' ',' ',' ','X'},
 			{'X',' ',' ',' ',' ','X'},
-			{'X','H',' ',' ','k','X'},
+			{'X','A',' ',' ','k','X'},
 			{'X','X','X','X','X','X'},};
 
 	@Test (timeout = 1000)
@@ -21,42 +22,41 @@ public class TestRandom {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap, 2, "Rookie");
+		Keep keep = new Keep(gameMap, 1);
 
 		boolean left = false, right = false, up = false, down = false;
 
 		while(!up || !down || !left || !right)
 		{
-			for(Ogre ogre : game.ogres())
+			for(Ogre ogre : keep.ogres())
 			{
-				int ogre_x_pos = ogre.x_pos();
-				int ogre_y_pos = ogre.y_pos();
+				Position pos = ogre.pos();
 
-				game.issueMov(game.generateMovement(), game.hero());
-				game.issueMov(game.generateMovement(), ogre);
+				keep.issueMov(keep.generateMovement(), keep.hero());
+				keep.issueMov(keep.generateMovement(), ogre);
 				
 
-				if(ogre_x_pos == ogre.x_pos() + 1)
+				if(pos.getI() == ogre.pos().getI() + 1)
 				{
 					up = true;
 				}
-				else if(ogre_x_pos == ogre.x_pos() - 1)
+				else if(pos.getI() == ogre.pos().getI() - 1)
 				{
 					down = true;
 				}
-				else if(ogre_y_pos == ogre.y_pos() - 1)
+				else if(pos.getJ() == ogre.pos().getJ() - 1)
 				{
 					right = true;
 				}
-				else if(ogre_y_pos == ogre.y_pos() + 1)
+				else if(pos.getJ() == ogre.pos().getJ() + 1)
 				{
 					left = true;
 				}
-				else if(ogre_x_pos == ogre.x_pos() && ogre_y_pos == ogre.y_pos())
+				else if(pos.getI() == ogre.pos().getI() && pos.getJ() == ogre.pos().getJ())
 				{
 					continue;
 				}
-				else if(game.gameOver() || game.escaped())
+				else if(keep.gameOver() || keep.escaped())
 				{
 					continue;
 				}
@@ -71,46 +71,45 @@ public class TestRandom {
 
 		Map gameMap = new Map(keep);
 
-		GameState game = new GameState(gameMap, 2, "Rookie");
+		Keep keep = new Keep(gameMap, 1);
 
 		boolean left = false, right = false, up = false, down = false;
 
 		while(!up || !down || !left || !right)
 		{
-			for(Ogre ogre : game.ogres())
+			for(Ogre ogre : keep.ogres())
 			{
-				int club_x_pos = ogre.x_pos();
-				int club_y_pos = ogre.y_pos();
+				Position pos = ogre.pos();
 				
-				game.printMap();
+				System.out.println(keep.map().getPrintable());
 
-				game.issueMov(game.generateMovement(), game.hero());
+				keep.issueMov(keep.generateMovement(), keep.hero());
 				//game.issueMov(game.generateMovement(), ogre);
-				game.updateOgre(ogre);
-				game.setClub(ogre);
+				keep.updateOgre(ogre);
+				keep.setClub(ogre);
 				
 
-				if(club_x_pos == ogre.club().x_pos() + 1)
+				if(pos.getI() == ogre.club().pos().getI() + 1)
 				{
 					up = true;
 				}
-				else if(club_x_pos == ogre.club().x_pos() - 1)
+				else if(pos.getI()  == ogre.club().pos().getJ() - 1)
 				{
 					down = true;
 				}
-				else if(club_y_pos == ogre.club().y_pos() - 1)
+				else if(pos.getJ() == ogre.club().pos().getJ() - 1)
 				{
 					right = true;
 				}
-				else if(club_y_pos == ogre.club().y_pos() + 1)
+				else if(pos.getJ() == ogre.club().pos().getJ() + 1)
 				{
 					left = true;
 				}
-				else if(club_x_pos == ogre.club().x_pos() && club_y_pos == ogre.club().y_pos())
+				else if(pos.getI()  == ogre.club().pos().getI() && pos.getJ() == ogre.club().pos().getJ())
 				{
 					continue;
 				}
-				else if(game.gameOver() || game.escaped())
+				else if(keep.gameOver() || keep.escaped())
 				{
 					continue;
 				}

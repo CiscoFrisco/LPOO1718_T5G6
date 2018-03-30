@@ -43,9 +43,9 @@ public abstract class Guard extends Entity
 		return mov;
 	}
 	
-	abstract void move();
+	public abstract void move();
 
-	abstract char getMove();
+	public abstract char getMove();
 	
-	abstract boolean status();
+	public abstract boolean status();
 }
