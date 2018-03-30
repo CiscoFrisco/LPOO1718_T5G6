@@ -10,13 +10,6 @@ import dkeep.logic.Position;
 
 public class TestRandom {
 
-	char [][] keep = {{'X','X','X','X','X','X'},
-			{'I',' ',' ',' ',' ','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'X','A',' ',' ','k','X'},
-			{'X','X','X','X','X','X'},};
-
 	char[][] level2 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 			{'I',' ',' ',' ',' ',' ',' ',' ','k','X'} , 
 			{'X',' ',' ',' ',' ',' ',' ',' ','O','X'} , 
@@ -31,9 +24,9 @@ public class TestRandom {
 	@Test (timeout = 1000)
 	public void testOgreRandomMov(){
 
-		Map gameMap = new Map(keep);
+		Map gameMap = new Map(level2);
 
-		Keep keep = new Keep(gameMap, 1);
+		Keep keep = new Keep(gameMap);
 
 		boolean left = false, right = false, up = false, down = false;
 
@@ -44,9 +37,8 @@ public class TestRandom {
 				Position pos = ogre.pos();
 
 				keep.issueMov(keep.generateMovement(), keep.hero());
-				keep.issueMov(keep.generateMovement(), ogre);
-
-
+				keep.moveOgres();
+				
 				if(pos.getI() == ogre.pos().getI() + 1)
 				{
 					up = true;
@@ -72,17 +64,18 @@ public class TestRandom {
 					continue;
 				}
 				else
-					fail("Well...shit!");
+					fail("Something's wrong!");
 			}
 		}
 	}
-/*
-	@Test
+
+	/*
+	@Test (timeout = 1000)
 	public void testClubRandomMov(){
 
-		Map gameMap = new Map(keep);
+		Map gameMap = new Map(level2);
 
-		Keep keep = new Keep(gameMap, 1);
+		Keep keep = new Keep(gameMap);
 
 		boolean left = false, right = false, up = false, down = false;
 
@@ -95,28 +88,25 @@ public class TestRandom {
 				System.out.println(keep.map().getPrintable());
 
 				keep.issueMov(keep.generateMovement(), keep.hero());
-				//game.issueMov(game.generateMovement(), ogre);
-				keep.updateOgre(ogre);
-				keep.setClub(ogre);
+				keep.moveEnemy();
 
-
-				if(pos.getI() == ogre.club().pos().getI() + 1)
+				if(pos.getI() == ogre.pos().getI() + 1)
 				{
 					up = true;
 				}
-				else if(pos.getI()  == ogre.club().pos().getJ() - 1)
+				else if(pos.getI()  == ogre.pos().getJ() - 1)
 				{
 					down = true;
 				}
-				else if(pos.getJ() == ogre.club().pos().getJ() - 1)
+				else if(pos.getJ() == ogre.pos().getJ() - 1)
 				{
 					right = true;
 				}
-				else if(pos.getJ() == ogre.club().pos().getJ() + 1)
+				else if(pos.getJ() == ogre.pos().getJ() + 1)
 				{
 					left = true;
 				}
-				else if(pos.getI()  == ogre.club().pos().getI() && pos.getJ() == ogre.club().pos().getJ())
+				else if(pos.getI()  == ogre.pos().getI() && pos.getJ() == ogre.pos().getJ())
 				{
 					continue;
 				}
@@ -125,12 +115,11 @@ public class TestRandom {
 					continue;
 				}
 				else
-					fail("Well...shit!");
+					fail("Something's wrong!");
 			}
 		}
 	}
 	*/
-	
 	@Test
 	public void testOgreKey()
 	{
@@ -159,6 +148,12 @@ public class TestRandom {
 		
 		keep.checkStun();
 		assertTrue(keep.ogres().get(0).stunned());
+		keep.moveEnemy();
+		assertTrue(keep.ogres().get(0).stunned());
+		keep.moveEnemy();
+		assertTrue(keep.ogres().get(0).stunned());
+		keep.moveEnemy();
+		assertFalse(keep.ogres().get(0).stunned());
 	}
 	
 }

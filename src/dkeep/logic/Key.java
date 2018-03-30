@@ -1,9 +1,7 @@
 package dkeep.logic;
 
 public class Key extends Entity
-{	
-	private Entity owner;
-	
+{		
 	/**
 	 * Class constructor.
 	 * 
@@ -13,14 +11,5 @@ public class Key extends Entity
 	public Key(Position pos, char rep)
 	{
 		super(pos, rep);
-	}
-	
-	/**
-	 * Returns the current owner of the key, be it the hero, an ogre, a club, or no one.
-	 * @return the owner of the key
-	 */
-	public Entity owner()
-	{
-		return owner;
 	}
 }

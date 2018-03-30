@@ -14,13 +14,6 @@ public class Map
 		width= layout[0].length;
 		height = layout.length;
 	}
-	
-	public Map(char[][] layout, int width, int height)
-	{
-		this.layout = layout;
-		this.width= width;
-		this.height = height;
-	}
 
 	public char[][] layout()
 	{
@@ -81,15 +74,6 @@ public class Map
 		}
 
 		return map;
-	}
-
-	public String getMapLine(char[] line) 
-	{
-		String res  = "";
-		for(int i = 0; i < line.length; i++)
-			res += line[i] + " ";
-
-		return res;
 	}
 
 	public String getWritable()
