@@ -17,26 +17,51 @@ public abstract class Level
 	protected boolean gameOver;
 	protected ArrayList<Character> movements;
 	
+	/**
+	 * Returns the current level map.
+	 * 
+	 * @return the current map
+	 */
 	public Map map()
 	{
 		return map;
 	}
 	
+	/**
+	 * Returns the level's hero.
+	 * 
+	 * @return the hero
+	 */
 	public Hero hero()
 	{
 		return hero;
 	}
 	
+	/**
+	 * Returns whether the hero has or hasn't escaped the level.
+	 * 
+	 * @return a boolean indicating if the hero has escaped
+	 */
 	public boolean escaped()
 	{
 		return escaped;
 	}
 	
+	/**
+	 * Returns whether the hero has or hasn't lost the level.
+	 * 
+	 * @return a boolean indicating if the hero has lost
+	 */
 	public boolean gameOver()
 	{
 		return gameOver;
 	}
 	
+	/**
+	 * Generates a random movement.
+	 * 
+	 * @return a random movement
+	 */
 	public char generateMovement()
 	{
 		Random number = new Random();
@@ -45,6 +70,12 @@ public abstract class Level
 		return movements.get(generated);
 	}
 	
+	/**
+	 * 
+	 * @param movement
+	 * @param entity
+	 * @return
+	 */
 	public boolean issueMov(char movement, Entity entity)
 	{
 		Position pos = entity.pos().clone();
@@ -83,6 +114,11 @@ public abstract class Level
 	
 	public abstract void saveToFile(File file);
 	
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
 	public static Level readFromFile(File file)
 	{
 		BufferedReader reader;
@@ -100,6 +136,11 @@ public abstract class Level
 		return levelID == 1 ? Dungeon.readFromFile(file) : Keep.readFromFile(file);
 	}
 	
+	/**
+	 * Checks if the level's door are open.
+	 * 
+	 * @return a boolean indicating if the level's doors are open.
+	 */
 	public boolean checkDoors()
 	{
 		for(int i = 0; i<map.height();i++)

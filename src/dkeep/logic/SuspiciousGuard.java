@@ -5,13 +5,22 @@ import java.util.Random;
 public class SuspiciousGuard extends Guard 
 {
 	private boolean reverse;
-
+	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param pos the coordinates of this suspicious guard on the dungeon map
+	 * @param rep the representation of this suspicious guard on a char based map
+	 */
 	public SuspiciousGuard(Position pos, char rep)
 	{
 		super(pos, rep);
 		reverse = false;
 	}
 
+	/**
+	 * According to the current direction of the guard's movement, updates its index on the movement array.
+	 */
 	public void move()
 	{
 		if(reverse)
@@ -29,7 +38,11 @@ public class SuspiciousGuard extends Guard
 				guard_movement++;
 		}
 	}
-
+	
+	/**
+	 * Checks in which way this guard is heading and returns its current movement.
+	 * Depending on the direction, the movement on the array might be reversed, or not.
+	 */
 	public char getMove()
 	{	
 		setReverse();
@@ -50,7 +63,11 @@ public class SuspiciousGuard extends Guard
 		
 		return mov;
 	}
-
+	
+	/**
+	 * Sets the current state of the reverse value, thus indicating whether the guard should reverse
+	 * its movement or not.
+	 */
 	public void setReverse()
 	{
 		Random number = new Random();
@@ -58,10 +75,5 @@ public class SuspiciousGuard extends Guard
 
 		//guard has 30 % chance of reversing his movement
 		reverse = generated>=7 ? true : false;
-	}
-	
-	public boolean status()
-	{
-		return false;
 	}
 }

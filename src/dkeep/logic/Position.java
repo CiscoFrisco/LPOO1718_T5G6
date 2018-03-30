@@ -5,11 +5,23 @@ public class Position implements Comparable<Position>
 	private int i;
 	private int j;
 	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param i the i component of this position
+	 * @param j the j component of this position
+	 */
 	public Position(int i, int j)
 	{
-		setPosition(i,j);
+		setPosition(i, j);
 	}
 	
+	/**
+	 * Sets the new values for i and j.
+	 * 
+	 * @param i the new i component of this position
+	 * @param j the new j component of this position
+	 */
 	public void setPosition(int i, int j)
 	{
 		this.i = i;
@@ -33,16 +45,31 @@ public class Position implements Comparable<Position>
 			return 1;
 	}
 	
+	/**
+	 * Gets the current i coordinate.
+	 * 
+	 * @return the current i coordinate
+	 */
 	public int getI()
 	{
 		return i;
 	}
 	
+	/**
+	 * Gets the current j coordinate.
+	 * 
+	 * @return the current j coordinate
+	 */
 	public int getJ()
 	{
 		return j;
 	}
 	
+	/**
+	 * Increments i or j according to the received movement (up, down, left or right).
+	 * 
+	 * @param movement a movement between consecutive cells
+	 */
 	public void movePosition(char movement)
 	{
 		switch(movement)
@@ -63,6 +90,14 @@ public class Position implements Comparable<Position>
 		}
 	}
 	
+	/**
+	 * Compares this position to a given one and checks if they are adjacent 
+	 * on a char based map, which means they need to have consecutive i or j
+	 * coordinates.
+	 * 
+	 * @param pos2 the position that is being compared to 
+	 * @return true or false according to the predicate
+	 */
 	public boolean isAdjacent(Position pos2)
 	{
 		boolean cond1 = Math.abs(i-pos2.i)<=1;

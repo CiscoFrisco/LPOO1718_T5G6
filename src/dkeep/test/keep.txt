@@ -2,7 +2,7 @@
 6
 6
 XXXXXX
-X  O X
+X   OX
 X    X
 X    X
 I A kX
