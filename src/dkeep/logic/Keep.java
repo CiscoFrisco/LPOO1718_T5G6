@@ -14,7 +14,13 @@ public class Keep extends Level
 	private ArrayList<Ogre> ogres;
 	private Key key;
 	private ExitDoor exitDoor;
-
+	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param map this level's current map
+	 * @param numberOfOgres the number of ogres to be generated
+	 */
 	public Keep(Map map, int numberOfOgres)
 	{
 		id = 2;
@@ -26,6 +32,11 @@ public class Keep extends Level
 		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
 
+	/**
+	 * Class constructor
+	 * 
+	 * @param map this level's current map, already contaning the ogres
+	 */
 	public Keep(Map map)
 	{
 		id = 2;
@@ -35,22 +46,41 @@ public class Keep extends Level
 		movements = new ArrayList<Character>();
 		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
-
+	
+	/**
+	 * Returns this level's key.
+	 * 
+	 * @return this level's key
+	 */
 	public Key key()
 	{
 		return key;
 	}
 
+	/**
+	 * Returns this level's exit doors.
+	 * 
+	 * @return this level's exit doors.
+	 */
 	public ExitDoor exitDoor()
 	{
 		return exitDoor;
 	}
 	
+	/**
+	 * Returns this level's ogres.
+	 * 
+	 * @return this level's ogres.
+	 */
 	public ArrayList<Ogre> ogres()
 	{
 		return ogres;
 	}
 
+	/**
+	 * Initializes this keep, by sweeping the map and checking for the existence of
+	 * its entities.
+	 */
 	private void initKeep() 
 	{
 		for(int i = 0;i<map.layout().length;i++)
@@ -74,14 +104,17 @@ public class Keep extends Level
 			hero.setKey();
 
 		for(Ogre ogre : ogres)
-		{
 			if(ogre.representation() == '8')
-			{
 				ogre.setStun();
-			}
-		}
+		
 	}
 
+	/**
+	 * Generates this level's ogres, by creating random positions and checking if they're not
+	 * close to the hero.
+	 * 
+	 * @param numberOfOgres this level's number of ogres
+	 */
 	public void generateOgres(int numberOfOgres)
 	{
 		Random random = new Random();
@@ -107,12 +140,20 @@ public class Keep extends Level
 			map.updatePos(ogre.pos, ogre);
 	}
 
+	/**
+	 * Updates the clubs for all ogres.
+	 */
 	public void armOgres()
 	{
 		for(Ogre ogre : ogres)
 			setClub(ogre);
 	}
 
+	/**
+	 * Puts the ogre's club on a new random position, adjacent to him.
+	 * 
+	 * @param ogre the ogre to be updated
+	 */
 	public void setClub(Ogre ogre)
 	{
 		char clubSwing = generateMovement();
@@ -120,7 +161,12 @@ public class Keep extends Level
 		while(!issueMov(clubSwing, ogre.club))
 			clubSwing = generateMovement();
 	}
-
+	
+	/**
+	 * Updates the ogre's old club position.
+	 * 
+	 * @param ogre the ogre to be updated
+	 */
 	public void updateOgre(Ogre ogre)
 	{
 		Position pos = ogre.club().pos();
@@ -136,7 +182,10 @@ public class Keep extends Level
 		ogre.club().resetKey();
 		ogre.club.setPos(ogre.pos);
 	}
-
+	
+	/**
+	 * Moves all of this level's ogres, if they're not stunned.
+	 */
 	public void moveOgres()
 	{
 		for(Ogre ogre : ogres)
@@ -151,15 +200,23 @@ public class Keep extends Level
 			updateOgre(ogre);
 		}
 	}
-
+	
+	/**
+	 * Checks if the ogre is adjacent to the hero.
+	 * 
+	 * @param ogre the ogre that is being checked
+	 * @return a boolean indicating if the ogre is or isn't adjacent to the hero
+	 */
 	public boolean checkOgre(Ogre ogre)
 	{		
-		if(hero.pos.isAdjacent(ogre.pos))
-			return true;
-
-		return false;
+		return hero.pos.isAdjacent(ogre.pos);
 	}
 
+	/**
+	 * Checks if any club is adjacent to the hero, thus ending the game.
+	 * 
+	 * @return a boolean indicating if any club is adjacent to the hero.
+	 */
 	public boolean checkClub()
 	{
 		for(Ogre ogre: ogres)
@@ -171,7 +228,10 @@ public class Keep extends Level
 
 		return false;
 	}
-
+	
+	/**
+	 * Checks is any ogre is adjacent to the hero, thus stunning him.
+	 */
 	public void checkStun()
 	{
 		for(Ogre ogre : ogres)
@@ -185,7 +245,6 @@ public class Keep extends Level
 			}
 		}
 	}
-
 
 	public boolean checkCell(Position pos, Entity entity)
 	{
@@ -328,7 +387,7 @@ public class Keep extends Level
 
 		map.update(pos, entity, pos1, pos2);
 	}
-
+	
 	private void updateOgres(Position pos, Entity entity) {
 
 		char pos1 = ' ', pos2= ' ';
@@ -360,7 +419,7 @@ public class Keep extends Level
 		}
 		map.update(pos, entity, pos1, pos2);
 	}
-
+	
 	public void moveEnemy()
 	{
 		moveOgres();
@@ -397,7 +456,12 @@ public class Keep extends Level
 		}
 
 	}
-
+	
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
 	public static Keep readFromFile(File file)
 	{
 		char[][] reading = null;

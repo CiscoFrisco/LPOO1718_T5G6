@@ -14,7 +14,13 @@ public class Dungeon extends Level
 	private Guard guard;
 	private Lever lever;
 	private String guardType;
-
+	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param map this level's initial map
+	 * @param guardType the personality of the guard (rookie, drunken or suspicious)
+	 */
 	public Dungeon(Map map, String guardType)
 	{
 		id = 1;
@@ -26,17 +32,33 @@ public class Dungeon extends Level
 		movements = new ArrayList<Character>();
 		movements.add('w');	movements.add('a'); movements.add('s'); movements.add('d');
 	}
-
+	
+	/**
+	 * Returns this level's guard.
+	 * 
+	 * @return this level's guard
+	 */
 	public Guard guard()
 	{
 		return guard;
 	}
 
+	/**
+	 * Returns this level's lever.
+	 * 
+	 * @return this level's lever
+	 */
 	public Lever lever()
 	{
 		return lever;
 	}
-
+	
+	/**
+	 * Initializes this dungeon, by sweeping the map and checking for the existence of
+	 * its entities.
+	 * 
+	 * @param guardType the personality of the guard (rookie, drunken or suspicious)
+	 */
 	private void initDungeon(String guardType) 
 	{
 		exitDoors = new ArrayList<ExitDoor>();
@@ -55,7 +77,14 @@ public class Dungeon extends Level
 					exitDoors.add(new ExitDoor(new Position(i,j),'I'));
 			}
 	}
-
+	
+	/**
+	 * Generates this level's guard according to its specified type.
+	 * 
+	 * @param pos the position of the guard
+	 * @param guardType the personality of the guard (rookie, drunken or suspicious)
+	 * @return
+	 */
 	public Guard generateGuard(Position pos, String guardType)
 	{
 		Guard guard = null;
@@ -77,13 +106,23 @@ public class Dungeon extends Level
 
 		return guard;
 	}
-
+	
+	/**
+	 * Performs a movement of the guard, also updating its internal values.
+	 */
 	public void moveGuard()
 	{
 		issueMov(guard.getMove(),guard);
 		guard.move();
 	}
-
+	
+	/**
+	 * Checks if the guard is capable of harming the hero, thus ending the game.
+	 * Not only checks if they're on consecutive positions, but also makes sure that the guard
+	 * is not asleep.
+	 * 
+	 * @return a boolean value indicating if the game is over or not.
+	 */
 	public boolean checkGuard()
 	{
 		if((hero.pos.isAdjacent(guard.pos) && !guard.status()) || hero.pos().equals(guard.pos()))
@@ -94,8 +133,7 @@ public class Dungeon extends Level
 
 		return false;
 	}
-
-
+	
 	public boolean checkCell(Position pos, Entity entity)
 	{
 		if(map.pos(pos) == 'X' || map.pos(pos) == 'I')
@@ -182,6 +220,14 @@ public class Dungeon extends Level
 		
 	}
 
+	/**
+	 * Reads from a file and creates a new Dungeon level.
+	 * Has the ability to create the level at any state: the beginning, after the hero has moved,
+	 * before/after the lever has been activated.
+	 * 
+	 * @param file the file to be read
+	 * @return a new Dungeon level
+	 */
 	public static Dungeon readFromFile(File file)
 	{
 		char[][] reading = null;

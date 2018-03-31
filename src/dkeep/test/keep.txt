@@ -3,7 +3,7 @@
 6
 XXXXXX
 X    X
+XO   X
 X    X
-X   OX
 I A kX
 XXXXXX

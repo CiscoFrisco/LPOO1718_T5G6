@@ -1,7 +1,6 @@
 package dkeep.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -11,11 +10,10 @@ import org.junit.Test;
 
 import dkeep.logic.Dungeon;
 import dkeep.logic.GameState;
-import dkeep.logic.Keep;
 import dkeep.logic.Map;
 import dkeep.logic.Position;
 
-public class Test1 {
+public class TestDungeon {
 
 	char [][] dungeon = {{'X','X','X','X','X'},
 			{'X','H',' ','G','X'},
@@ -23,12 +21,6 @@ public class Test1 {
 			{'I','k',' ',' ','X'},
 			{'X','X','X','X','X'},};
 
-	char [][] keep = {{'X','X','X','X','X','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'X',' ',' ',' ',' ','X'},
-			{'I',' ','A',' ','k','X'},
-			{'X','X','X','X','X','X'},};
 
 	char[][] level1 = {{'X','X','X','X','X','X','X','X','X','X'} , 
 			{'X','H',' ',' ','I',' ','X',' ','G','X'} , 
@@ -139,79 +131,7 @@ public class Test1 {
 	//Keep tests//
 	//////////////
 
-	@Test
-	public void testKeyHeroMov() {
 
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 0)); 
-
-		game.issueMov('d',game.hero());
-		game.issueMov('d',game.hero());
-		assertEquals('K', game.hero().representation());	
-	}
-
-	@Test
-	public void testFailedExitKeep() {
-
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 1)); 
-
-		game.issueMov('a',game.hero());
-		game.issueMov('a',game.hero());
-
-		assertEquals(new Position(4,1), game.hero().pos());
-
-		assertFalse(game.level().checkDoors());
-	}
-
-	@Test
-	public void testOpenDoorKeep() {
-
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 1)); 
-
-		game.issueMov('d',game.hero());
-		game.issueMov('d',game.hero());
-
-		game.issueMov('a',game.hero());
-
-		game.issueMov('a',game.hero());
-		game.issueMov('a',game.hero());
-
-		assertFalse(game.level().checkDoors());
-
-		game.issueMov('a',game.hero());		
-
-		assertTrue(game.level().checkDoors());
-	}
-
-	@Test
-	public void testVictoryKeep() {
-
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 1)); 
-
-		game.issueMov('d',game.hero());
-		game.issueMov('d',game.hero());
-		game.issueMov('a',game.hero());
-		game.issueMov('a',game.hero());
-		game.issueMov('a',game.hero());
-
-		assertFalse(game.level().checkDoors());
-
-
-		game.issueMov('a',game.hero());		
-
-		assertTrue(game.level().checkDoors());
-
-		game.issueMov('a',game.hero());		
-
-		assertEquals(true, game.escaped());
-	}
 
 	@Test
 	public void testDungeonSave() {
@@ -229,25 +149,6 @@ public class Test1 {
 		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
 
 		assertNotNull(Dungeon.readFromFile(new File("dkeep/test/dungeon.txt")));
-	}
-
-	@Test
-	public void testKeepSave() {
-		Map gameMap = new Map(keep);
-		Keep keep = new Keep(gameMap,1);
-
-		keep.saveToFile(new File("dkeep/test/keep.txt"));
-	}
-
-	@Test
-	public void testKeepLoad() {
-
-		Map gameMap = new Map(keep);
-		Keep keep = new Keep(gameMap,1);
-
-		keep.saveToFile(new File("dkeep/test/keep.txt"));
-
-		assertNotNull(Keep.readFromFile(new File("dkeep/test/keep.txt")));
 	}
 
 	@Test
@@ -315,33 +216,4 @@ public class Test1 {
 			dungeon.moveEnemy();
 		}
 	}
-
-	/*
-	//Code needed to be slightly changed in order to test this (remove randomness)
-	@Test
-	public void testStun() {
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 1)); 
-
-		game.issueMov('w', game.hero());
-
-		game.checkStun();
-
-		boolean stunned = false;
-
-		for(Ogre ogre : game.ogres())
-			assertEquals('8', ogre.representation());
-
-	}
-
-	@Test
-	public void testOgre() {
-		Map gameMap = new Map(keep);
-
-		GameState game = new GameState(new Keep(gameMap, 1)); 
-
-
-	}
-	 */
 }

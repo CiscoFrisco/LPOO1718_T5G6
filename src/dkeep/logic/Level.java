@@ -2,7 +2,6 @@ package dkeep.logic;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,10 +70,11 @@ public abstract class Level
 	}
 	
 	/**
+	 * Issues a movement to a given entity, by checking if it's valid, and if it's possible to make.
 	 * 
-	 * @param movement
-	 * @param entity
-	 * @return
+	 * @param movement the movement that is being issued
+	 * @param entity the entity that is going to me moved
+	 * @return a boolean value indicating whether the movement was performed or not
 	 */
 	public boolean issueMov(char movement, Entity entity)
 	{
@@ -115,9 +115,10 @@ public abstract class Level
 	public abstract void saveToFile(File file);
 	
 	/**
+	 * Reads a text file and according to its content, creates a new level, Dungeon or Keep.
 	 * 
-	 * @param file
-	 * @return
+	 * @param file the file to be read
+	 * @return a new level 
 	 */
 	public static Level readFromFile(File file)
 	{
@@ -131,7 +132,6 @@ public abstract class Level
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
 		return levelID == 1 ? Dungeon.readFromFile(file) : Keep.readFromFile(file);
 	}
