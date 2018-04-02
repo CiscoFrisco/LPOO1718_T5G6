@@ -10,8 +10,8 @@ public class DrunkenGuard extends Guard
 	/**
 	 * Class constructor.
 	 * 
-	 * @param pos the coordinates of this rookie guard on the dungeon map
-	 * @param rep the representation of this rookie guard on a char based map
+	 * @param pos the coordinates of this drunken guard on the dungeon map
+	 * @param rep the representation of this drunken guard on a char based map
 	 */
 	public DrunkenGuard(Position pos, char rep)
 	{

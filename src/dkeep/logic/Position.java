@@ -28,6 +28,12 @@ public class Position implements Comparable<Position>
 		this.j = j;
 	}
 	
+	/**
+	 * Checks whether or not the two positions to be compared are equal.
+	 * 
+	 * @param o1 An object referring a game position.
+	 * @ return returns a boolean indicating if the two postitions are equal or not.
+	 */
 	public boolean equals(Object o1)
 	{
 		return o1 != null && o1 instanceof Position && i==((Position)o1).i && j==((Position)o1).j;
@@ -108,6 +114,11 @@ public class Position implements Comparable<Position>
 		return  (cond1 && cond2) || (cond3 && cond4);
 	}
 	
+	/**
+	 * Clones the current position.
+	 * 
+	 * @return a new position representing the position cloned. 
+	 */
 	public Position clone()
 	{
 		return new Position(i,j);

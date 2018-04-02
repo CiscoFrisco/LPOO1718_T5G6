@@ -64,17 +64,30 @@ public class GameState
 	{
 		return level.gameOver;
 	}
+	
 
+	/**
+	 * Moves the enemy within the level.
+ 	 */
 	public void moveEnemy() 
 	{
 		level.moveEnemy();	
 	}
 
+	/**
+	 * Checks whether or not the enemy can harm the hero.
+	 * @return a boolean value indicating if the guard harmed the hero or not.
+ 	 */
 	public boolean checkEnemy()
 	{
 		return level.checkEnemy();
 	}
-	
+
+	/**
+	 * Returns the current level's map.
+	 * 
+	 * @return the current level's map.
+ 	 */
 	public Map getMap()
 	{
 		return level.map;
@@ -89,7 +102,13 @@ public class GameState
 	{
 		return level.id;
 	}
+	
 
+	/**
+	 * Returns the current level's hero.
+	 * 
+	 * @return the current level's hero.
+ 	 */
 	public Hero hero()
 	{
 		return level.hero;

@@ -246,6 +246,12 @@ public class Keep extends Level
 		}
 	}
 
+	/**
+	 * Checks if the cell the hero is trying to move is a valid cell.To be valid it needs to be a free cell (' ').
+	 * It also checks if the hero is moving to the lever or to an open door updating the game status accordingly.
+	 * 
+	 * @return a boolean value indicating if the cell is valid or not.
+	 */
 	public boolean checkCell(Position pos, Entity entity)
 	{
 		if(map.pos(pos) == 'X')
@@ -343,6 +349,12 @@ public class Keep extends Level
 		map.update(pos, entity, pos1, pos2);
 	}
 
+	/**
+	 * Updates the position of a certain character.
+	 * 
+	 * @param pos the position the character is moving.
+	 * @param entity the character to be updated.
+	 */
 	public void update(Position pos, Entity entity)
 	{	
 		if(entity.equals(hero))
@@ -420,6 +432,10 @@ public class Keep extends Level
 		map.update(pos, entity, pos1, pos2);
 	}
 	
+	/**
+	 * Updates the position of every ogre as well as each of the clubs.
+	 * It also checks whether or not the hero stunned any ogre.
+	 */
 	public void moveEnemy()
 	{
 		moveOgres();
@@ -427,12 +443,20 @@ public class Keep extends Level
 		checkStun();
 	}
 
+	/**
+	 * Checks whether or not any club has hit the hero.
+	 * @return returns a boolean indicating if the hero was hit by a club.
+	 */
 	@Override
 	public boolean checkEnemy() 
 	{
 		return checkClub();
 	}
 
+	/**
+	 * Saves the relevant game information to a file.
+	 * @param file to be saved.
+	 */
 	@Override
 	public void saveToFile(File file) 
 	{
@@ -458,9 +482,12 @@ public class Keep extends Level
 	}
 	
 	/**
+	 * Reads from a file and creates a new Keep level.
+	 * Has the ability to create the level at any state: the beginning, after the hero has moved,
+	 * before/after the lever has been activated.
 	 * 
-	 * @param file
-	 * @return
+	 * @param file the file to be read
+	 * @return a new Keep level
 	 */
 	public static Keep readFromFile(File file)
 	{

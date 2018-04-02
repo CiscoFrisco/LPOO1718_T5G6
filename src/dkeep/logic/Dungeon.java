@@ -83,7 +83,7 @@ public class Dungeon extends Level
 	 * 
 	 * @param pos the position of the guard
 	 * @param guardType the personality of the guard (rookie, drunken or suspicious)
-	 * @return
+	 * @return Returns the guard generated
 	 */
 	public Guard generateGuard(Position pos, String guardType)
 	{
@@ -134,6 +134,12 @@ public class Dungeon extends Level
 		return false;
 	}
 	
+	/**
+	 * Checks if the cell the hero is trying to move is a valid cell.To be valid it needs to be a free cell (' ').
+	 * It also checks if the hero is moving to the lever or to an open door updating the game status accordingly.
+	 * 
+	 * @return a boolean value indicating if the cell is valid or not.
+	 */
 	public boolean checkCell(Position pos, Entity entity)
 	{
 		if(map.pos(pos) == 'X' || map.pos(pos) == 'I')
@@ -149,7 +155,13 @@ public class Dungeon extends Level
 
 		return true;
 	}
-
+	
+	/**
+	 * Updates the position of a certain character.
+	 * 
+	 * @param pos the position the character is moving.
+	 * @param entity the character to be updated.
+	 */
 	public void update(Position pos, Entity entity)
 	{	
 		char pos1 = ' ', pos2= ' ';
@@ -182,17 +194,28 @@ public class Dungeon extends Level
 		map.update(pos, entity, pos1, pos2);
 	}
 
+	/**
+	 * Moves the enemy in this level (Guard).
+	 */
 	public void moveEnemy()
 	{
 		moveGuard();
 	}
 
+	/**
+	 * Calls functions checkGuard() to see if the guard is capable of harming the hero.
+	 * @return a boolean value indicating if the guard harmed the hero or not.
+	 */
 	@Override
 	public boolean checkEnemy() 
 	{
 		return checkGuard();
 	}
 
+	/**
+	 * Saves the relevant game information to a file.
+	 * @param file to be saved.
+	 */
 	@Override
 	public void saveToFile(File file) 
 	{
