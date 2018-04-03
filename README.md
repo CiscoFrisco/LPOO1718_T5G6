@@ -7,7 +7,9 @@ Test coverage results:
 
 ![alt text](res/test_results/coverage.png "EclEmma results")
 
+
 PitClipse mutation coverage results: 
+
 ![alt text](res/test_results/pit.png "PitClipse results")
 
 
