@@ -12,6 +12,7 @@ PitClipse mutation coverage results:
 
 ![alt text](res/test_results/pit.png "PitClipse results")
 
+[Project Documentation](https://ciscofrisco.github.io/)
 
 ## Team members
 
