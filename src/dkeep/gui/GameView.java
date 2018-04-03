@@ -59,13 +59,13 @@ public class GameView extends JPanel
 		dungeon.put(' ', ImageIO.read(new File("images/espaco.png")));
 
 		keep.put('O', ImageIO.read(new File("images/ogre.png")));
-		keep.put('*', ImageIO.read(new File("images/weapon.png")));
-		keep.put('K', ImageIO.read(new File("images/armed_hero.png")));
-		keep.put('A', ImageIO.read(new File("images/armed_hero.png")));
+		keep.put('*', ImageIO.read(new File("images/club.png")));
+		keep.put('K', dungeon.get('H'));
+		keep.put('A', dungeon.get('H'));
 		keep.put('$', ImageIO.read(new File("images/dollar.png")));
 		keep.put('k', ImageIO.read(new File("images/key.png")));
-		keep.put('8', ImageIO.read(new File("images/hero.png")));
-		keep.put(' ', ImageIO.read(new File("images/parquet.png")));
+		keep.put('8', keep.get('O'));
+		keep.put(' ', ImageIO.read(new File("images/espaco.png")));
 		keep.put('X', dungeon.get('X'));
 		keep.put('S', dungeon.get('S'));
 		keep.put('I', dungeon.get('I'));

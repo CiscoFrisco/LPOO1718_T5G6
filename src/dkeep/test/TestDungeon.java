@@ -138,7 +138,7 @@ public class TestDungeon {
 		Map gameMap = new Map(dungeon);
 		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
 
-		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
+		dungeon.saveToFile(new File("src/dkeep/test/dungeon.txt"));
 	}
 
 	@Test
@@ -146,9 +146,9 @@ public class TestDungeon {
 		Map gameMap = new Map(dungeon);
 		Dungeon dungeon = new Dungeon(gameMap,"Rookie");
 
-		dungeon.saveToFile(new File("dkeep/test/dungeon.txt"));
+		dungeon.saveToFile(new File("src/dkeep/test/dungeon.txt"));
 
-		assertNotNull(Dungeon.readFromFile(new File("dkeep/test/dungeon.txt")));
+		assertNotNull(Dungeon.readFromFile(new File("src/dkeep/test/dungeon.txt")));
 	}
 
 	@Test

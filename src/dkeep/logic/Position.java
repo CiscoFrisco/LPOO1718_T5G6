@@ -32,7 +32,7 @@ public class Position implements Comparable<Position>
 	 * Checks whether or not the two positions to be compared are equal.
 	 * 
 	 * @param o1 An object referring a game position.
-	 * @ return returns a boolean indicating if the two postitions are equal or not.
+	 * @return returns a boolean indicating if the two positions are equal or not.
 	 */
 	public boolean equals(Object o1)
 	{

@@ -114,6 +114,11 @@ public class GameConfig extends JDialog {
 						return;
 					}
 				}
+				else if(!customKeep.signal())
+				{
+					JOptionPane.showMessageDialog(contentPanel, "No valid custom map!");
+					return;
+				}
 				
 				dispose();
 			}

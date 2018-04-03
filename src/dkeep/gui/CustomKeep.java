@@ -34,6 +34,7 @@ public class CustomKeep extends JDialog {
 	private char current_char = ' ';
 	private int numOgres = 0;
 	private GameView editable = new GameView(null, 2);
+	private boolean signal;
 
 	private Map gameMap;
 	private TreeMap<Position, Character> positions = new TreeMap<Position, Character>();
@@ -224,6 +225,11 @@ public class CustomKeep extends JDialog {
 		return false;
 
 	}
+	
+	public boolean signal()
+	{
+		return signal;
+	}
 
 	private void disableBtn()
 	{
@@ -285,6 +291,7 @@ public class CustomKeep extends JDialog {
 				if(!checkEntities())
 					return;
 
+				signal = true;
 				dispose();
 			}
 		});
@@ -297,6 +304,7 @@ public class CustomKeep extends JDialog {
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				signal = false;
 				dispose();
 			}
 		});

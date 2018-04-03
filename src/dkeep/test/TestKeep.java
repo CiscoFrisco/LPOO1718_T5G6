@@ -204,8 +204,7 @@ public class TestKeep {
 	public void testKeepSave() {
 		Map gameMap = new Map(keep);
 		Keep keep = new Keep(gameMap,1);
-
-		keep.saveToFile(new File("dkeep/test/keep.txt"));
+		keep.saveToFile(new File("src/dkeep/test/keep.txt"));
 	}
 
 	@Test
@@ -214,9 +213,9 @@ public class TestKeep {
 		Map gameMap = new Map(keep);
 		Keep keep = new Keep(gameMap,1);
 
-		keep.saveToFile(new File("dkeep/test/keep.txt"));
+		keep.saveToFile(new File("src/dkeep/test/keep.txt"));
 
-		assertNotNull(Keep.readFromFile(new File("dkeep/test/keep.txt")));
+		assertNotNull(Keep.readFromFile(new File("src/dkeep/test/keep.txt")));
 	}
 	
 }
