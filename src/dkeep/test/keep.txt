@@ -2,8 +2,8 @@
 6
 6
 XXXXXX
-X   OX
 X    X
+X   OX
 X    X
 I A kX
 XXXXXX

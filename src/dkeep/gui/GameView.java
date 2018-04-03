@@ -48,24 +48,24 @@ public class GameView extends JPanel
 	}
 
 	public void loadImages() throws IOException
-	{
-		dungeon.put('H', ImageIO.read(new File("images/hero.png")));
-		dungeon.put('G', ImageIO.read(new File("images/guard.png")));
-		dungeon.put('g', ImageIO.read(new File("images/sleep.png")));
-		dungeon.put('I', ImageIO.read(new File("images/door_closed.png")));
-		dungeon.put('S', ImageIO.read(new File("images/door_open.png")));
-		dungeon.put('k', ImageIO.read(new File("images/lever.png")));
-		dungeon.put('X', ImageIO.read(new File("images/parede.png")));
-		dungeon.put(' ', ImageIO.read(new File("images/espaco.png")));
+	{		
+		dungeon.put('H', ImageIO.read(new File("res/hero.png")));
+		dungeon.put('G', ImageIO.read(new File("res/guard.png")));
+		dungeon.put('g', ImageIO.read(new File("res/sleep.png")));
+		dungeon.put('I', ImageIO.read(new File("res/door_closed.png")));
+		dungeon.put('S', ImageIO.read(new File("res/door_open.png")));
+		dungeon.put('k', ImageIO.read(new File("res/lever.png")));
+		dungeon.put('X', ImageIO.read(new File("res/parede.png")));
+		dungeon.put(' ', ImageIO.read(new File("res/espaco.png")));
 
-		keep.put('O', ImageIO.read(new File("images/ogre.png")));
-		keep.put('*', ImageIO.read(new File("images/club.png")));
+		keep.put('O', ImageIO.read(new File("res/ogre.png")));
+		keep.put('*', ImageIO.read(new File("res/club.png")));
 		keep.put('K', dungeon.get('H'));
 		keep.put('A', dungeon.get('H'));
-		keep.put('$', ImageIO.read(new File("images/dollar.png")));
-		keep.put('k', ImageIO.read(new File("images/key.png")));
+		keep.put('$', ImageIO.read(new File("res/dollar.png")));
+		keep.put('k', ImageIO.read(new File("res/key.png")));
 		keep.put('8', keep.get('O'));
-		keep.put(' ', ImageIO.read(new File("images/espaco.png")));
+		keep.put(' ', ImageIO.read(new File("res/espaco.png")));
 		keep.put('X', dungeon.get('X'));
 		keep.put('S', dungeon.get('S'));
 		keep.put('I', dungeon.get('I'));
