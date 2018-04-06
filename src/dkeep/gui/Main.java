@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class Main implements KeyListener
 	private GameState game;
 	private Map map2;
 	private int level = 1;
+	private ArrayList<String> messages;
 
 
 
@@ -57,6 +59,12 @@ public class Main implements KeyListener
 	 * Create the application.
 	 */
 	public Main() {
+		messages = new ArrayList<String>();
+		messages.add("JUST DO IT!!");
+		messages.add("DON'T LET YOUR DREAMS BE DREAMS!");		
+		messages.add("YESTERDAY YOU SAID TOMORROW SO... DO IT!!!!");
+		messages.add("Why do you even try??!!");
+		messages.add("DISAPOINTEEEEEED!");
 		initialize();
 	}
 
@@ -78,31 +86,9 @@ public class Main implements KeyListener
 	private void generateStatus() {
 
 		Random number = new Random();
-		int status = number.nextInt(6);
+		int status = number.nextInt(5);
 
-		switch(status) 
-		{
-		case 0:
-			lblGameStatus.setText("JUST DO IT!!");
-			break;
-		case 1:
-			lblGameStatus.setText("DON'T LET YOUR DREAMS BE DREAMS!");
-			break;
-		case 2:
-			lblGameStatus.setText("YESTERDAY YOU SAID TOMORROW SO... DO IT!!!!");
-			break;
-		case 3:
-			lblGameStatus.setText("( ͡° ͜ʖ ͡°)");
-			break;
-		case 4:
-			lblGameStatus.setText("Why do you even try??!!");
-			break;
-		case 5:
-			lblGameStatus.setText("DISAPOINTEEEEEED!");
-			break;
-		default:
-			break;
-		}
+		lblGameStatus.setText(messages.get(status));
 	}
 
 	private void gameIteration(char heroMov)
@@ -332,6 +318,7 @@ public class Main implements KeyListener
 		btnConfigureGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmDungeonKeep.requestFocusInWindow();
+				configWindow.newKeep();
 				configWindow.setVisible(true);
 			}
 		});

@@ -49,6 +49,11 @@ public class GameConfig extends JDialog {
 		}
 	}
 	
+	public void newKeep()
+	{
+		customKeep = new CustomKeep();
+	}
+	
 	public int numberOfOgres()
 	{
 		return numberOfOgres;

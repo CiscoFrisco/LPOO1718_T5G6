@@ -351,8 +351,11 @@ public class CustomKeep extends JDialog {
 		}
 
 		Character ent = positions.get(new Position(current_line, current_col));
-
-		if(ent!=null)
+		
+		if(ent != null && editable.getGameMap()[current_line][current_col]==ent)
+			return;
+			
+		if(ent!= null)
 			enableButton(ent);
 
 		positions.put(new Position(current_line, current_col), current_char);
